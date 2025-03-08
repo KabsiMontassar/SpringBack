@@ -11,11 +11,9 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 @ToString
-public class Agriculteur implements Serializable {
+public class Agriculteur extends User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idAgriculteur;
     private String localisation;
-
-
 }

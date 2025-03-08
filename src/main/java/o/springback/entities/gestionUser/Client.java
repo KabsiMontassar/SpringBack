@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+
 @Entity
 @AllArgsConstructor
 @Setter
@@ -15,6 +16,4 @@ public class Client extends User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long IdClient;
     private String Address;
-
-
 }
