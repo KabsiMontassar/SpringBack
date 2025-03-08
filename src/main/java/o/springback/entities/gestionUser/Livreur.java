@@ -11,9 +11,10 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 @ToString
+@DiscriminatorValue("Livreur")
 public class Livreur extends User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long IdCLivreur;
-    private String TypeCarteGrise;
+    private Long idCLivreur;
+    private String typeCarteGrise;
 }

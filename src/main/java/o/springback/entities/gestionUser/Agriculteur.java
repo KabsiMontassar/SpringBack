@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 @ToString
+@DiscriminatorValue("Agriculteur")
 public class Agriculteur extends User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

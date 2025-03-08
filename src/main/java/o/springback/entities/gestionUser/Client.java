@@ -11,9 +11,10 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 @ToString
+@DiscriminatorValue("Client")
 public class Client extends User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long IdClient;
-    private String Address;
+    private Long idClient;
+    private String address;
 }
