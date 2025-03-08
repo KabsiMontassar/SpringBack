@@ -5,17 +5,13 @@ import lombok.*;
 import o.springback.entities.GestionPlateforme.Plateforme;
 
 @Entity
-@Table
 @AllArgsConstructor
 @Setter
 @Getter
 @NoArgsConstructor
 @ToString
-public class Agriculteur {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idAgriculteur;
+@DiscriminatorValue("1")
+public class Agriculteur extends User {
 
     private String localisation;
 
