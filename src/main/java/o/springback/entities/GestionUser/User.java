@@ -1,7 +1,9 @@
-package o.springback.entities.gestionUser;
+package o.springback.entities.GestionUser;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.io.Serializable;
 
 @Entity
 @Table
@@ -10,9 +12,9 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @ToString
-public class Livreur extends User{
-
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idLivreur;
+    private Long idClient;
+    private String identifiant;
 }
