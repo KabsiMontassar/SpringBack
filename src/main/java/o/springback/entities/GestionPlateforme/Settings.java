@@ -16,4 +16,14 @@ public class Settings {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idSettings;
+
+
+    private String TypeComposant ;
+
+    private String PositionnementComposant;
+
+    @ManyToOne
+    Plateforme plateformeSetting;
+
+
 }

@@ -2,8 +2,7 @@ package o.springback.entities.GestionUser;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.io.Serializable;
+import o.springback.entities.GestionPlateforme.Plateforme;
 
 @Entity
 @Table
@@ -12,9 +11,14 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 @ToString
-public class User implements Serializable {
+public class Agriculteur {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idUser;
-    private String identifiant;
+    private Long idAgriculteur;
+
+    private String localisation;
+
+    @OneToOne
+    private Plateforme plateforme;
 }

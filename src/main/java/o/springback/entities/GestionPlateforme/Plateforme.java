@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import o.springback.entities.GestionUser.Agriculteur;
+import o.springback.entities.GestionUser.User;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table
@@ -31,6 +34,16 @@ public class Plateforme {
     private String description;
 
     private String logo;
+
+
+    @OneToOne(mappedBy="plateforme")
+    private Agriculteur agriculteur;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="plateformeSetting")
+    private Set<Settings> plateformeSettings;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="plateformeSponsor")
+    private Set<Sponsor> plateformeSponsors;
 
 
 
