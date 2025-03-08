@@ -3,17 +3,16 @@ package o.springback.entities.gestionUser;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.io.Serializable;
-
-@MappedSuperclass
+@Entity
+@Table
 @AllArgsConstructor
 @Setter
 @Getter
 @NoArgsConstructor
 @ToString
-public class User implements Serializable {
+public class Livreur extends User{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idClient;
-    private String identifiant;
+    private int idLivreur;
 }
