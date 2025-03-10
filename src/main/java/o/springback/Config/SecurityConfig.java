@@ -37,9 +37,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/welcome", "/addNewUser", "/generateToken").permitAll()
-                        .requestMatchers("/user/**").hasAuthority("ROLE_USER")
-                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken","/auth/user/**").permitAll()
+                        .requestMatchers("/auth/user/**").hasAuthority("ROLE_USER")
+                        .requestMatchers("/auth/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated() // Protect all other endpoints
                 )
                 .sessionManagement(sess -> sess
@@ -55,7 +55,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // Password encoding
     }
-
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
