@@ -33,7 +33,7 @@ public class UserController {
         public User retrieveUser(@PathVariable("User-id") Long UserId) {
             return userService.findById(UserId);
         }
-        @PostMapping("/add-User")
+        @PostMapping("/addNewUser")
         public User addUser(@RequestBody User c) {
             return userService.save(c);
         }
