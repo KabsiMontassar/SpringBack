@@ -1,21 +1,30 @@
 package o.springback.services.GestionUser;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import o.springback.Interfaces.GestionUser.IUserService;
 import o.springback.entities.GestionUser.User;
 import o.springback.repositories.GestionUserRepository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class UserService implements IUserService{
+@NoArgsConstructor
+public class UserService implements IUserService , UserDetailsService {
 
 
     @Autowired
     private PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
+
+
+
     @Override
     public User save (User user){
         return userRepository.save(user);
@@ -36,6 +45,20 @@ public class UserService implements IUserService{
     public List<User> findAll(){
         return userRepository.findAll();
     }
+
+
+
+
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> userDetail = userRepository.findByEmail(username); // Assuming 'email' is used as username
+
+        // Converting UserInfo to UserDetails
+        return userDetail.map(UserInfoDetails::new)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    }
+
+
+
 
     public String addUser(User userInfo) {
         // Encode password before saving the user
