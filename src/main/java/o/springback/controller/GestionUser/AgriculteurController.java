@@ -10,6 +10,6 @@ import java.util.List;
 @RequestMapping("/agriculteur")
 public class AgriculteurController {
 
-            
+
 
 }
