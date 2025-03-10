@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/auth")
 
 public class UserController {
 
@@ -33,11 +33,12 @@ public class UserController {
         public User retrieveUser(@PathVariable("User-id") Long UserId) {
             return userService.findById(UserId);
         }
-        @PostMapping("/addNewUser")
-        public User addUser(@RequestBody User c) {
-            return userService.save(c);
-        }
-        @DeleteMapping("/remove-User/{User-id}")
+    @PostMapping("/addNewUser")
+    public String addUser(@RequestBody User c) {
+
+            return userService.addUser(c);
+    }
+        @DeleteMapping("/user/remove-User/{User-id}")
         public void removeUser(@PathVariable("User-id") Long UserId) {
             userService.delete(UserId);
         }
