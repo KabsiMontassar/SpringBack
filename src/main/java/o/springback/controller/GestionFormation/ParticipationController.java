@@ -1,5 +1,6 @@
 package o.springback.controller.GestionFormation;
 
+import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionFormation.IParticipationService;
 import o.springback.entities.GestionFormation.Participation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/participations")
+@AllArgsConstructor
 public class ParticipationController {
 
-    @Autowired
+
     private IParticipationService participationService;
 
     @PostMapping
