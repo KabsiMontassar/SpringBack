@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @ToString
+@DiscriminatorValue("LIVREUR")
 
 public class Livreur extends User {
     @Id

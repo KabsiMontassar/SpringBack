@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @ToString
-@DiscriminatorValue("1")
+@DiscriminatorValue("AGRICULTEUR")
 public class Agriculteur extends User {
 
     private String localisation;
