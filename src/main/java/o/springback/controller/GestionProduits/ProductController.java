@@ -10,9 +10,9 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/produits")
-public class ProductController {
 
-    IProductService productService;
+public class ProductController {
+ IProductService productService;
 
     @GetMapping("/retrieve-all-Produits")
     public List<Products> getProducts() {
