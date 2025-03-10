@@ -2,5 +2,6 @@ package o.springback.repositories.GestionUserRepository;
 import o.springback.entities.GestionUser.Agriculteur;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-public interface AgriculteurRepository {
+public interface AgriculteurRepository extends JpaRepository<Agriculteur,Long>{
+
 }
