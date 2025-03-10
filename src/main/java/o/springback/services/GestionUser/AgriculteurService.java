@@ -7,6 +7,8 @@ import o.springback.repositories.GestionUserRepository.UserRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
+@Service
+@AllArgsConstructor
 public class AgriculteurService implements IAgriculteurService{
     private AgriculteurRepository agriculteurRepository;
     @Override

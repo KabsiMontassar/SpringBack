@@ -1,11 +1,12 @@
 package o.springback.Interfaces.GestionUser;
 import o.springback.entities.GestionUser.Client;
+import o.springback.entities.GestionUser.User;
+
 import java.util.List;
 public interface IClientService {
-    List<Client> retrieveAllClients();
-    Client addClient(Client e);
-    Client updateClient(Client e);
-    Client retrieveClient(Long idClient);
-    void removeClient(Long idClient);
-    List<Client> addClients (List<Client> Clients);
+    List<Client> findAll();
+    Client findById(Long id);
+    Client save(Client client);
+    void delete(Long id);
+    Client update(Client client);
 }

@@ -1,7 +1,7 @@
 package o.springback.Interfaces.GestionUser;
 import o.springback.entities.GestionUser.Livreur;
 import java.util.List;
-public interface ILivreur {
+public interface ILivreurService {
     List<Livreur> findAll();
     Livreur findById(Long id);
     Livreur save(Livreur livreur);
