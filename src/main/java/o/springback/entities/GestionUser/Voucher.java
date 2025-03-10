@@ -11,7 +11,7 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @ToString
-public class Voucher extends User {
+public class Voucher{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idVoucher")

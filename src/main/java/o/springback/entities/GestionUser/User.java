@@ -14,7 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="role", discriminatorType = DiscriminatorType.INTEGER)
+@DiscriminatorColumn(name="role", discriminatorType = DiscriminatorType.STRING)
 public class User implements Serializable {
     @Id
     @Column(name = "idUser")
@@ -28,7 +28,5 @@ public class User implements Serializable {
     private String adresse;
     @Temporal(TemporalType.DATE)
     Date dateInscription;
-    @Enumerated(EnumType.STRING)
-    private role role;
     private String identifiant;
 }
