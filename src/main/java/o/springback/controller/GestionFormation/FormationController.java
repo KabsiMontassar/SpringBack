@@ -1,5 +1,6 @@
 package o.springback.controller.GestionFormation;
 
+import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionFormation.IFormationService;
 import o.springback.entities.GestionFormation.Formation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/formations")
+@AllArgsConstructor
 public class FormationController {
 
-    @Autowired
+
     private IFormationService formationService;
 
     @PostMapping
