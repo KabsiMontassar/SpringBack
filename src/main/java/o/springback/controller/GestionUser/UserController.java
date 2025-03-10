@@ -22,7 +22,7 @@ public class UserController {
 
         IUserService userService;
         private JwtService jwtService;
-      //  private AuthenticationManager authenticationManager;
+       private AuthenticationManager authenticationManager;
 
 
         @GetMapping("/retrieve-all-Users")
@@ -63,7 +63,7 @@ public class UserController {
             return "Welcome to Admin Profile";
         }
 
-     /*   @PostMapping("/generateToken")
+       @PostMapping("/generateToken")
         public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
@@ -73,5 +73,5 @@ public class UserController {
             } else {
                 throw new UsernameNotFoundException("Invalid user request!");
             }
-    }*/
+    }
 }
