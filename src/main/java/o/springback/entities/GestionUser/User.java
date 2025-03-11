@@ -2,9 +2,11 @@ package o.springback.entities.GestionUser;
 
 import jakarta.persistence.*;
 import lombok.*;
+import o.springback.entities.GestionProduits.Products;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -29,4 +31,7 @@ public class User implements Serializable {
     @Temporal(TemporalType.DATE)
     Date dateInscription;
     private String role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Products> produits;
 }

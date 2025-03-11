@@ -1,23 +1,23 @@
 package o.springback.entities.GestionProduits;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.Set;
 
 @Entity
-@Table
-@AllArgsConstructor
-@Setter
+@Table(name = "categorie")
 @Getter
+@Setter
+@AllArgsConstructor
 @NoArgsConstructor
-
+@ToString
 public class CategorieProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idC;
-    private String nomC;
-    private String description;
+    private Long idCategorie;
+    private String nomCategorie;
 
-
+    @OneToMany(mappedBy = "categorie", cascade = CascadeType.ALL)
+    private Set<Products> produits;
 }
+

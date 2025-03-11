@@ -1,13 +1,12 @@
 package o.springback.entities.GestionCommande;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import o.springback.entities.GestionProduits.Products;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -23,5 +22,7 @@ public class Commande {
 
     LocalDate dateCommande;
 
+    @ManyToMany(mappedBy = "commandes")
+    private Set<Products> produits;
 
 }
