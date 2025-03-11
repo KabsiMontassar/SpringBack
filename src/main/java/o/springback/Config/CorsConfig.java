@@ -6,10 +6,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import java.util.List;
 
-@Configuration // ✅ Required to mark it as a Spring configuration class
+@Configuration
 public class CorsConfig {
 
-    @Bean // ✅ Marks this method as a bean for Spring Boot
+    @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("*"));
