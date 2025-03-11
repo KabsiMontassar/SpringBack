@@ -22,13 +22,11 @@ public class ProductController {
 
     @GetMapping("/retrieve-Produits/{idProduit}")
     public Products retrieveProduits(@PathVariable("idProduit") Long idProduit) {
-        return productService.findById(idProduit);
-    }
+        return productService.findById(idProduit);}
 
-    @GetMapping("/all")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
-    public List<Products> getProducts() {
-        return productService.findAll();
+    @PostMapping("/add-Produits")
+    public Products save(@RequestBody Products p) {
+        return productService.save(p);
     }
 
     @PutMapping("/update")
