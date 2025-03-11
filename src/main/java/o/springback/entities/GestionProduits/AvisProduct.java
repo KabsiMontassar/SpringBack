@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
-@Table
+@Table(name = "avis_product")
 @AllArgsConstructor
 @Setter
 @Getter
@@ -20,5 +20,6 @@ public class AvisProduct {
     private LocalDate DateAvis;
 
     @ManyToOne
-    Products ProductsAvisProducts;
+    @JoinColumn(name = "idProduit")
+    private Products produit;
 }

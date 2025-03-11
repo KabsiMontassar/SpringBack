@@ -1,4 +1,6 @@
 package o.springback.repositories.GestionProduitsRepository;
 
-public interface ProductRepository {
-}
+import o.springback.entities.GestionProduits.Products;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductRepository extends JpaRepository<Products, Long> { }

@@ -18,6 +18,7 @@ public class PlateformeController {
     public List<Plateforme> getPlateformes() {
         return plateformeService.findAll();
     }
+
     @GetMapping("/retrieve-Plateforme/{Plateforme-id}")
     public Plateforme retrievePlateforme(@PathVariable("Plateforme-id") Long PlateformeId) {
         return plateformeService.findById(PlateformeId);
@@ -26,6 +27,7 @@ public class PlateformeController {
     public Plateforme addPlateforme(@RequestBody Plateforme c) {
         return plateformeService.save(c);
     }
+
     @DeleteMapping("/remove-Plateforme/{Plateforme-id}")
     public void removePlateforme(@PathVariable("Plateforme-id") Long PlateformeId) {
         plateformeService.delete(PlateformeId);

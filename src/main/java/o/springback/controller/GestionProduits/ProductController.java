@@ -3,35 +3,44 @@ package o.springback.controller.GestionProduits;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionProduits.IProductService;
 import o.springback.entities.GestionProduits.Products;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
+@RequestMapping("/produits")
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/produits")
-
 public class ProductController {
- IProductService productService;
+
+    private final IProductService productService;
 
     @GetMapping("/retrieve-all-Produits")
+    public List<Products> getProduits() {
+        return productService.findAll();
+    }
+
+    @GetMapping("/retrieve-Produits/{idProduit}")
+    public Products retrieveProduits(@PathVariable("idProduit") Long idProduit) {
+        return productService.findById(idProduit);
+    }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
     public List<Products> getProducts() {
         return productService.findAll();
     }
-    @GetMapping("/retrieve-Produit/{idProduit}")
-    public Products retrieveProducts(@PathVariable("idProduit") Long idProduit) {
-        return productService.findById(idProduit);
-    }
-    @PostMapping("/add-Produits")
-    public Products addProducts(@RequestBody Products p) {
-        return productService.save(p);
-    }
-    @DeleteMapping("/remove-Produit/{idProduit}")
-    public void removeProducts(@PathVariable("idProduit") Long idProduit) {
-        productService.delete(idProduit);
-    }
-    @PutMapping("/update-Produits")
-    public Products updateProducts(@RequestBody Products p) {
+
+    @PutMapping("/update")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
+    public Products updateProduct(@RequestBody Products p) {
         return productService.update(p);
     }
+
+    @DeleteMapping("/delete/{idProduit}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void deleteProduct(@PathVariable("idProduit") Long idProduit) {
+        productService.delete(idProduit);
+    }
 }
+

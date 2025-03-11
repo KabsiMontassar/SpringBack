@@ -1,4 +1,6 @@
 package o.springback.repositories.GestionProduitsRepository;
 
-public interface AvisProductRepository {
-}
+import o.springback.entities.GestionProduits.AvisProduct;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AvisProductRepository extends JpaRepository<AvisProduct, Long> {}
