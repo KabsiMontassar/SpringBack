@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 @NoArgsConstructor
 public class UserService implements IUserService , UserDetailsService {
 
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
     private UserRepository userRepository;
 
 
@@ -41,9 +41,8 @@ public class UserService implements IUserService , UserDetailsService {
     public User findById(Long id){
         return userRepository.findById(id).orElse(null);
     }
-    @Override
     public List<User> findAll(){
-        return userRepository.findAll();
+        return  userRepository.findAll();
     }
 
 
