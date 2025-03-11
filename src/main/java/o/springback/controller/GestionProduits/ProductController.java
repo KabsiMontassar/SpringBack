@@ -3,7 +3,7 @@ package o.springback.controller.GestionProduits;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionProduits.IProductService;
 import o.springback.entities.GestionProduits.Products;
-import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -30,13 +30,13 @@ public class ProductController {
     }
 
     @PutMapping("/update")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
     public Products updateProduct(@RequestBody Products p) {
         return productService.update(p);
     }
 
     @DeleteMapping("/delete/{idProduit}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void deleteProduct(@PathVariable("idProduit") Long idProduit) {
         productService.delete(idProduit);
     }
