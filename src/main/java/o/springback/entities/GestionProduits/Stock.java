@@ -8,21 +8,19 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
-@Table
+@Table(name = "stock")
 @AllArgsConstructor
 @Setter
 @Getter
 @NoArgsConstructor
 
-public class Stock {
+public class Stock{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idStock;
     private Long quantite;
     private LocalDate dateMaj;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy="StockProducts")
-    private Set<Products> StockProducts;
-
-
+    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
+    private Set<Products> produits;
 }
