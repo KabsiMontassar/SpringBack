@@ -37,7 +37,7 @@ public class Plateforme {
 
 
     @OneToOne(mappedBy="plateforme")
-    private Agriculteur agriculteur;
+    private User agriculteur;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy="plateformeSetting")
     private Set<Settings> plateformeSettings;
