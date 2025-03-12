@@ -12,4 +12,6 @@ public interface IFactureService {
     Facture getFactureById(Long id);
     List<Facture> getAllFactures();
 
+    //BigDecimal calculeTotal(Long idFacture);
+
 }

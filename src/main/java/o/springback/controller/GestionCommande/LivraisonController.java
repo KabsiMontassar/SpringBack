@@ -15,27 +15,27 @@ public class LivraisonController {
     @Autowired
     private LivraisonServiceImpl livraisonService;
 
-    @PostMapping
+    @PostMapping("/add")
     public Livraison createLivraison(@RequestBody Livraison livraison) {
         return livraisonService.createLivraison(livraison);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public Livraison updateLivraison(@PathVariable Long id, @RequestBody Livraison livraison) {
         return livraisonService.updateLivraison(id, livraison);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteLivraison(@PathVariable Long id) {
         livraisonService.deleteLivraison(id);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/retrieve/{id}")
     public Livraison getLivraisonById(@PathVariable Long id) {
         return livraisonService.getLivraisonById(id);
     }
 
-    @GetMapping
+    @GetMapping("/retrieve-all")
     public List<Livraison> getAllLivraisons() {
         return livraisonService.getAllLivraisons();
     }

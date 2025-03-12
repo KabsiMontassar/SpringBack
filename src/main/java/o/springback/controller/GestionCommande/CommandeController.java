@@ -15,27 +15,27 @@ public class CommandeController {
     @Autowired
     private CommandeServiceImpl commandeService;
 
-    @PostMapping("add")
+    @PostMapping("/add")
     public Commande createCommande(@RequestBody Commande commande) {
         return commandeService.createCommande(commande);
     }
 
-    @PutMapping("update/{id}")
+    @PutMapping("/update/{id}")
     public Commande updateCommande(@PathVariable Long id, @RequestBody Commande commande) {
         return commandeService.updateCommande(id, commande);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteCommande(@PathVariable Long id) {
         commandeService.deleteCommande(id);
     }
 
-    @GetMapping("get-by-id/{id}")
+    @GetMapping("/get-by-id/{id}")
     public Commande getCommandeById(@PathVariable Long id) {
         return commandeService.getCommandeById(id);
     }
 
-    @GetMapping("get-all")
+    @GetMapping("/get-all")
     public List<Commande> getAllCommandes() {
         return commandeService.getAllCommandes();
     }

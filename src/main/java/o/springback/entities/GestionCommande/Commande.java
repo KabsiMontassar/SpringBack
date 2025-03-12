@@ -35,6 +35,7 @@ public class Commande {
     @OneToOne(mappedBy = "commande")
     Livraison livraison;
 
+    @Enumerated(EnumType.STRING)
     StatusCommande statusCommande;
 
     @OneToOne(mappedBy = "commande")

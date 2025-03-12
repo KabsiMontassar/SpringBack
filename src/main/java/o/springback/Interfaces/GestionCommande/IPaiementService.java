@@ -10,4 +10,6 @@ public interface IPaiementService {
     void deletePaiement(Long id);
     Paiement getPaiementById(Long id);
     List<Paiement> getAllPaiements();
+
+    //String checkPaymentStatus(Long id);
 }

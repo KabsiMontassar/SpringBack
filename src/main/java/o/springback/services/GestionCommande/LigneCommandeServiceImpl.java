@@ -40,4 +40,6 @@ public class LigneCommandeServiceImpl implements ILigneCommandeService {
     public List<LigneCommande> getAllLigneCommandes() {
         return ligneCommandeRepository.findAll();
     }
+
+
 }

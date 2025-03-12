@@ -11,4 +11,12 @@ public interface ICommandeService {
     void deleteCommande(Long id);
     Commande getCommandeById(Long id);
     List<Commande> getAllCommandes();
+
+
+
+    //Commande annulerCommande(Commande commande);
+    //List<Commande> getCommandesByClientId(Long clientId);
+    //double calculTotal(List<Commande> items);
+    //boolean validerCommande(List<Commande> items);
+
 }

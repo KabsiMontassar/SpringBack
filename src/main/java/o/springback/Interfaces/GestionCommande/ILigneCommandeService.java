@@ -10,4 +10,7 @@ public interface ILigneCommandeService {
     void deleteLigneCommande(Long id);
     LigneCommande getLigneCommandeById(Long id);
     List<LigneCommande> getAllLigneCommandes();
+
+    // LigneCommande modifierQte(Long id, int qte);
+
 }
