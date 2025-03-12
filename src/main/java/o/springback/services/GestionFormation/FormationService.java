@@ -21,7 +21,7 @@ public class FormationService implements IFormationService {
 
     @Override
     public Formation updateFormation(int id, Formation formation) {
-        formation.setIdFormation(id); // Assurez-vous que l'ID est correct
+        formation.setIdFormation(id);
         return formationRepository.save(formation);
     }
 
