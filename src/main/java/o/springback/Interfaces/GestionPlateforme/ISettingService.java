@@ -1,5 +1,7 @@
 package o.springback.Interfaces.GestionPlateforme;
+
 import o.springback.entities.GestionPlateforme.Settings;
+
 import java.util.List;
 
 public interface ISettingService {
