@@ -1,9 +1,6 @@
 package o.springback.entities.GestionCommande;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -24,9 +21,11 @@ public class Paiement {
 
     float montant;
 
-    String modePaiement;
+    @Enumerated(EnumType.STRING)
+    ModePaiement modePaiement;
 
     Long transactionId;
 
+    @Enumerated(EnumType.STRING)
     StatusPaiement statusPaiement;
 }

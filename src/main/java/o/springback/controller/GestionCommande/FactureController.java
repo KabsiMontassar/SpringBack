@@ -15,27 +15,27 @@ public class FactureController {
     @Autowired
     private FactureServiceImpl factureService;
 
-    @PostMapping
+    @PostMapping("/add")
     public Facture createFacture(@RequestBody Facture facture) {
         return factureService.createFacture(facture);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public Facture updateFacture(@PathVariable Long id, @RequestBody Facture facture) {
         return factureService.updateFacture(id, facture);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteFacture(@PathVariable Long id) {
         factureService.deleteFacture(id);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/retrieve/{id}")
     public Facture getFactureById(@PathVariable Long id) {
         return factureService.getFactureById(id);
     }
 
-    @GetMapping
+    @GetMapping("/retrieve-all")
     public List<Facture> getAllFactures() {
         return factureService.getAllFactures();
     }

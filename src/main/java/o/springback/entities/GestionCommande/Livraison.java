@@ -29,4 +29,7 @@ public class Livraison {
     LocalDate dateLivraisonEffective;
 
     LocalDate dateLivraisonPrevue;
+
+    @Enumerated(EnumType.STRING)
+    StatusLivraison statusLivraison;
 }
