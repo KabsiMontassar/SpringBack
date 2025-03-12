@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/facture")
-public class FactureController {
+@RequestMapping("/panier")
+public class PanierController {
 }
