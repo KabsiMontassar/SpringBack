@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import o.springback.entities.GestionUser.Agriculteur;
 import o.springback.entities.GestionUser.User;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -29,9 +30,11 @@ public class Plateforme {
 
     private LocalDate dateCreation;
 
-    private String Valabilite;
+    private LocalDate Valabilite;
 
     private String description;
+
+    private String theme;
 
     private String logo;
 
@@ -47,5 +50,9 @@ public class Plateforme {
 
 
 
+
+    public boolean isExpired() {
+        return LocalDate.now().isAfter(Valabilite);
+    }
 
 }
