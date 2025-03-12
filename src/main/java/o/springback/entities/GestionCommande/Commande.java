@@ -3,10 +3,11 @@ package o.springback.entities.GestionCommande;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import o.springback.entities.GestionProduits.Products;
+import o.springback.entities.GestionUser.Client;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -20,9 +21,24 @@ public class Commande {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idCommande;
 
+    @ManyToOne
+    Client client;
+
     LocalDate dateCommande;
 
-    @ManyToMany(mappedBy = "commandes")
-    private Set<Products> produits;
+    @OneToOne(mappedBy = "commande")
+    Facture facture;
+
+    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL)
+    List<LigneCommande> lignesCommande;
+
+    @OneToOne(mappedBy = "commande")
+    Livraison livraison;
+
+    StatusCommande statusCommande;
+
+    @OneToOne(mappedBy = "commande")
+    Paiement paiement;
+
 
 }

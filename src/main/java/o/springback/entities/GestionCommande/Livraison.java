@@ -3,8 +3,8 @@ package o.springback.entities.GestionCommande;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import o.springback.entities.GestionUser.Livreur;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -13,19 +13,20 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Facture {
+public class Livraison {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idFacture;
+    Long idPanier;
+
+    String dateLivraison;
 
     @OneToOne
     Commande commande;
 
-    LocalDate dateFacture;
+    @OneToOne
+    Livreur livreur;
 
-    BigDecimal montantFacture;
+    LocalDate dateLivraisonEffective;
 
-    float tva;
-
-
+    LocalDate dateLivraisonPrevue;
 }

@@ -1,4 +1,14 @@
 package o.springback.Interfaces.GestionCommande;
 
+import o.springback.entities.GestionCommande.Commande;
+
+import java.util.List;
+import java.util.Optional;
+
 public interface ICommandeService {
+    Commande createCommande(Commande commande);
+    Commande updateCommande(Long id, Commande commande);
+    void deleteCommande(Long id);
+    Commande getCommandeById(Long id);
+    List<Commande> getAllCommandes();
 }
