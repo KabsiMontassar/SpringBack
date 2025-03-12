@@ -34,7 +34,7 @@ public class Plateforme {
 
     private String description;
 
-    private String theme;
+    private String updateTheme;
 
     private String logo;
 
