@@ -3,9 +3,11 @@ package o.springback.entities.GestionProduits;
 import jakarta.persistence.*;
 import lombok.*;
 import o.springback.entities.GestionCommande.Commande;
+import o.springback.entities.GestionCommande.LigneCommande;
 import o.springback.entities.GestionUser.User;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -42,10 +44,8 @@ public class Products {
     private CategorieProduct categorie;
 
     // Relation avec Commandes (ManyToMany)
-    @ManyToMany
-    @JoinTable(
-    name = "produit_commande", joinColumns = @JoinColumn(name = "idProduit"), inverseJoinColumns = @JoinColumn(name = "idCommande"))
-    private Set<Commande> commandes;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<LigneCommande> ligneCommandes;
 
     @ManyToOne
     @JoinColumn(name = "idUser")
