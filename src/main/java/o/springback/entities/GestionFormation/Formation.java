@@ -1,13 +1,11 @@
 package o.springback.entities.GestionFormation;
 
-
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -34,5 +32,8 @@ public class Formation {
     private TypeFormation typeFormation;
 
     @OneToOne(mappedBy = "formation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private DetailsFormation detailFormation; }
+    private DetailsFormation detailFormation;
 
+    @OneToMany(mappedBy = "formation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Participation> participations;
+}
