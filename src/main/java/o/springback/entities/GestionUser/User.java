@@ -2,6 +2,7 @@ package o.springback.entities.GestionUser;
 
 import jakarta.persistence.*;
 import lombok.*;
+import o.springback.entities.GestionFormation.Participation;
 import o.springback.entities.GestionProduits.Products;
 
 import java.io.Serializable;
@@ -34,4 +35,7 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Products> produits;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Participation> participations;
 }
