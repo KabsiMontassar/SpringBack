@@ -14,17 +14,17 @@ public class DetailsFormationController {
 
     private IDetailsFormationService detailFormationService;
 
-    @PostMapping("/add")
+    @PostMapping
     public DetailsFormation addDetailFormation(@RequestBody DetailsFormation detailFormation) {
         return detailFormationService.addDetailFormation(detailFormation);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public DetailsFormation updateDetailFormation(@PathVariable int id, @RequestBody DetailsFormation detailFormation) {
         return detailFormationService.updateDetailFormation(id, detailFormation);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteDetailFormation(@PathVariable int id) {
         detailFormationService.deleteDetailFormation(id);
     }
@@ -33,7 +33,5 @@ public class DetailsFormationController {
     public DetailsFormation getDetailFormationById(@PathVariable int id) {
         return detailFormationService.getDetailFormationById(id);
     }
-
-
 }
 
