@@ -27,21 +27,21 @@ public class Products {
     private String imageURL;
     private String status;
 
-    // Relation avec Stock (ManyToOne)
+
     @ManyToOne
     @JoinColumn(name = "idStock")
     private Stock stock;
 
-    // Relation avec Avis (OneToMany)
+
     @OneToMany(mappedBy = "produit", cascade = CascadeType.ALL)
     private Set<AvisProduct> avis;
 
-    // Relation avec Catégorie (ManyToOne)
+
     @ManyToOne
     @JoinColumn(name = "idCategorie")
     private CategorieProduct categorie;
 
-    // Relation avec Commandes (ManyToMany)
+
     @ManyToMany
     @JoinTable(
     name = "produit_commande", joinColumns = @JoinColumn(name = "idProduit"), inverseJoinColumns = @JoinColumn(name = "idCommande"))
