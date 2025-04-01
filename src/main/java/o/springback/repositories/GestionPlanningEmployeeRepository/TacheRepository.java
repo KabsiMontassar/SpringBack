@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface TacheRepository extends JpaRepository<Tache, Long>{
-    
+
 }
