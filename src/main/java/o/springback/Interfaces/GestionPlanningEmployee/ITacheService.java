@@ -10,4 +10,5 @@ public interface ITacheService {
     Tache findById(Long id);
     List<Tache> findAll();
     Map<String, Object> getNombreTachesParEmploye(Long employeeId);
+    Map<String, Long> getNombreTachesParStatut(Long employeeId);
 }
