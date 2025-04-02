@@ -4,10 +4,7 @@ import o.springback.Interfaces.GestionPlanningEmployee.ITacheService;
 import o.springback.entities.GestionPlanningEmployee.Tache;
 import o.springback.repositories.GestionPlanningEmployeeRepository.TacheRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -37,6 +34,4 @@ public class TacheService implements ITacheService{
     public List<Tache> findAll() {
         return tacheRepository.findAll();
     }
-
-
 }

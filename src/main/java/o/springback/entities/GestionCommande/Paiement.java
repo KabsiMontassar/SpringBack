@@ -4,28 +4,28 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Facture {
+public class Paiement {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idFacture;
+    Long idPaiement;
 
     @OneToOne
     Commande commande;
 
-    LocalDate dateFacture;
+    String datePaiement;
 
-    BigDecimal montantFacture;
+    float montant;
 
-    float tva;
+    @Enumerated(EnumType.STRING)
+    ModePaiement modePaiement;
 
+    Long transactionId;
 
+    @Enumerated(EnumType.STRING)
+    StatusPaiement statusPaiement;
 }
