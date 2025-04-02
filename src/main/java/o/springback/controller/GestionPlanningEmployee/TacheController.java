@@ -1,8 +1,12 @@
 package o.springback.controller.GestionPlanningEmployee;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionPlanningEmployee.ITacheService;
+import o.springback.entities.GestionPlanningEmployee.StatutTache;
 import o.springback.entities.GestionPlanningEmployee.Tache;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,5 +43,13 @@ public class TacheController {
     @GetMapping("/nombre-taches-par-statut/{employeeId}")
     public Map<String, Long> getNombreTachesParStatut(@PathVariable Long employeeId) {
             return tacheService.getNombreTachesParStatut(employeeId);
+    }
+    @GetMapping("/tache-par-statut/{employeeId}/{statut}")
+    public Map<String, Object> getTachesParStatut(@PathVariable Long employeeId, @PathVariable StatutTache statut){
+        Long count = tacheService.getTachesParStatut(employeeId, statut);
+        Map<String, Object> response = new HashMap<>();
+        response.put("statut", statut);
+        response.put("Nombre Taches", count);
+        return response;
     }
 }

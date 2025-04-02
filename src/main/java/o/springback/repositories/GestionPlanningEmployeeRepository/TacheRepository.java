@@ -13,6 +13,6 @@ public interface TacheRepository extends JpaRepository<Tache, Long>{
     @Query("SELECT t.employee.nom, t.employee.prenom, COUNT(t) FROM Tache t WHERE t.employee.idEmployee= :id GROUP BY t.employee.nom, t.employee.prenom")
     List<Object[]> countTachesByEmployee(@Param("id") Long id);
 
-    @Query("SELECT t.statutTache, COUNT(t) FROM Tache t WHERE t.employee.idEmployee= :id GROUP BY t.statutTache")
+    @Query("SELECT t.statutTache, COUNT(t) FROM Tache t WHERE t.employee.idEmployee= :id GROUP BY t.statutTache ORDER BY t.statutTache")
     List<Object[]> countTachesByStatutTacheForEmployee(@Param("id") Long employeeId);
 }

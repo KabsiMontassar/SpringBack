@@ -7,6 +7,7 @@ import o.springback.repositories.GestionPlanningEmployeeRepository.TacheReposito
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,13 +59,26 @@ public class TacheService implements ITacheService{
     @Override
     public Map<String, Long> getNombreTachesParStatut(Long employeeId) {
         List<Object[]> result = tacheRepository.countTachesByStatutTacheForEmployee(employeeId);
-        Map<String, Long> map = new HashMap<>();
+        Map<String, Long> map = new LinkedHashMap<>();
         for (Object[] statutCount : result ) {
             StatutTache statut = (StatutTache) statutCount[0];
             long count = (Long) statutCount[1];
             map.put(statut.name(), count);
         }
         return map;
+    }
+
+    @Override
+    public Long getTachesParStatut(Long employeeId, StatutTache statut) {
+        List<Object[]> status = tacheRepository.countTachesByStatutTacheForEmployee(employeeId);
+        for (Object[] stat: status) {
+            StatutTache currentStatut = (StatutTache) stat[0];
+            Long count = (Long) stat[1];
+            if (currentStatut.equals(statut)) {
+                return count;
+            }
+        }
+        return 0L; //aucune tâche trouvée
     }
 
 }
