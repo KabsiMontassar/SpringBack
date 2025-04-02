@@ -1,10 +1,10 @@
 package o.springback.entities.GestionPlateforme;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import o.springback.entities.GestionPlanningEmployee.Employee;
 import o.springback.entities.GestionUser.Agriculteur;
 import o.springback.entities.GestionUser.User;
 
@@ -45,13 +45,8 @@ public class Plateforme {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy="plateformeSponsor")
     private Set<Sponsor> plateformeSponsors;
-<<<<<<< HEAD
-
-    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy="plateforme")
     private Set<Employee> employees;
-=======
->>>>>>> master
 
 
 

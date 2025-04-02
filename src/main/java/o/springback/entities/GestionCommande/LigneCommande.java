@@ -3,6 +3,7 @@ package o.springback.entities.GestionCommande;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import o.springback.entities.GestionProduits.Products;
 
 @Entity
 @Getter
@@ -10,22 +11,16 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Paiement {
+public class LigneCommande {
     @Id
-    Long idPaiement;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long idLigne;
 
-    @OneToOne
+    @ManyToOne
     Commande commande;
 
-    String datePaiement;
+    @ManyToOne
+    Products product;
 
-    float montant;
-
-    @Enumerated(EnumType.STRING)
-    ModePaiement modePaiement;
-
-    Long transactionId;
-
-    @Enumerated(EnumType.STRING)
-    StatusPaiement statusPaiement;
+    int quantite;
 }
