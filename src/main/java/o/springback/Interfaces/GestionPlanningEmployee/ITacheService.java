@@ -1,4 +1,5 @@
 package o.springback.Interfaces.GestionPlanningEmployee;
+import o.springback.entities.GestionPlanningEmployee.PeriodeHistorique;
 import o.springback.entities.GestionPlanningEmployee.StatutTache;
 import o.springback.entities.GestionPlanningEmployee.Tache;
 import java.util.List;
@@ -13,4 +14,5 @@ public interface ITacheService {
     Map<String, Object> getNombreTachesParEmploye(Long employeeId);
     Map<String, Long> getNombreTachesParStatut(Long employeeId); //pour afficher tout les statuts
     Long getTachesParStatut(Long employeeId, StatutTache statut); // pour afficher kol statut wahdou
+    Map<String, Object> getHistoriqueTachesParPeriode(Long employeeId, PeriodeHistorique periode);
 }
