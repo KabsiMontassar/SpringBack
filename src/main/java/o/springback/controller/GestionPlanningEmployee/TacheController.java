@@ -1,6 +1,7 @@
 package o.springback.controller.GestionPlanningEmployee;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionPlanningEmployee.ITacheService;
+import o.springback.entities.GestionPlanningEmployee.PeriodeHistorique;
 import o.springback.entities.GestionPlanningEmployee.StatutTache;
 import o.springback.entities.GestionPlanningEmployee.Tache;
 import org.springframework.security.core.parameters.P;
@@ -51,5 +52,9 @@ public class TacheController {
         response.put("statut", statut);
         response.put("Nombre Taches", count);
         return response;
+    }
+    @GetMapping("/historique/{employeeId}")
+    public Map<String, Object> getHistorique(@PathVariable Long employeeId, @RequestParam PeriodeHistorique periode) {
+        return tacheService.getHistoriqueTachesParPeriode(employeeId, periode);
     }
 }

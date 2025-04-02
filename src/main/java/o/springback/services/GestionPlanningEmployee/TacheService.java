@@ -1,15 +1,14 @@
 package o.springback.services.GestionPlanningEmployee;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionPlanningEmployee.ITacheService;
+import o.springback.entities.GestionPlanningEmployee.PeriodeHistorique;
 import o.springback.entities.GestionPlanningEmployee.StatutTache;
 import o.springback.entities.GestionPlanningEmployee.Tache;
 import o.springback.repositories.GestionPlanningEmployeeRepository.TacheRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -79,6 +78,39 @@ public class TacheService implements ITacheService{
             }
         }
         return 0L; //aucune tâche trouvée
+    }
+
+    @Override
+    public Map<String, Object> getHistoriqueTachesParPeriode(Long employeeId, PeriodeHistorique periode) {
+        LocalDate today = LocalDate.now();
+        LocalDate start;
+
+        switch (periode) {
+            case JOUR -> start = today;
+            case SEMAINE -> start = today.minusWeeks(1);
+            case MOIS -> start = today.minusMonths(1);
+            case TRIMESTRE -> start = today.minusMonths(3);
+            case SEMESTRE -> start = today.minusMonths(6);
+            case ANNEE -> start = today.minusYears(1);
+            default -> throw new IllegalArgumentException("Période inconnue : "+periode);
+        }
+        Date startDate = java.sql.Date.valueOf(start); //conversion de LocalDate en java.sql.Date
+        Date endDate = java.sql.Date.valueOf(today);
+
+        List<Tache> taches = tacheRepository.findTachesTermineesParPeriode(employeeId, startDate, endDate);
+        List<Map<String, Object>> tachesInfo = taches.stream().map(t -> {
+            Map<String, Object> info = new HashMap<>();
+            info.put("titre", t.getTitre());
+            info.put("dateDebut", t.getDateDebut());
+            info.put("dateFin", t.getDateFin());
+            return info;
+        }).toList(); //crée la liste finale
+        Map<String, Object> result = new HashMap<>();
+        result.put("période", periode);
+        result.put("total", taches.size());
+        result.put("taches", tachesInfo);
+
+        return result;
     }
 
 }
