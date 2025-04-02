@@ -36,4 +36,8 @@ public class TacheController {
     public Map<String, Object> getNombreTachesParEmploye(@PathVariable Long id){
         return tacheService.getNombreTachesParEmploye(id);
     }
+    @GetMapping("/nombre-taches-par-statut/{employeeId}")
+    public Map<String, Long> getNombreTachesParStatut(@PathVariable Long employeeId) {
+            return tacheService.getNombreTachesParStatut(employeeId);
+    }
 }

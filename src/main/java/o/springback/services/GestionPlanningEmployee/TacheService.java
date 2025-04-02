@@ -1,6 +1,7 @@
 package o.springback.services.GestionPlanningEmployee;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionPlanningEmployee.ITacheService;
+import o.springback.entities.GestionPlanningEmployee.StatutTache;
 import o.springback.entities.GestionPlanningEmployee.Tache;
 import o.springback.repositories.GestionPlanningEmployeeRepository.TacheRepository;
 import org.springframework.stereotype.Service;
@@ -54,5 +55,16 @@ public class TacheService implements ITacheService{
         return map;
     }
 
+    @Override
+    public Map<String, Long> getNombreTachesParStatut(Long employeeId) {
+        List<Object[]> result = tacheRepository.countTachesByStatutTacheForEmployee(employeeId);
+        Map<String, Long> map = new HashMap<>();
+        for (Object[] statutCount : result ) {
+            StatutTache statut = (StatutTache) statutCount[0];
+            long count = (Long) statutCount[1];
+            map.put(statut.name(), count);
+        }
+        return map;
+    }
 
 }
