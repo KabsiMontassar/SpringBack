@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface TacheRepository extends JpaRepository<Tache, Long>{
-
+    @Query("SELECT t.employee.idEmployee, COUNT(t) FROM t WHERE  t.employee IS NOT NULL GROUP BY t.employee.idEmployee")
+    List<Object[]> countTachesParEmploye();
 }
