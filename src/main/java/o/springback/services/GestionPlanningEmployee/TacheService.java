@@ -1,16 +1,18 @@
 package o.springback.services.GestionPlanningEmployee;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionPlanningEmployee.ITacheService;
-import o.springback.entities.GestionPlanningEmployee.PeriodeHistorique;
-import o.springback.entities.GestionPlanningEmployee.StatutTache;
-import o.springback.entities.GestionPlanningEmployee.Tache;
+import o.springback.entities.GestionPlanningEmployee.*;
+import o.springback.repositories.GestionPlanningEmployeeRepository.EmployeeRepository;
 import o.springback.repositories.GestionPlanningEmployeeRepository.TacheRepository;
+import o.springback.repositories.GestionPlanningEmployeeRepository.PlanningRepository;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static java.time.Month.*;
@@ -19,6 +21,8 @@ import static java.time.Month.*;
 @AllArgsConstructor
 public class TacheService implements ITacheService{
     private TacheRepository tacheRepository;
+    private PlanningRepository planningRepository;
+    private EmployeeRepository employeeRepository;
     @Override
     public Tache save(Tache tache) {
         return tacheRepository.save(tache);
@@ -201,5 +205,59 @@ public class TacheService implements ITacheService{
         };
     }
 
+    @Override
+    public Map<String, Object> replanifierTache(Long employeeId, String strategie) {
+        List<TypePlanning> bloque = List.of(
+                TypePlanning.CONGES,
+                TypePlanning.MALADIE,
+                TypePlanning.DEPLACEMENT,
+                TypePlanning.VACANCES);
+        List<Tache> taches = tacheRepository.findAll().stream()
+                .filter(t -> t.getEmployee().getIdEmployee().equals(employeeId))
+                .toList(); //tâches de l'employe durant la période bloquée
+        int replanifiees = 0, supprimees = 0, ignorees = 0;
+
+        for (Tache tache : taches) {
+            List<Planning> conflits = planningRepository.findPlanningByTypePlanning(
+                    employeeId, bloque, tache.getDateDebut(), tache.getDateFin());
+            if (!conflits.isEmpty()) {
+                switch (strategie.toUpperCase()) {
+                    case "REPLANIFIER" -> {
+                        Optional<Planning> conflitLePlusLong = conflits.stream() //optional maaneha l fonction tnajem ma traja3 chay blech exception
+                                .max(Comparator.comparing(p -> p.getDateFin().getTime() - p.getDateDebut().getTime()));
+                        if (conflitLePlusLong.isPresent()) {
+                            Planning conflit = conflitLePlusLong.get();
+                            long joursDeBlocage = ChronoUnit.DAYS.between(
+                                    conflit.getDateDebut().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                                    conflit.getDateFin().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                            ) +1;
+                            LocalDate newDebut = tache.getDateFin().toInstant()
+                                    .atZone(ZoneId.systemDefault())
+                                    .toLocalDate()
+                                    .plusDays(joursDeBlocage);
+                            LocalDate newFin = tache.getDateFin().toInstant()
+                                    .atZone(ZoneId.systemDefault())
+                                    .toLocalDate()
+                                    .plusDays(joursDeBlocage);
+                            tache.setDateDebut(Date.from(newDebut.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                            tache.setDateFin(Date.from(newFin.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                            tacheRepository.save(tache);
+                            replanifiees++;
+                        }
+
+                    } case "SUPPRIMER" -> {
+                        tacheRepository.delete(tache);
+                        supprimees++;
+                    }
+                    default -> ignorees++;
+                }
+            }
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("replanifiees", replanifiees);
+        result.put("supprimees", supprimees);
+        result.put("ignorees", ignorees);
+        return result;
+    }
 
 }
