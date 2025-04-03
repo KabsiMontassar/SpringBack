@@ -70,7 +70,8 @@ public class UserController {
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
             if (authentication.isAuthenticated()) {
-                return jwtService.generateToken(authRequest.getUsername());
+                String sanitizedUsername = org.springframework.web.util.HtmlUtils.htmlEscape(authRequest.getUsername());
+                return jwtService.generateToken(sanitizedUsername);
             } else {
                 throw new UsernameNotFoundException("Invalid user request!");
             }
