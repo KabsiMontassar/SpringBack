@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ITacheService {
-    Tache save(Tache tache);
+    Tache add(Tache tache);
     Tache update(Tache tache);
     void delete(Long id);
     Tache findById(Long id);

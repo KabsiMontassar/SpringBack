@@ -24,18 +24,32 @@ public class TacheService implements ITacheService{
     private PlanningRepository planningRepository;
     private EmployeeRepository employeeRepository;
     @Override
-    public Tache save(Tache tache) {
+    public Tache add(Tache tache) {
+        if (tache.getSousTaches() != null){
+            for (Tache sousT : tache.getSousTaches()) {
+                sousT.setParent(tache);
+            }
+        }
         return tacheRepository.save(tache);
     }
 
     @Override
     public Tache update(Tache tache) {
+        if (tache.getSousTaches() != null){
+            for(Tache sousT : tache.getSousTaches()) {
+                sousT.setParent(tache);
+            }
+        }
         return tacheRepository.save(tache);
     }
 
     @Override
     public void delete(Long id) {
-        tacheRepository.deleteById(id);
+        Tache tache = tacheRepository.findById(id).orElse(null);
+        if (tache != null) {
+            tacheRepository.deleteById(id);
+        }
+
     }
 
     @Override
