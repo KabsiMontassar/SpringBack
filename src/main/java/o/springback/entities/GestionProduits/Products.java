@@ -1,4 +1,5 @@
 package o.springback.entities.GestionProduits;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,7 +24,7 @@ public class Products {
     private String description;
     private Long prix;
     private Long quantiteDisponible;
-    private LocalDate dateAjout;
+    private LocalDate dateAjout = LocalDate.now();
     private String imageURL;
     private String status;
 
@@ -49,5 +50,6 @@ public class Products {
 
     @ManyToOne
     @JoinColumn(name = "idUser")
+    @JsonIgnoreProperties("products")
     private User user;
 }
