@@ -20,5 +20,9 @@ public interface TacheRepository extends JpaRepository<Tache, Long>{
     List<Tache> findTachesTermineesParPeriode(@Param("id") Long employeeId,
                                               @Param("startDate") Date startDate,
                                               @Param("endDate") Date endDate);
+    @Query("SELECT t FROM Tache t WHERE t.employee.idEmployee= :id AND t.dateFin BETWEEN :startDate AND :endDate")
+    List<Tache> findTachesParDate(@Param("id") Long employeeId,
+                                              @Param("startDate") Date startDate,
+                                              @Param("endDate") Date endDate);
 
 }

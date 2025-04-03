@@ -126,17 +126,16 @@ public class TacheService implements ITacheService{
         String p = periode.toLowerCase().trim();
 
         try {
-            // Cas : date exacte (format yyyy-MM-dd)
+            //yfalter bel date exacte
             start = LocalDate.parse(p);
             end = start;
         } catch (DateTimeParseException e) {
             if (p.matches("\\d{4}")) {
-                // Cas : année (ex. "2023")
+                // année (ex. "2025")
                 int year = Integer.parseInt(p);
                 start = LocalDate.of(year, 1, 1);
                 end = LocalDate.of(year, 12, 31);
-            } else if (p.matches("\\d{1,2}")) {
-                // Cas : mois numérique (ex. "5" pour mai)
+            } else if (p.matches("\\d{1,2}")) { // tekteb 4 wala 04 ykharrej avril
                 int month = Integer.parseInt(p);
                 start = LocalDate.of(today.getYear(), month, 1);
                 end = start.withDayOfMonth(start.lengthOfMonth());
@@ -158,7 +157,7 @@ public class TacheService implements ITacheService{
                 start = today.minusYears(1);
                 end = today;
             } else {
-                // Cas : mois écrit (fr/en)
+                //mois en lettres (français wala anglais)
                 Month month = mapMoisMultilingue(p);
                 if (month == null) throw new IllegalArgumentException("Période inconnue : " + periode);
                 start = LocalDate.of(today.getYear(), month, 1);
@@ -169,7 +168,7 @@ public class TacheService implements ITacheService{
         Date startDate = java.sql.Date.valueOf(start);
         Date endDate = java.sql.Date.valueOf(end);
 
-        List<Tache> taches = tacheRepository.findTachesTermineesParPeriode(employeeId, startDate, endDate);
+        List<Tache> taches = tacheRepository.findTachesParDate(employeeId, startDate, endDate);
         List<Map<String, Object>> tachesInfo = taches.stream().map(t -> {
             Map<String, Object> info = new HashMap<>();
             info.put("titre", t.getTitre());
