@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import o.springback.entities.GestionPlateforme.Plateforme;
 import o.springback.entities.GestionProduits.Products;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -34,6 +35,7 @@ public class User implements Serializable {
     private String role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Products> produits;
 
     @OneToOne
