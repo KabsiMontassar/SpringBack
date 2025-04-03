@@ -1,6 +1,5 @@
 package o.springback.Interfaces.GestionCommande;
 
-
 import o.springback.entities.GestionCommande.Facture;
 
 import java.util.List;

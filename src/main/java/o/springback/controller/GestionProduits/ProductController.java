@@ -3,7 +3,7 @@ package o.springback.controller.GestionProduits;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionProduits.IProductService;
 import o.springback.entities.GestionProduits.Products;
-import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 

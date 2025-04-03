@@ -3,10 +3,9 @@ package o.springback.entities.GestionCommande;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import o.springback.entities.GestionProduits.Products;
+import o.springback.entities.GestionUser.Livreur;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -14,15 +13,23 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Commande {
-
+public class Panier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idCommande;
+    Long idPanier;
 
-    LocalDate dateCommande;
+    String dateLivraison;
 
-    @ManyToMany(mappedBy = "commandes")
-    private Set<Products> produits;
+    @OneToOne
+    Commande commande;
 
+    @OneToOne
+    Livreur livreur;
+
+    LocalDate dateLivraisonEffective;
+
+    LocalDate dateLivraisonPrevue;
+
+    @Enumerated(EnumType.STRING)
+    StatusLivraison statusLivraison;
 }
