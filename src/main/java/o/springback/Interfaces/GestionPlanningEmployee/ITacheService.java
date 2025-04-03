@@ -15,4 +15,5 @@ public interface ITacheService {
     Map<String, Long> getNombreTachesParStatut(Long employeeId); //pour afficher tout les statuts
     Long getTachesParStatut(Long employeeId, StatutTache statut); // pour afficher kol statut wahdou
     Map<String, Object> getHistoriqueTachesParPeriode(Long employeeId, PeriodeHistorique periode);
+    Map<String, Object> getHistoriqueTachesParDate(Long  employeeId, String periode);
 }

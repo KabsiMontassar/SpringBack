@@ -5,10 +5,15 @@ import o.springback.entities.GestionPlanningEmployee.PeriodeHistorique;
 import o.springback.entities.GestionPlanningEmployee.StatutTache;
 import o.springback.entities.GestionPlanningEmployee.Tache;
 import o.springback.repositories.GestionPlanningEmployeeRepository.TacheRepository;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeParseException;
 import java.util.*;
+
+import static java.time.Month.*;
 
 @Service
 @AllArgsConstructor
@@ -112,5 +117,90 @@ public class TacheService implements ITacheService{
 
         return result;
     }
+
+    @Override
+    public Map<String, Object> getHistoriqueTachesParDate(Long employeeId, String periode) {
+        LocalDate today = LocalDate.now();
+        LocalDate start;
+        LocalDate end;
+        String p = periode.toLowerCase().trim();
+
+        try {
+            // Cas : date exacte (format yyyy-MM-dd)
+            start = LocalDate.parse(p);
+            end = start;
+        } catch (DateTimeParseException e) {
+            if (p.matches("\\d{4}")) {
+                // Cas : année (ex. "2023")
+                int year = Integer.parseInt(p);
+                start = LocalDate.of(year, 1, 1);
+                end = LocalDate.of(year, 12, 31);
+            } else if (p.matches("\\d{1,2}")) {
+                // Cas : mois numérique (ex. "5" pour mai)
+                int month = Integer.parseInt(p);
+                start = LocalDate.of(today.getYear(), month, 1);
+                end = start.withDayOfMonth(start.lengthOfMonth());
+            } else if (p.equals("aujourdhui") || p.equals("jour")) {
+                start = end = today;
+            } else if (p.equals("semaine")) {
+                start = today.minusWeeks(1);
+                end = today;
+            } else if (p.equals("mois")) {
+                start = today.minusMonths(1);
+                end = today;
+            } else if (p.equals("trimestre")) {
+                start = today.minusMonths(3);
+                end = today;
+            } else if (p.equals("semestre")) {
+                start = today.minusMonths(6);
+                end = today;
+            } else if (p.equals("annee")) {
+                start = today.minusYears(1);
+                end = today;
+            } else {
+                // Cas : mois écrit (fr/en)
+                Month month = mapMoisMultilingue(p);
+                if (month == null) throw new IllegalArgumentException("Période inconnue : " + periode);
+                start = LocalDate.of(today.getYear(), month, 1);
+                end = start.withDayOfMonth(start.lengthOfMonth());
+            }
+        }
+
+        Date startDate = java.sql.Date.valueOf(start);
+        Date endDate = java.sql.Date.valueOf(end);
+
+        List<Tache> taches = tacheRepository.findTachesTermineesParPeriode(employeeId, startDate, endDate);
+        List<Map<String, Object>> tachesInfo = taches.stream().map(t -> {
+            Map<String, Object> info = new HashMap<>();
+            info.put("titre", t.getTitre());
+            info.put("dateDebut", t.getDateDebut());
+            info.put("dateFin", t.getDateFin());
+            return info;
+        }).toList();
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("période", periode);
+        result.put("total", taches.size());
+        result.put("taches", tachesInfo);
+        return result;
+    }
+    private Month mapMoisMultilingue(String moisTexte) {
+        return switch (moisTexte.toLowerCase()) {
+            case "janvier", "january" -> Month.JANUARY;
+            case "février", "fevrier", "february" -> Month.FEBRUARY;
+            case "mars", "march" -> Month.MARCH;
+            case "avril", "april" -> Month.APRIL;
+            case "mai", "may" -> Month.MAY;
+            case "juin", "june" -> Month.JUNE;
+            case "juillet", "july" -> Month.JULY;
+            case "août", "aout", "august" -> Month.AUGUST;
+            case "septembre", "september" -> Month.SEPTEMBER;
+            case "octobre", "october" -> Month.OCTOBER;
+            case "novembre", "november" -> Month.NOVEMBER;
+            case "décembre", "decembre", "december" -> Month.DECEMBER;
+            default -> null;
+        };
+    }
+
 
 }
