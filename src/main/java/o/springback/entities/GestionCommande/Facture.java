@@ -1,11 +1,11 @@
 package o.springback.entities.GestionCommande;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -17,4 +17,15 @@ public class Facture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idFacture;
+
+    @OneToOne
+    Commande commande;
+
+    LocalDate dateFacture;
+
+    BigDecimal montantFacture;
+
+    float tva;
+
+
 }

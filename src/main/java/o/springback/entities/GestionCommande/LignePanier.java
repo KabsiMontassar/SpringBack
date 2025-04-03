@@ -15,6 +15,20 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LignePanier {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idLignePanier;
+    Long idPaiement;
+
+    @OneToOne
+    Commande commande;
+
+    String datePaiement;
+
+    float montant;
+
+    @Enumerated(EnumType.STRING)
+    ModePaiement modePaiement;
+
+    Long transactionId;
+
+    @Enumerated(EnumType.STRING)
+    StatusPaiement statusPaiement;
 }
