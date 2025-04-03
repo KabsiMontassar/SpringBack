@@ -16,4 +16,5 @@ public interface ITacheService {
     Long getTachesParStatut(Long employeeId, StatutTache statut); // pour afficher kol statut wahdou
     Map<String, Object> getHistoriqueTachesParPeriode(Long employeeId, PeriodeHistorique periode);
     Map<String, Object> getHistoriqueTachesParDate(Long  employeeId, String periode);
+    Map<String, Object> replanifierTache(Long employeeId, String strategie);
 }

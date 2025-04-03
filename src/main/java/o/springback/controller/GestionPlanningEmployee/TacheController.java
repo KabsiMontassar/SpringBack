@@ -1,9 +1,11 @@
 package o.springback.controller.GestionPlanningEmployee;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionPlanningEmployee.ITacheService;
+import o.springback.Interfaces.GestionPlanningEmployee.IPlanningService;
 import o.springback.entities.GestionPlanningEmployee.PeriodeHistorique;
 import o.springback.entities.GestionPlanningEmployee.StatutTache;
 import o.springback.entities.GestionPlanningEmployee.Tache;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,8 @@ import java.util.Map;
 public class TacheController {
 
     ITacheService tacheService;
+    @Autowired
+    IPlanningService planningService;
     @GetMapping("/retrieve-all-taches")
     public List<Tache> getTaches() {
         return tacheService.findAll();
@@ -61,5 +65,10 @@ public class TacheController {
     public Map<String, Object> getHistoriqueTaches(@PathVariable Long employeeId, @RequestParam String periode) {
         return tacheService.getHistoriqueTachesParDate(employeeId, periode);
     }
+    @PutMapping("/replanifier/{employeeId}")
+    public Map<String, Object> replanifierTaches ( @PathVariable Long employeeId, @RequestParam String strategie) {
+        return tacheService.replanifierTache(employeeId, strategie);
+    }
+
 
 }
