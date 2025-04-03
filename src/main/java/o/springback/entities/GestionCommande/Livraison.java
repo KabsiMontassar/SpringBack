@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Panier {
+public class Livraison {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idPanier;

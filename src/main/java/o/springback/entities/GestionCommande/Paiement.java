@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LignePanier {
+public class Paiement {
     @Id
     Long idPaiement;
 
