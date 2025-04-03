@@ -22,32 +22,23 @@ public class Plateforme {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPlateforme;
-    @Column(nullable = false)
 
     private TypePack typePack;
-    @Column(nullable = false)
 
-    private String Couleur;
-    @Column(nullable = false)
+    private String couleur;
 
     private String nomPlateforme;
-    @Column(nullable = false)
 
     private LocalDate dateCreation;
-    @Column(nullable = false)
 
-    private LocalDate Valabilite;
-    @Column(nullable = false)
+    private LocalDate valabilite;
 
     private String description;
-    @Column(nullable = false)
 
     private String updateTheme;
-    @Column(nullable = false)
 
     private String logo;
-    @Column(nullable = false)
-    private String Content ;
+    private String content ;
 
     @OneToOne(mappedBy="plateforme")
     private User agriculteur;
@@ -63,7 +54,7 @@ public class Plateforme {
 
 
     public boolean isExpired() {
-        return LocalDate.now().isAfter(Valabilite);
+        return LocalDate.now().isAfter(valabilite);
     }
 
 }

@@ -25,6 +25,10 @@ public class PlateformeController {
     }
     @PostMapping("/add-Plateforme")
     public Plateforme addPlateforme(@RequestBody Plateforme c) {
+        System.out.println("PlateformeController.addPlateforme() called with: c = [" + c + "]");
+        if (c.getContent() == null) {
+            throw new IllegalArgumentException("Content cannot be null");
+        }
         return plateformeService.save(c);
     }
 

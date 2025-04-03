@@ -14,7 +14,11 @@ public class PlateformeService implements IPlateformeService {
      private PlateformeRepository plateformeRepository;
     @Override
     public Plateforme save(Plateforme plateforme) {
-         return plateformeRepository.save(plateforme);
+        if (plateforme.getContent() == null) {
+            throw new IllegalArgumentException("Content cannot be null");
+        }
+        System.out.println("PlateformeService.save() called with: plateforme = [" + plateforme + "]");
+        return plateformeRepository.save(plateforme);
     }
 
     @Override
