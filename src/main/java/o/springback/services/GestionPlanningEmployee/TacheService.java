@@ -168,7 +168,7 @@ public class TacheService implements ITacheService{
         Date startDate = java.sql.Date.valueOf(start);
         Date endDate = java.sql.Date.valueOf(end);
 
-        List<Tache> taches = tacheRepository.findTachesTermineesParDate(employeeId, startDate, endDate);
+        List<Tache> taches = tacheRepository.findTachesParDate(employeeId, startDate, endDate);
         List<Map<String, Object>> tachesInfo = taches.stream().map(t -> {
             Map<String, Object> info = new HashMap<>();
             info.put("titre", t.getTitre());

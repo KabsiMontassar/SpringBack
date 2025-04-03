@@ -58,7 +58,7 @@ public class TacheController {
         return tacheService.getHistoriqueTachesParPeriode(employeeId, periode);
     }
     @GetMapping("/historiqueDate/{employeeId}")
-    public Map<String, Object> getHistoriqueFlexible(@PathVariable Long employeeId, @RequestParam String periode) {
+    public Map<String, Object> getHistoriqueTaches(@PathVariable Long employeeId, @RequestParam String periode) {
         return tacheService.getHistoriqueTachesParDate(employeeId, periode);
     }
 
