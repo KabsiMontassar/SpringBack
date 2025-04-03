@@ -39,5 +39,6 @@ public class User implements Serializable {
     private Set<Products> produits;
 
     @OneToOne
-    private Plateforme plateforme ;
+    @JsonIgnore
+    private Plateforme plateforme;
 }
