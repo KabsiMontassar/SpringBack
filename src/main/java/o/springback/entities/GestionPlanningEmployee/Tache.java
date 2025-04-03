@@ -1,7 +1,10 @@
 package o.springback.entities.GestionPlanningEmployee;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import o.springback.entities.GestionPlateforme.Plateforme;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,5 +31,12 @@ public class Tache {
     private Employee employee;
     @OneToMany(mappedBy = "tache")
     private List<Planning> plannings;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true) //orphanRemoval tfassakh l'entité elli maadch aandha parent (orphaned entity) mel db
+    private List<Tache> sousTaches = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    @JsonIgnore //pour éviter les boucles
+    private Tache parent;
 
 }

@@ -31,7 +31,7 @@ public class TacheController {
     }
     @PostMapping("/add-tache")
     public Tache addTache(@RequestBody Tache c) {
-        return tacheService.save(c);
+        return tacheService.add(c);
     }
     @DeleteMapping("/remove-tache/{Tache-id}")
     public void removeTache(@PathVariable("Tache-id") Long TacheId) {
