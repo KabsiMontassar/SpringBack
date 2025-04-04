@@ -74,6 +74,10 @@ public class TacheController {
                 "nombreSousTaches", count
         );
     }
+    @GetMapping("/progression/{tacheId}")
+    public Map<String, Object> getProgressionTache(@PathVariable Long tacheId){
+        return tacheService.getProgressionTache(tacheId);
+    }
     @GetMapping("/nombre-taches-par-employe/{id}")
     public Map<String, Object> getNombreTachesParEmploye(@PathVariable Long id){
         return tacheService.getNombreTachesParEmploye(id);

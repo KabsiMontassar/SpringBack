@@ -111,6 +111,26 @@ public class TacheService implements ITacheService{
         return getAllDescendants(tache).size();
     }
 
+    @Override
+    public Map<String, Object> getProgressionTache(Long tacheId) {
+        Tache tache = tacheRepository.findById(tacheId).orElse(null);
+        if (tache == null) return null;
+        List<Tache> sousTaches = tache.getSousTaches();
+        long total = sousTaches.size();
+        long terminees = sousTaches.stream()
+                .filter(st -> st.getStatutTache() == StatutTache.TERMINEE)
+                .count();
+        double progression = total > 0 ? (double) terminees /total * 100:0 ;
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("tache", tache.getIdTache());
+        result.put("totalSousTaches", total);
+        result.put("totalSousTachesTerminee", terminees);
+        result.put("progression", progression);
+
+        return result;
+    }
+
 
     @Override
     public Tache findById(Long id) {
