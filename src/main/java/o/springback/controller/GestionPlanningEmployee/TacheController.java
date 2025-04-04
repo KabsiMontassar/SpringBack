@@ -57,9 +57,22 @@ public class TacheController {
         return tacheService.hasSousTaches(id);
     }
     @GetMapping("/descendants/{id}")
-    public List<Tache> getAllDescandants(@PathVariable Long id){
+    public List<Tache> getAllDescendants(@PathVariable Long id){
         Tache tache = tacheService.findById(id);
-        return (tache != null) ? tacheService.getAllDescandants(tache) : Collections.emptyList();
+        return (tache != null) ? tacheService.getAllDescendants(tache) : Collections.emptyList();
+    }
+    @GetMapping("/descendants/count/{id}")
+    public Map<String, Object> countAllDescendants(@PathVariable Long id){
+        Tache tache = tacheService.findById(id);
+        if (tache == null){
+            return Map.of("message", "Tâche introuvable", "count", 0);
+        }
+        int count = tacheService.countAllDescendants(tache);
+        return Map.of(
+                "idTache", id,
+                "titre", tache.getTitre(),
+                "nombreSousTaches", count
+        );
     }
     @GetMapping("/nombre-taches-par-employe/{id}")
     public Map<String, Object> getNombreTachesParEmploye(@PathVariable Long id){

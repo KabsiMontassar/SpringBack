@@ -95,8 +95,20 @@ public class TacheService implements ITacheService{
     }
 
     @Override
-    public List<Tache> getAllDescandants(Tache tache) {
-        return null;
+    public List<Tache> getAllDescendants(Tache tache) {
+        List<Tache> all = new ArrayList<>();
+        if (tache.getSousTaches() != null){
+            for (Tache child : tache.getSousTaches()) {
+                all.add(child);
+                all.addAll(getAllDescendants(child));
+            }
+        }
+        return all;
+    }
+
+    @Override
+    public int countAllDescendants(Tache tache) {
+        return getAllDescendants(tache).size();
     }
 
 
