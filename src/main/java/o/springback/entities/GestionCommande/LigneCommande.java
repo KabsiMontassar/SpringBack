@@ -23,4 +23,9 @@ public class LigneCommande {
     Products product;
 
     int quantite;
+
+    public LigneCommande(Products p, Integer qte) {
+        this.product = p;
+        this.quantite = qte;
+    }
 }
