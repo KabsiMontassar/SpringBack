@@ -42,28 +42,15 @@ public class UserService implements IUserService , UserDetailsService {
     }
 
     @Override
-    public void updatePlateformeId(String email, Plateforme c) {
-        User user =  userRepository.findByEmail(email).orElse(null);
+    public void updatePlateformeId(String email, Plateforme plateforme) {
+        User user = userRepository.findByEmail(email).orElse(null);
+
         if (user != null) {
-            user.setPlateforme(c);
+            user.setPlateforme(plateforme);
             userRepository.save(user);
         }
-
-    if (c != null) {
-            if (user != null) {
-                user.setPlateforme(c);
-                userRepository.save(user);
-            }
-        }
-
-        else {
-            if (user != null) {
-                user.setPlateforme(null);
-                userRepository.save(user);
-            }
-        }
-
     }
+
 
     @Override
     public void delete(Long id){

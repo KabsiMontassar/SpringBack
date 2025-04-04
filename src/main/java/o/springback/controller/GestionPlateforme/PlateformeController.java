@@ -35,17 +35,16 @@ public class PlateformeController {
     }
 
     @DeleteMapping("/remove-Plateforme/{Plateforme-id}")
-    public void removePlateforme(@PathVariable("Plateforme-id") Long PlateformeId) {
-        // update the plateforme_id field in the user after adding
-        Plateforme p =plateformeService.findById(PlateformeId);
-        if (p.getAgriculteur() != null) {
-            userService.updatePlateformeId(p.getAgriculteur().getEmail(), null);
-            plateformeService.delete(PlateformeId);
-        }else{
-            plateformeService.delete(PlateformeId);
+    public void removePlateforme(@PathVariable("Plateforme-id") Long plateformeId) {
+        Plateforme plateforme = plateformeService.findById(plateformeId);
+
+        if (plateforme.getAgriculteur() != null) {
+            userService.updatePlateformeId(plateforme.getAgriculteur().getEmail(), null);
         }
 
+        plateformeService.delete(plateformeId);
     }
+
     @PutMapping("/update-Plateforme")
     public Plateforme updatePlateforme(@RequestBody Plateforme c) {
         return plateformeService.update(c);
