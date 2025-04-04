@@ -134,41 +134,42 @@ public class TacheService implements ITacheService{
 
     @Override
     public Map<String, Object> getProgressionParEmploye(Long employeeId) {
-        List<Tache> taches = tacheRepository.findAll().stream()
-                .filter(t -> t.getEmployee() != null && t.getEmployee().getIdEmployee().equals(employeeId))
-                .toList();
+        List<Tache> taches = tacheRepository.findAll();
         int total = 0;
         int terminees = 0;
+        String nom = "";
+        String prenom = "";
 
         for (Tache tache : taches) {
-            List<Tache> sousTaches = getAllDescendants(tache);
-            total += sousTaches.size();
-            terminees += sousTaches.stream()
-                    .filter(st -> st.getStatutTache() == StatutTache.TERMINEE)
-                    .count();
+            if (tache.getEmployee() != null && tache.getEmployee().getIdEmployee().equals(employeeId)) {
+                if (nom.isEmpty()){
+                    nom = tache.getEmployee().getNom();
+                    prenom = tache.getEmployee().getPrenom();
+                }
+                List<Tache> descendants = getAllDescendants(tache);
+                if (descendants.isEmpty()) {
+                    total++;
+                    if (tache.getStatutTache() == StatutTache.TERMINEE) terminees++;
+                } else {
+                    for (Tache sousT : descendants) {
+                        total++;
+                        if (sousT.getStatutTache() == StatutTache.TERMINEE) terminees++;
+                    }
+                }
+            }
         }
-        double progression = (total > 0) ? (terminees *100.0 / total) : 0.0;
+        double progression = (total > 0) ? (terminees * 100.0 / total) : 0.0;
         Map<String, Object> result = new HashMap<>();
-        result.put("employeeId", employeeId);
+        result.put("nom", nom);
+        result.put("prénom", prenom);
+            result.put("Total", total);
+            result.put("terminées", terminees);
+            result.put("progression", progression);
+            result.put("plannings", planningRepository.findByEmployeeId(employeeId));
 
-        if(!taches.isEmpty()){
-            result.put("nom", taches.get(0).getEmployee().getNom());
-            result.put("prénom", taches.get(0).getEmployee().getPrenom());
-
-            List<Planning> plannings = planningRepository.findByEmployeeId(employeeId);
-            List<Map<String, Object>> planningList = plannings.stream().map(p -> {
-                Map<String, Object> map = new HashMap<>();
-                map.put("id", p.getIdPlanning());
-                map.put("type", p.getTypePlanning());
-                map.put("dateDebut", p.getDateDebut());
-                map.put("dateFin", p.getDateFin());
-                map.put("tache", p.getTache() != null ? p.getTache().getTitre() : null);
-                return map;
-            }).toList();
-            result.put("plannings", planningList);
+            return result;
         }
-        return result;
-    }
+
 
 
     @Override
