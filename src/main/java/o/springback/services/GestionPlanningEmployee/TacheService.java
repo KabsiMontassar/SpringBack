@@ -42,23 +42,63 @@ public class TacheService implements ITacheService{
     }
 
     @Override
-    public Tache update(Tache tache) {
-        if (tache.getSousTaches() != null){
-            for(Tache sousT : tache.getSousTaches()) {
-                sousT.setParent(tache);
+    public Tache update(Long id,Tache tache) {
+        Tache exTache = tacheRepository.findById(id).orElse(null);
+        if ( exTache == null ) return null;
+        exTache.setTitre(tache.getTitre());
+        exTache.setDescription(tache.getDescription());
+        exTache.setDateDebut(tache.getDateDebut());
+        exTache.setDateFin(tache.getDateFin());
+        exTache.setStatutTache(tache.getStatutTache());
+        if (tache.getSousTaches() != null) {
+            for (Tache sousT : tache.getSousTaches()) {
+                sousT.setParent(exTache);
             }
+            exTache.setSousTaches(tache.getSousTaches());
         }
-        return tacheRepository.save(tache);
+        return tacheRepository.save(exTache);
+    }
+
+    @Override
+    public Tache updateSousTache(Long id, Tache sousTache) {
+        Tache exStache = tacheRepository.findById(id).orElse(null);
+        if ( exStache == null ) return null;
+        exStache.setTitre(sousTache.getTitre());
+        exStache.setDescription(sousTache.getDescription());
+        exStache.setDateDebut(sousTache.getDateDebut());
+        exStache.setDateFin(sousTache.getDateFin());
+        exStache.setStatutTache(sousTache.getStatutTache());
+        return tacheRepository.save(exStache);
     }
 
     @Override
     public void delete(Long id) {
         Tache tache = tacheRepository.findById(id).orElse(null);
         if (tache != null) {
+            tacheRepository.delete(tache);
+        }
+    }
+
+    @Override
+    public void deletesoustache(Long id) {
+        Tache sousTache = tacheRepository.findById(id).orElse(null);
+        if (sousTache != null && sousTache.getParent() != null){
+            Tache parent = sousTache.getParent();
+            parent.getSousTaches().remove(sousTache);
             tacheRepository.deleteById(id);
         }
-
     }
+
+    @Override
+    public Boolean hasSousTaches(Long idTache) {
+        return tacheRepository.hasChildTaches(idTache);
+    }
+
+    @Override
+    public List<Tache> getAllDescandants(Tache tache) {
+        return null;
+    }
+
 
     @Override
     public Tache findById(Long id) {

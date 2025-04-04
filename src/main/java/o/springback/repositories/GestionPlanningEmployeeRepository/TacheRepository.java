@@ -24,6 +24,8 @@ public interface TacheRepository extends JpaRepository<Tache, Long>{
     List<Tache> findTachesParDate(@Param("id") Long employeeId,
                                               @Param("startDate") Date startDate,
                                               @Param("endDate") Date endDate);
+    @Query("SELECT COUNT(t) > 0 FROM Tache t WHERE t.parent.idTache =:id")
+    boolean hasChildTaches(@Param("id") Long id);
 
 
 }
