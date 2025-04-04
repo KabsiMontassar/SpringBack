@@ -34,6 +34,14 @@ public class TacheService implements ITacheService{
     }
 
     @Override
+    public Tache ajouterSousTache(Long parentId, Tache sousTache) {
+        Tache parent = tacheRepository.findById(parentId).orElse(null);
+        if (parent == null) return null;
+        sousTache.setParent(parent);
+        return tacheRepository.save(sousTache);
+    }
+
+    @Override
     public Tache update(Tache tache) {
         if (tache.getSousTaches() != null){
             for(Tache sousT : tache.getSousTaches()) {
@@ -273,5 +281,7 @@ public class TacheService implements ITacheService{
         result.put("ignorees", ignorees);
         return result;
     }
+
+
 
 }

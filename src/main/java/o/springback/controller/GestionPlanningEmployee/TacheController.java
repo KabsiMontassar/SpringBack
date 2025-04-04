@@ -33,6 +33,10 @@ public class TacheController {
     public Tache addTache(@RequestBody Tache c) {
         return tacheService.add(c);
     }
+    @PostMapping("/add-sous-tache/{parentId}")
+    public Tache ajouterSousTache(@PathVariable Long parentId, @RequestBody Tache sousTache){
+        return tacheService.ajouterSousTache(parentId, sousTache);
+    }
     @DeleteMapping("/remove-tache/{Tache-id}")
     public void removeTache(@PathVariable("Tache-id") Long TacheId) {
         tacheService.delete(TacheId);
