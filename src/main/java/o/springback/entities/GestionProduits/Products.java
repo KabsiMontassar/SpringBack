@@ -5,6 +5,7 @@ import lombok.*;
 import o.springback.entities.GestionCommande.Commande;
 import o.springback.entities.GestionUser.User;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -21,7 +22,7 @@ public class Products {
     private Long idProduit;
     private String nom;
     private String description;
-    private Long prix;
+    private BigDecimal prix;
     private Long quantiteDisponible;
     private LocalDate dateAjout;
     private String imageURL;
