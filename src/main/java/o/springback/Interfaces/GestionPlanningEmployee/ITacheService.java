@@ -13,7 +13,8 @@ public interface ITacheService {
     void delete(Long id);
     void deletesoustache(Long id);
     Boolean hasSousTaches(Long idTache);
-    List<Tache> getAllDescandants(Tache tache);
+    List<Tache> getAllDescendants(Tache tache);
+    int countAllDescendants(Tache tache);
     Tache findById(Long id);
     List<Tache> findAll();
     Map<String, Object> getNombreTachesParEmploye(Long employeeId);
