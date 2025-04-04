@@ -7,6 +7,7 @@ import java.util.Map;
 
 public interface ITacheService {
     Tache add(Tache tache);
+    Tache ajouterSousTache(Long parentId, Tache sousTache);
     Tache update(Tache tache);
     void delete(Long id);
     Tache findById(Long id);
