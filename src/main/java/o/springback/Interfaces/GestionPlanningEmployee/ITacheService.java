@@ -8,8 +8,12 @@ import java.util.Map;
 public interface ITacheService {
     Tache add(Tache tache);
     Tache ajouterSousTache(Long parentId, Tache sousTache);
-    Tache update(Tache tache);
+    Tache update(Long id, Tache tache);
+    Tache updateSousTache(Long id, Tache sousTache);
     void delete(Long id);
+    void deletesoustache(Long id);
+    Boolean hasSousTaches(Long idTache);
+    List<Tache> getAllDescandants(Tache tache);
     Tache findById(Long id);
     List<Tache> findAll();
     Map<String, Object> getNombreTachesParEmploye(Long employeeId);

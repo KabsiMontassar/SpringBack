@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @AllArgsConstructor
@@ -41,9 +39,27 @@ public class TacheController {
     public void removeTache(@PathVariable("Tache-id") Long TacheId) {
         tacheService.delete(TacheId);
     }
-    @PutMapping("/update-tache")
-    public Tache updateTache(@RequestBody Tache c) {
-        return tacheService.update(c);
+    @DeleteMapping("/remove-sous-tache/{id}")
+    public void removeSousTache(@PathVariable Long id){
+        tacheService.deletesoustache(id);
+    }
+    @PutMapping("/update-tache/{id}")
+    public Tache updateTache(@PathVariable Long id, @RequestBody Tache tache) {
+        return tacheService.update(id, tache);
+    }
+    @PutMapping("/update-sous-tache/{id}")
+    public Tache updateSousTache(@PathVariable Long id, @RequestBody Tache sousTache){
+        return tacheService.updateSousTache(id, sousTache);
+    }
+
+    @GetMapping("/has-sous-taches/{id}")
+    public boolean hasSousTache (@PathVariable Long id){
+        return tacheService.hasSousTaches(id);
+    }
+    @GetMapping("/descendants/{id}")
+    public List<Tache> getAllDescandants(@PathVariable Long id){
+        Tache tache = tacheService.findById(id);
+        return (tache != null) ? tacheService.getAllDescandants(tache) : Collections.emptyList();
     }
     @GetMapping("/nombre-taches-par-employe/{id}")
     public Map<String, Object> getNombreTachesParEmploye(@PathVariable Long id){
