@@ -17,4 +17,7 @@ public interface PlanningRepository extends JpaRepository<Planning, Long>{
                                               @Param("types")List<TypePlanning> types,
                                               @Param("start") Date start,
                                               @Param("end") Date end);
+
+    @Query("SELECT p FROM Planning p WHERE p.employee.idEmployee = :id")
+    List<Planning> findByEmployeeId(@Param("id") Long id);
 }
