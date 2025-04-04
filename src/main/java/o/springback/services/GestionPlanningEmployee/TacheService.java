@@ -8,6 +8,7 @@ import o.springback.repositories.GestionPlanningEmployeeRepository.PlanningRepos
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import javax.print.attribute.standard.JobKOctets;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
@@ -128,6 +129,44 @@ public class TacheService implements ITacheService{
         result.put("totalSousTachesTerminee", terminees);
         result.put("progression", progression);
 
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> getProgressionParEmploye(Long employeeId) {
+        List<Tache> taches = tacheRepository.findAll().stream()
+                .filter(t -> t.getEmployee() != null && t.getEmployee().getIdEmployee().equals(employeeId))
+                .toList();
+        int total = 0;
+        int terminees = 0;
+
+        for (Tache tache : taches) {
+            List<Tache> sousTaches = getAllDescendants(tache);
+            total += sousTaches.size();
+            terminees += sousTaches.stream()
+                    .filter(st -> st.getStatutTache() == StatutTache.TERMINEE)
+                    .count();
+        }
+        double progression = (total > 0) ? (terminees *100.0 / total) : 0.0;
+        Map<String, Object> result = new HashMap<>();
+        result.put("employeeId", employeeId);
+
+        if(!taches.isEmpty()){
+            result.put("nom", taches.get(0).getEmployee().getNom());
+            result.put("prénom", taches.get(0).getEmployee().getPrenom());
+
+            List<Planning> plannings = planningRepository.findByEmployeeId(employeeId);
+            List<Map<String, Object>> planningList = plannings.stream().map(p -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("id", p.getIdPlanning());
+                map.put("type", p.getTypePlanning());
+                map.put("dateDebut", p.getDateDebut());
+                map.put("dateFin", p.getDateFin());
+                map.put("tache", p.getTache() != null ? p.getTache().getTitre() : null);
+                return map;
+            }).toList();
+            result.put("plannings", planningList);
+        }
         return result;
     }
 

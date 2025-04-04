@@ -16,6 +16,7 @@ public interface ITacheService {
     List<Tache> getAllDescendants(Tache tache);
     int countAllDescendants(Tache tache);
     Map<String, Object> getProgressionTache(Long tacheId);
+    Map<String, Object> getProgressionParEmploye(Long employeeId);
     Tache findById(Long id);
     List<Tache> findAll();
     Map<String, Object> getNombreTachesParEmploye(Long employeeId);

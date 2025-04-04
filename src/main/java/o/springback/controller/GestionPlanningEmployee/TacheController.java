@@ -78,6 +78,10 @@ public class TacheController {
     public Map<String, Object> getProgressionTache(@PathVariable Long tacheId){
         return tacheService.getProgressionTache(tacheId);
     }
+    @GetMapping("/progression-employe/{employeeId}")
+    public Map<String, Object> getProgressionParEmployee(@PathVariable Long employeeId) {
+        return tacheService.getProgressionParEmploye(employeeId);
+    }
     @GetMapping("/nombre-taches-par-employe/{id}")
     public Map<String, Object> getNombreTachesParEmploye(@PathVariable Long id){
         return tacheService.getNombreTachesParEmploye(id);
