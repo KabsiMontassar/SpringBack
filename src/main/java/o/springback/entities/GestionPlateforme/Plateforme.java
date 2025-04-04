@@ -40,7 +40,7 @@ public class Plateforme {
     private String logo;
     private String content ;
 
-    @OneToOne(mappedBy="plateforme")
+    @OneToOne(mappedBy = "plateforme")
     private User agriculteur;
 
 

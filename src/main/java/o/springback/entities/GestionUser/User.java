@@ -34,11 +34,16 @@ public class User implements Serializable {
     Date dateInscription;
     private String role;
 
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name = "plateforme_id")
+    private Plateforme plateforme;
+
+
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Products> produits;
 
-    @OneToOne
-    @JsonIgnore
-    private Plateforme plateforme;
+
 }
