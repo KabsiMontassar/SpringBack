@@ -30,20 +30,21 @@ public class Products {
 
 
     @ManyToOne
+    @JsonIgnoreProperties("produits")  // Ignore le champ "produits" dans la réponse JSON pour éviter les boucles infinies
     @JoinColumn(name = "idStock")
     private Stock stock;
 
-
+    @JsonIgnoreProperties
     @OneToMany(mappedBy = "produit", cascade = CascadeType.ALL)
     private Set<AvisProduct> avis;
 
-
     @ManyToOne
+    @JsonIgnoreProperties("produits")  // Ignore le champ "produits" dans la réponse JSON pour éviter les boucles infinies
     @JoinColumn(name = "idCategorie")
     private CategorieProduct categorie;
 
-
     @ManyToMany
+    @JsonIgnoreProperties
     @JoinTable(
     name = "produit_commande", joinColumns = @JoinColumn(name = "idProduit"), inverseJoinColumns = @JoinColumn(name = "idCommande"))
     private Set<Commande> commandes;

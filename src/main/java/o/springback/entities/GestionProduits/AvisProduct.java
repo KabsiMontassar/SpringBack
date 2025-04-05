@@ -1,4 +1,5 @@
 package o.springback.entities.GestionProduits;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,9 +18,10 @@ public class AvisProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idAvis;
     private String comment;
-    private LocalDate DateAvis;
+    private LocalDate dateAvis;
 
     @ManyToOne
+    @JsonIgnoreProperties
     @JoinColumn(name = "idProduit")
     private Products produit;
 }

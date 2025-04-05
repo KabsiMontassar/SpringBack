@@ -1,4 +1,5 @@
 package o.springback.entities.GestionProduits;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,6 +18,7 @@ public class CategorieProduct {
     private Long idCategorie;
     private String nomCategorie;
 
+    @JsonIgnoreProperties
     @OneToMany(mappedBy = "categorie", cascade = CascadeType.ALL)
     private Set<Products> produits;
 }
