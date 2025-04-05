@@ -28,12 +28,15 @@ public class Formation {
     private String lieu;
     private boolean certification;
 
+    private String photoPath;
+
+
     @Enumerated(EnumType.STRING)
     private TypeFormation typeFormation;
 
-    @OneToOne(mappedBy = "formation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "formation", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private DetailsFormation detailFormation;
 
-    @OneToMany(mappedBy = "formation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "formation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Participation> participations;
 }
