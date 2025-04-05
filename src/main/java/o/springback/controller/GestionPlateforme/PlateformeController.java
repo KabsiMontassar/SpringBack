@@ -16,26 +16,21 @@ public class PlateformeController {
     IPlateformeService plateformeService;
     IUserService userService;
 
-    @GetMapping("/retrieve-all-Plateformes")
-    public List<Plateforme> getPlateformes() {
-        return plateformeService.findAll();
-    }
-
-    @GetMapping("/retrieve-Plateforme/{Plateforme-id}")
-    public Plateforme retrievePlateforme(@PathVariable("Plateforme-id") Long PlateformeId) {
-        return plateformeService.findById(PlateformeId);
-    }
-
-
-    @PostMapping("/add-Plateforme")
+    @PostMapping
     public Plateforme addPlateforme(@RequestBody Plateforme c) {
         plateformeService.save(c);
         userService.updatePlateformeId(c.getAgriculteur().getEmail(), c);
         return c;
     }
 
-    @DeleteMapping("/remove-Plateforme/{Plateforme-id}")
-    public void removePlateforme(@PathVariable("Plateforme-id") Long plateformeId) {
+    @PutMapping("/")
+    public Plateforme updatePlateforme(@RequestBody Plateforme c) {
+        return plateformeService.update(c);
+    }
+
+
+    @DeleteMapping("/{id}")
+    public void removePlateforme(@PathVariable("id") Long plateformeId) {
         Plateforme plateforme = plateformeService.findById(plateformeId);
 
         if (plateforme.getAgriculteur() != null) {
@@ -44,12 +39,18 @@ public class PlateformeController {
 
         plateformeService.delete(plateformeId);
     }
-
-    @PutMapping("/update-Plateforme")
-    public Plateforme updatePlateforme(@RequestBody Plateforme c) {
-        return plateformeService.update(c);
+    @GetMapping("/{id}")
+    public Plateforme retrievePlateforme(@PathVariable("id") Long PlateformeId) {
+        return plateformeService.findById(PlateformeId);
     }
 
+
+
+
+    @GetMapping
+    public List<Plateforme> getPlateformes() {
+        return plateformeService.findAll();
+    }
 
 
 

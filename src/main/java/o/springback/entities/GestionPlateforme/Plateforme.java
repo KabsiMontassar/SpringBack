@@ -44,15 +44,12 @@ public class Plateforme {
     @OneToOne(mappedBy = "plateforme")
     private User agriculteur;
 
-
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy="plateformeSponsor")
     private Set<Sponsor> plateformeSponsors;
     @OneToMany(cascade = CascadeType.ALL, mappedBy="plateforme")
     private Set<Employee> employees;
 
-
-
-
+    @OneToMany(mappedBy = "plateforme", cascade = CascadeType.ALL)
+    private Set<Component> components;
 
 }
