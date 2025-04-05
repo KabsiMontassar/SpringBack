@@ -38,6 +38,7 @@ public class Plateforme {
     private String updateTheme;
 
     private String logo;
+    @Column(columnDefinition = "TEXT")
     private String content ;
 
     @OneToOne(mappedBy = "plateforme")
@@ -53,8 +54,5 @@ public class Plateforme {
 
 
 
-    public boolean isExpired() {
-        return LocalDate.now().isAfter(valabilite);
-    }
 
 }
