@@ -5,9 +5,11 @@ import o.springback.Interfaces.GestionPlanningEmployee.IEmployeeService;
 
 import o.springback.entities.GestionPlanningEmployee.Employee;
 import o.springback.entities.GestionPlanningEmployee.Planning;
+import o.springback.entities.GestionPlanningEmployee.TypePlanning;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -57,5 +59,9 @@ public class PlanningController {
         }
         planning.setEmployee(employee);
         return planningService.update(planning);
+    }
+    @GetMapping("/duree-absence-par-type/{employeeId}")
+    public Map<TypePlanning, Long> getDureeAbsenceParType(@PathVariable Long employeeId) {
+        return planningService.getDureeAbsenceParType(employeeId);
     }
 }
