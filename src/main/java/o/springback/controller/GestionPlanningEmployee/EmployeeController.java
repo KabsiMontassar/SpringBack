@@ -1,7 +1,9 @@
 package o.springback.controller.GestionPlanningEmployee;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionPlanningEmployee.IEmployeeService;
+import o.springback.dto.EmployeeDTO;
 import o.springback.entities.GestionPlanningEmployee.Employee;
+import o.springback.entities.GestionPlanningEmployee.TypePost;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -33,5 +35,9 @@ public class EmployeeController {
     @PutMapping("/update-Employee")
     public Employee updateEmployee(@RequestBody Employee c) {
         return employeeService.update(c);
+    }
+    @GetMapping("/type-post")
+    public List<EmployeeDTO> getEmployeeByTypePost(@RequestParam TypePost type) {
+        return employeeService.findByTypePost(type);
     }
 }

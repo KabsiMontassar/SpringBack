@@ -1,4 +1,5 @@
 package o.springback.entities.GestionPlanningEmployee;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import o.springback.entities.GestionPlateforme.Plateforme;
@@ -27,6 +28,7 @@ public class Employee{
     private TypePost typePoste;
     private Float salaire;
     @ManyToOne
+    @JsonIgnore
     private Plateforme plateforme;
     @OneToMany(mappedBy = "employee")
     private List<Tache> taches;
