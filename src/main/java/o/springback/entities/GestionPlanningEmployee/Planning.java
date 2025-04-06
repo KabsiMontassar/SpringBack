@@ -25,6 +25,7 @@ public class Planning {
     @Enumerated(EnumType.STRING)
     private TypePlanning typePlanning;
     @ManyToOne
+    @JsonIgnore
     private Tache tache;
     @ManyToOne
     @JsonIgnore
