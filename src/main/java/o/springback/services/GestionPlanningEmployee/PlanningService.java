@@ -1,9 +1,6 @@
 package o.springback.services.GestionPlanningEmployee;
 import lombok.AllArgsConstructor;
-import o.springback.entities.GestionPlanningEmployee.Employee;
-import o.springback.entities.GestionPlanningEmployee.Planning;
-import o.springback.entities.GestionPlanningEmployee.Tache;
-import o.springback.entities.GestionPlanningEmployee.TypePlanning;
+import o.springback.entities.GestionPlanningEmployee.*;
 import o.springback.repositories.GestionPlanningEmployeeRepository.PlanningRepository;
 import o.springback.repositories.GestionPlanningEmployeeRepository.TacheRepository;
 import o.springback.repositories.GestionPlanningEmployeeRepository.EmployeeRepository;
@@ -60,5 +57,26 @@ public class PlanningService implements IPlanningService{
         return planningRepository.save(planning);
     }
 
+    @Override
+    public Map<TypePlanning, Long> getDureeAbsenceParType(Long employeeId) {
+        List<Planning> plannings = planningRepository.findByEmployeeId(employeeId);
+        Map<TypePlanning, Long> dureeAbsence = new HashMap<>();
+
+        for (Planning planning : plannings){
+            TypePlanning typeA = planning.getTypePlanning();
+            LocalDate debut = convertToLocalDate(planning.getDateDebut());
+            LocalDate fin = convertToLocalDate(planning.getDateFin());
+
+            long jours = ChronoUnit.DAYS.between(debut, fin) +1;
+            dureeAbsence.put(typeA, dureeAbsence.getOrDefault(typeA, 0L) + jours);
+        }
+
+        return dureeAbsence;
+    }
+    private LocalDate convertToLocalDate(Date date) {
+        return new java.sql.Date(date.getTime()).toLocalDate(); //conversion de LocalDate en java.sql.Date
+    }
 
 }
+
+
