@@ -1,5 +1,6 @@
 package o.springback.entities.GestionUser;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import o.springback.entities.GestionFormation.Participation;
@@ -37,5 +38,6 @@ public class User implements Serializable {
     private Set<Products> produits;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<Participation> participations;
 }

@@ -2,6 +2,7 @@ package o.springback.services.GestionFormation;
 
 import o.springback.Interfaces.GestionFormation.IDetailsFormationService;
 import o.springback.entities.GestionFormation.DetailsFormation;
+import o.springback.entities.GestionFormation.Formation;
 import o.springback.repositories.GestionFormation.DetailsFormationRepository;
 import o.springback.repositories.GestionFormation.FormationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,21 @@ public class DetailsFormationService implements IDetailsFormationService {
 
     @Override
     public void deleteDetailFormation(int id) {
-        detailFormationRepository.deleteById(id);
+        Optional<DetailsFormation> detailOpt = detailFormationRepository.findById(id);
+        if (detailOpt.isPresent()) {
+            DetailsFormation detail = detailOpt.get();
+            Formation formation = detail.getFormation();
+
+            if (formation != null) {
+                formation.setDetailFormation(null); // important : coupe la relation
+                formationRepository.save(formation); // Hibernate comprend qu'on supprime le détail
+            }
+
+            detailFormationRepository.delete(detail); // peut même être omis, car orphanRemoval s’en charge
+            System.out.println(">>> Détail supprimé avec succès via Formation !");
+        } else {
+            System.out.println(">>> Aucun détail trouvé avec l'ID : " + id);
+        }
     }
 
     @Override

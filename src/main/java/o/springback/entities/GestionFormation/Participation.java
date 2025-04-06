@@ -1,5 +1,6 @@
 package o.springback.entities.GestionFormation;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,12 +22,16 @@ public class Participation {
 
     private float noteFinale;
     private boolean certificatDelivre;
+    private boolean enAttente = false;
 
     @ManyToOne
     @JoinColumn(name = "idFormation", nullable = false)
+    @JsonBackReference
     private Formation formation;
 
     @ManyToOne
     @JoinColumn(name = "idUser", nullable = false)
+    @JsonBackReference
     private User user; // Ajout de la relation avec User
+
 }
