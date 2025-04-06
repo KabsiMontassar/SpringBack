@@ -61,8 +61,7 @@ public class FormationService implements IFormationService {
     }
 
     @Override
-    public void deleteFormation(int id) {
-        formationRepository.deleteById(id);
+    public void deleteFormation(int id) {formationRepository.deleteById(id);
     }
 
     @Override
