@@ -23,8 +23,10 @@ public class PlateformeController {
         return c;
     }
 
-    @PutMapping("/")
+    @PutMapping
     public Plateforme updatePlateforme(@RequestBody Plateforme c) {
+        Plateforme plateforme = plateformeService.findById(c.getIdPlateforme());
+        c.setAgriculteur(plateforme.getAgriculteur());
         return plateformeService.update(c);
     }
 

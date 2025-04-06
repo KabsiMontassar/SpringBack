@@ -1,4 +1,5 @@
 package o.springback.entities.GestionPlateforme;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class Plateforme {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPlateforme;
-
+    @Enumerated(EnumType.STRING)
     private TypePack typePack;
 
     private String couleur;
@@ -46,10 +47,11 @@ public class Plateforme {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy="plateformeSponsor")
     private Set<Sponsor> plateformeSponsors;
+
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy="plateforme")
     private Set<Employee> employees;
 
-    @OneToMany(mappedBy = "plateforme", cascade = CascadeType.ALL)
-    private Set<Component> components;
+
 
 }

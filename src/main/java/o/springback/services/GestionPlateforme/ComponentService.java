@@ -19,8 +19,7 @@ public class ComponentService implements IComponentService {
     }
 
     @Override
-    public Component update(Long id, Component component) {
-        component.setId(id);
+    public Component update( Component component) {
         return componentRepository.save(component);
     }
 
@@ -37,5 +36,10 @@ public class ComponentService implements IComponentService {
     @Override
     public List<Component> findAll() {
         return componentRepository.findAll();
+    }
+
+    @Override
+    public List<Component> findByUserId(Long userId) {
+        return componentRepository.findByIdUser(userId);
     }
 }

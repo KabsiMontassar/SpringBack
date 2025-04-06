@@ -18,10 +18,9 @@ public class ComponentController {
         return componentService.save(component);
     }
 
-    @PutMapping("/")
+    @PutMapping
     public Component updateComponent( @RequestBody Component component) {
-        Long id = component.getId();
-        return componentService.update(id, component);
+        return componentService.save(component);
     }
 
     @DeleteMapping("/{id}")
@@ -38,4 +37,15 @@ public class ComponentController {
     public List<Component> getAllComponents() {
         return componentService.findAll();
     }
+
+    //fetch all components by userid
+    @GetMapping("/user/{userId}")
+    public List<Component> getComponentsByUserId(@PathVariable Long userId) {
+        return componentService.findByUserId(userId);
+    }
+
+
+
+
+
 }
