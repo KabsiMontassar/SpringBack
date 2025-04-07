@@ -1,6 +1,7 @@
 package o.springback.entities.GestionProduits;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import o.springback.entities.GestionCommande.Commande;
@@ -35,6 +36,8 @@ public class Products {
     private Stock stock;
 
     @JsonIgnoreProperties
+    @JsonManagedReference
+
     @OneToMany(mappedBy = "produit", cascade = CascadeType.ALL)
     private Set<AvisProduct> avis;
 

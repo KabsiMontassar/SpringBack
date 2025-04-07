@@ -19,6 +19,7 @@ public class CategorieProduct {
     private String nomCategorie;
 
     @JsonIgnoreProperties
+
     @OneToMany(mappedBy = "categorie", cascade = CascadeType.ALL)
     private Set<Products> produits;
 }

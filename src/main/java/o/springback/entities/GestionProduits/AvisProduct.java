@@ -1,4 +1,6 @@
 package o.springback.entities.GestionProduits;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,7 +23,8 @@ public class AvisProduct {
     private LocalDate dateAvis;
 
     @ManyToOne
-    @JsonIgnoreProperties
     @JoinColumn(name = "idProduit")
+    @JsonIgnoreProperties({"avis", "stock", "categorie", "commandes", "user"})
     private Products produit;
+
 }
