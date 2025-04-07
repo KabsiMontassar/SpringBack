@@ -15,7 +15,7 @@ public class Paiement {
     Long idPaiement;
 
     @OneToOne
-    Commande commande;
+    Order order;
 
     String datePaiement;
 

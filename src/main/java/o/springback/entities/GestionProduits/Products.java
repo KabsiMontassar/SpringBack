@@ -2,7 +2,7 @@ package o.springback.entities.GestionProduits;
 
 import jakarta.persistence.*;
 import lombok.*;
-import o.springback.entities.GestionCommande.Commande;
+import o.springback.entities.GestionCommande.Order;
 import o.springback.entities.GestionUser.User;
 
 import java.math.BigDecimal;
@@ -22,7 +22,7 @@ public class Products {
     private Long idProduit;
     private String nom;
     private String description;
-    private BigDecimal prix;
+    private Double prix;
     private Long quantiteDisponible;
     private LocalDate dateAjout;
     private String imageURL;
@@ -42,11 +42,11 @@ public class Products {
     @JoinColumn(name = "idCategorie")
     private CategorieProduct categorie;
 
-    // Relation avec Commandes (ManyToMany)
+    /* Relation avec Commandes (ManyToMany)
     @ManyToMany
     @JoinTable(
     name = "produit_commande", joinColumns = @JoinColumn(name = "idProduit"), inverseJoinColumns = @JoinColumn(name = "idCommande"))
-    private Set<Commande> commandes;
+    private Set<Order> orders;*/
 
     @ManyToOne
     @JoinColumn(name = "idUser")

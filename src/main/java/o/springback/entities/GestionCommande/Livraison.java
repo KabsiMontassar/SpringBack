@@ -21,7 +21,7 @@ public class Livraison {
     String dateLivraison;
 
     @OneToOne
-    Commande commande;
+    Order order;
 
     @OneToOne
     Livreur livreur;
