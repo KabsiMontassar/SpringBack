@@ -8,6 +8,7 @@ import o.springback.dto.OrderProductDto;
 import o.springback.entities.GestionCommande.Order;
 import o.springback.entities.GestionCommande.OrderProduct;
 import o.springback.entities.GestionCommande.OrderStatus;
+import o.springback.entities.GestionProduits.Products;
 import o.springback.exception.ResourceNotFoundException;
 import o.springback.services.GestionProduits.ProductService;
 import org.springframework.http.HttpHeaders;
@@ -62,6 +63,12 @@ public class OrderController {
 
         this.orderService.update(order);
 
+        order.getOrderProducts().forEach(orderProduct -> {
+            Products product = orderProduct.getProduct();
+            product.setQuantiteDisponible(product.getQuantiteDisponible() - orderProduct.getQuantity());
+            productService.update(product);
+        });
+
         String uri = ServletUriComponentsBuilder
                 .fromCurrentServletMapping()
                 .path("/orders/{id}")
@@ -74,15 +81,24 @@ public class OrderController {
     }
 
     private void validateProductsExistence(List<OrderProductDto> orderProducts) {
-        List<OrderProductDto> list = orderProducts
-                .stream()
-                .filter(op -> Objects.isNull(productService.findById(op
-                        .getProduct()
-                        .getIdProduit())))
-                .collect(Collectors.toList());
+        List<String> errors = new ArrayList<>();
 
-        if (!CollectionUtils.isEmpty(list)) {
-            throw new ResourceNotFoundException("Product not found");
+        for (OrderProductDto op : orderProducts) {
+            Products product = productService.findById(op.getProduct().getIdProduit());
+
+            if (product == null) {
+                errors.add("Product with ID " + op.getProduct().getIdProduit() + " not found");
+            } else if (product.getQuantiteDisponible() <= 0) {
+                errors.add("Product " + product.getIdProduit() + " is out of stock");
+            } else if (product.getQuantiteDisponible() < op.getQuantity()) {
+                errors.add("Insufficient stock for product " + product.getIdProduit() +
+                        ". Available: " + product.getQuantiteDisponible() +
+                        ", Requested: " + op.getQuantity());
+            }
+        }
+
+        if (!errors.isEmpty()) {
+            throw new ResourceNotFoundException(String.join(", ", errors));
         }
     }
 
