@@ -114,6 +114,10 @@ public class OrderController {
             this.productOrders = productOrders;
         }
     }
+    @DeleteMapping("/{id}")
+    public void deleteCommande(@PathVariable Long id) {
+        orderService.deleteCommande(id);
+    }
 
 
     /*@Autowired
@@ -143,10 +147,7 @@ public class OrderController {
         return commandeService.updateCommande(id, order);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteCommande(@PathVariable Long id) {
-        commandeService.deleteCommande(id);
-    }
+
 
     @GetMapping("/get-by-id/{id}")
     public Order getCommandeById(@PathVariable Long id) {

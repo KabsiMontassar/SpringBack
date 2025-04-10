@@ -31,7 +31,7 @@ public class Order {
     private String status;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "pk.order")
+    @OneToMany(mappedBy = "pk.order", cascade = CascadeType.ALL)
     @Valid  //bch tsir validation aal les attributs mtaa orderproduct
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
