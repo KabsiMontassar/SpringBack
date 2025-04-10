@@ -31,6 +31,11 @@ public class OrderServiceImpl implements OrderService {
         this.orderRepository.save(order);
     }
 
+    @Override
+    public void deleteCommande(Long id) {
+        orderRepository.deleteById(id);
+    }
+
     /*
     public void updateStatus(Long idCommande, StatusCommande newStatus) {
         Order cmd = orderRepo.findById(idCommande).orElseThrow();
@@ -44,10 +49,6 @@ public class OrderServiceImpl implements OrderService {
         return orderRepo.save(order);
     }
 
-    @Override
-    public void deleteCommande(Long id) {
-        orderRepo.deleteById(id);
-    }
 
     @Override
     public Order getCommandeById(Long id) {

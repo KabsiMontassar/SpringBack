@@ -9,7 +9,6 @@ public interface OrderService {
    /* Order createCommande(Order order);
     Order creerCommande(Long clientId, Map<Long, Integer> produitsQuantites);
     Order updateCommande(Long id, Order order);
-    void deleteCommande(Long id);
     Order getCommandeById(Long id);
     List<Order> getAllCommandes();
 
@@ -23,4 +22,7 @@ public interface OrderService {
    Iterable<Order> getAllOrders();
     Order create(Order order);
     public void update(Order order);
+    void deleteCommande(Long id);
+
+
 }
