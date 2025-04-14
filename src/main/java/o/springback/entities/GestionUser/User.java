@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import o.springback.entities.GestionPlateforme.Component;
 import o.springback.entities.GestionPlateforme.Plateforme;
+import o.springback.entities.GestionPlateforme.TypePack;
 import o.springback.entities.GestionProduits.Products;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -34,6 +35,9 @@ public class User implements Serializable {
     @Temporal(TemporalType.DATE)
     Date dateInscription;
     private String role;
+
+    @Enumerated(EnumType.STRING)
+    private TypePack typePack = TypePack.GUEST;
 
     @OneToOne
     @JsonIgnore

@@ -40,7 +40,7 @@ public class ComponentController {
 
     //fetch all components by userid
     @GetMapping("/user/{userId}")
-    public List<Component> getComponentsByUserId(@PathVariable Long userId) {
+    public List<Component> getComponentsByUserId(@PathVariable("userId")  Long userId) {
         return componentService.findByUserId(userId);
     }
 

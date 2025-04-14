@@ -37,4 +37,9 @@ public class SponsorService implements ISponsorService {
     public List<Sponsor> findAll() {
         return  sponsorRepository.findAll();
     }
+
+    @Override
+    public List<Sponsor> findByplateformeSponsor(Long id) {
+        return sponsorRepository.findByplateformeSponsor(id);
+    }
 }
