@@ -14,7 +14,7 @@ import java.util.List;
 public class SponsorController {
     ISponsorService sponsorService;
 
-    @PostMapping("/")
+    @PostMapping
     public Sponsor addsponsor(@RequestBody Sponsor c) {
         return sponsorService.save(c);
     }

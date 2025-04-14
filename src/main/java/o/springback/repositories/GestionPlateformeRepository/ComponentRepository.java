@@ -1,4 +1,4 @@
-package o.springback.repositories.GestionPlateforme;
+package o.springback.repositories.GestionPlateformeRepository;
 
 import o.springback.entities.GestionPlateforme.Component;
 import org.springframework.data.jpa.repository.JpaRepository;

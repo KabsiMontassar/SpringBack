@@ -12,4 +12,5 @@ public interface IPlateformeService {
     List<Plateforme> findAll();
 
 
+    void changePackType(Long id, String plan);
 }

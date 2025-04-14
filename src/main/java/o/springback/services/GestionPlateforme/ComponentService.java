@@ -3,7 +3,7 @@ package o.springback.services.GestionPlateforme;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionPlateforme.IComponentService;
 import o.springback.entities.GestionPlateforme.Component;
-import o.springback.repositories.GestionPlateforme.ComponentRepository;
+import o.springback.repositories.GestionPlateformeRepository.ComponentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
