@@ -13,4 +13,5 @@ public interface ISponsorService {
     List<Sponsor> findAll();
 
     List<Sponsor> findByplateformeSponsor(Long id);
+    List<Sponsor> findByPlateformeSponsor_IdPlateforme(Long id);
 }

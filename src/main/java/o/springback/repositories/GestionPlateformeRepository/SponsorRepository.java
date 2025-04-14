@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface SponsorRepository extends JpaRepository<Sponsor, Long> {
-    List<Sponsor> findByplateformeSponsor(Long id);
+    List<Sponsor> findByPlateformeSponsor_IdPlateforme(Long id);
 }

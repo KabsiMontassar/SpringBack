@@ -41,9 +41,8 @@ public class SponsorController {
 
 
     @GetMapping("/platform/{id}")
-    public List<Sponsor> findByplateformeSponsor(
-            @PathVariable("id") Long id) {
-        return sponsorService.findByplateformeSponsor(id);
+    public List<Sponsor> findByplateformeSponsor(@PathVariable("id") Long id) {
+        return sponsorService.findByPlateformeSponsor_IdPlateforme(id);
     }
 
 

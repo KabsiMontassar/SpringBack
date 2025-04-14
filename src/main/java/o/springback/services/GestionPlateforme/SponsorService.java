@@ -13,9 +13,10 @@ import java.util.List;
 public class SponsorService implements ISponsorService {
 
     SponsorRepository sponsorRepository;
+
     @Override
     public Sponsor save(Sponsor sponsor) {
-        return  sponsorRepository.save(sponsor);
+        return sponsorRepository.save(sponsor);
     }
 
     @Override
@@ -30,16 +31,21 @@ public class SponsorService implements ISponsorService {
 
     @Override
     public Sponsor findById(Long id) {
-        return  sponsorRepository.findById(id).orElse(null);
+        return sponsorRepository.findById(id).orElse(null);
     }
 
     @Override
     public List<Sponsor> findAll() {
-        return  sponsorRepository.findAll();
+        return sponsorRepository.findAll();
     }
 
     @Override
     public List<Sponsor> findByplateformeSponsor(Long id) {
-        return sponsorRepository.findByplateformeSponsor(id);
+        return sponsorRepository.findByPlateformeSponsor_IdPlateforme(id);
+    }
+
+    @Override
+    public List<Sponsor> findByPlateformeSponsor_IdPlateforme(Long id) {
+        return sponsorRepository.findByPlateformeSponsor_IdPlateforme(id);
     }
 }
