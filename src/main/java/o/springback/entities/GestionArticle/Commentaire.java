@@ -1,7 +1,6 @@
 package o.springback.entities.GestionArticle;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,5 +23,6 @@ public class Commentaire {
 
     @ManyToOne
     @JoinColumn(name = "id_annonce")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Annonce annonce;
 }

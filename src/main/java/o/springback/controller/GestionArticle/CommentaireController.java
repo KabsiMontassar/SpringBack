@@ -3,6 +3,8 @@ package o.springback.controller.GestionArticle;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionArticle.ICommentaireService;
 import o.springback.entities.GestionArticle.Commentaire;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,9 +35,9 @@ public class CommentaireController {
         return commentaireService.update(commentaire);
     }
 
+
     @DeleteMapping("/deleteCommentaire/{idCommentaire}")
     public void deleteCommentaire(@PathVariable Long idCommentaire) {
         commentaireService.delete(idCommentaire);
     }
-
 }
