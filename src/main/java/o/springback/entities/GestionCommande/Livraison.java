@@ -3,6 +3,9 @@ package o.springback.entities.GestionCommande;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import o.springback.entities.GestionUser.Livreur;
+
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -10,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Panier {
+public class Livraison {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idPanier;

@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/paiement")
-public class PaiementController {
+public class PaymentController {
     @Autowired
     private PaiementServiceImpl paiementService;
 
