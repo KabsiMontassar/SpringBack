@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import o.springback.entities.GestionCommande.Commande;
+import o.springback.entities.GestionCommande.Order;
 import o.springback.entities.GestionUser.User;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 @Entity
@@ -23,7 +24,7 @@ public class Products {
     private Long idProduit;
     private String nom;
     private String description;
-    private Long prix;
+    private Double prix;
     private Long quantiteDisponible;
     private LocalDate dateAjout = LocalDate.now();
     private String imageURL;
@@ -44,11 +45,12 @@ public class Products {
     @JoinColumn(name = "idCategorie")
     private CategorieProduct categorie;
 
+    /* Relation avec Commandes (ManyToMany)
     @ManyToMany
     @JsonIgnoreProperties
     @JoinTable(
-            name = "produit_commande", joinColumns = @JoinColumn(name = "idProduit"), inverseJoinColumns = @JoinColumn(name = "idCommande"))
-    private Set<Commande> commandes;
+    name = "produit_commande", joinColumns = @JoinColumn(name = "idProduit"), inverseJoinColumns = @JoinColumn(name = "idCommande"))
+    private Set<Order> orders;*/
 
     @ManyToOne
     @JoinColumn(name = "idUser")

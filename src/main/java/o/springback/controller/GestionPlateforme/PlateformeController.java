@@ -2,6 +2,7 @@ package o.springback.controller.GestionPlateforme;
 
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionPlateforme.IPlateformeService;
+import o.springback.Interfaces.GestionUser.IUserService;
 import o.springback.entities.GestionPlateforme.Plateforme;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,27 +14,56 @@ import java.util.List;
 public class PlateformeController {
 
     IPlateformeService plateformeService;
+    IUserService userService;
 
-    @GetMapping("/retrieve-all-Plateformes")
+    @PostMapping
+    public Plateforme addPlateforme(@RequestBody Plateforme c) {
+        plateformeService.save(c);
+        userService.updatePlateformeId(c.getAgriculteur().getEmail(), c);
+        return c;
+    }
+
+    @PutMapping
+    public Plateforme updatePlateforme(@RequestBody Plateforme c) {
+        Plateforme plateforme = plateformeService.findById(c.getIdPlateforme());
+        c.setAgriculteur(plateforme.getAgriculteur());
+        return plateformeService.update(c);
+    }
+
+
+    @DeleteMapping("/{id}")
+    public void removePlateforme(@PathVariable("id") Long plateformeId) {
+        Plateforme plateforme = plateformeService.findById(plateformeId);
+
+        if (plateforme.getAgriculteur() != null) {
+            userService.updatePlateformeId(plateforme.getAgriculteur().getEmail(), null);
+        }
+
+        plateformeService.delete(plateformeId);
+    }
+    @GetMapping("/{id}")
+    public Plateforme retrievePlateforme(@PathVariable("id") Long PlateformeId) {
+        return plateformeService.findById(PlateformeId);
+    }
+
+
+
+
+    @GetMapping
     public List<Plateforme> getPlateformes() {
         return plateformeService.findAll();
     }
 
-    @GetMapping("/retrieve-Plateforme/{Plateforme-id}")
-    public Plateforme retrievePlateforme(@PathVariable("Plateforme-id") Long PlateformeId) {
-        return plateformeService.findById(PlateformeId);
-    }
-    @PostMapping("/add-Plateforme")
-    public Plateforme addPlateforme(@RequestBody Plateforme c) {
-        return plateformeService.save(c);
+
+
+
+    @PutMapping("/user/{id}/{plan}")
+    public void changePackType(
+            @PathVariable("id") Long id,
+            @PathVariable("plan") String plan) {
+        plateformeService.changePackType(id, plan);
     }
 
-    @DeleteMapping("/remove-Plateforme/{Plateforme-id}")
-    public void removePlateforme(@PathVariable("Plateforme-id") Long PlateformeId) {
-        plateformeService.delete(PlateformeId);
-    }
-    @PutMapping("/update-Plateforme")
-    public Plateforme updatePlateforme(@RequestBody Plateforme c) {
-        return plateformeService.update(c);
-    }
+
+
 }

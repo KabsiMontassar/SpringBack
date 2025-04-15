@@ -16,17 +16,17 @@ public class FormationController {
 
     private IFormationService formationService;
 
-    @PostMapping("/add")
+    @PostMapping
     public Formation addFormation(@RequestBody Formation formation) {
         return formationService.addFormation(formation);
     }
 
-    @PutMapping("/add/{id}")
+    @PutMapping("/{id}")
     public Formation updateFormation(@PathVariable int id, @RequestBody Formation formation) {
         return formationService.updateFormation(id, formation);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteFormation(@PathVariable int id) {
         formationService.deleteFormation(id);
     }
