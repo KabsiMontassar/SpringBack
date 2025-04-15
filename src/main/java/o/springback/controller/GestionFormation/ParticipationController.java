@@ -2,6 +2,7 @@ package o.springback.controller.GestionFormation;
 
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionFormation.IParticipationService;
+import o.springback.dto.GestionFormation.ParticipationRequestDto;
 import o.springback.entities.GestionFormation.Participation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,4 +41,21 @@ public class ParticipationController {
     public List<Participation> getAllParticipations() {
         return participationService.getAllParticipations();
     }
+
+    @PostMapping("/inscrire")
+    public Participation participate(@RequestBody ParticipationRequestDto dto) {
+        return participationService.participate(dto);
+    }
+
+    @DeleteMapping("/annuler/{id}")
+    public void annulerParticipation(@PathVariable int id) {
+        participationService.annulerParticipation(id);
+    }
+
+    @PostMapping("/noter/{idParticipation}")
+    public Participation noterParticipant(@PathVariable int idParticipation, @RequestParam float note) {
+        return participationService.enregistrerNoteEtEvaluerCertificat(idParticipation, note);
+    }
+
+
 }

@@ -41,4 +41,3 @@ public class ProductController {
         productService.delete(idProduit);
     }
 }
-
