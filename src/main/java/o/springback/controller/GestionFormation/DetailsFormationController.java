@@ -51,7 +51,7 @@ public class DetailsFormationController {
         return detailFormationService.updateDetailFormation(id, detail);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteDetailFormation(@PathVariable int id) {
         detailFormationService.deleteDetailFormation(id);
     }
@@ -73,6 +73,4 @@ public class DetailsFormationController {
                 detail.getFormation().getIdFormation() // ✅ important
         );
     }
-
-
 }

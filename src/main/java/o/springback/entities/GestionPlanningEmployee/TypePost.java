@@ -1,6 +1,6 @@
 package o.springback.entities.GestionPlanningEmployee;
 
-public enum TypePoste {
+public enum TypePost {
     MANAGER,
     EMPLOYE,
     CONTRACTUEL,

@@ -3,6 +3,7 @@ package o.springback.services.GestionProduits;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionProduits.IProductService;
 import o.springback.entities.GestionProduits.Products;
+import o.springback.exception.ResourceNotFoundException;
 import o.springback.repositories.GestionProduitsRepository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,11 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Products findById(Long idProduit) { return productRepository.findById(idProduit).orElse(null); }
+    public Products findById(Long id) {
+        return productRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    }
 
     @Override
     public Products save(Products product) {
@@ -36,4 +41,5 @@ public class ProductService implements IProductService {
     public void delete(Long id) {
         productRepository.deleteById(id);
     }
+
 }

@@ -1,4 +1,6 @@
 package o.springback.Interfaces.GestionPlanningEmployee;
+import o.springback.dto.EmployeeDTO;
+import o.springback.entities.GestionPlanningEmployee.TypePost;
 import org.springframework.stereotype.Service;
 import o.springback.entities.GestionPlanningEmployee.Employee;
 import java.util.List;
@@ -10,4 +12,5 @@ public interface IEmployeeService {
     void delete(Long id);
     Employee findById(Long id);
     List<Employee> findAll();
+    List<EmployeeDTO> findByTypePost (TypePost type);
 }

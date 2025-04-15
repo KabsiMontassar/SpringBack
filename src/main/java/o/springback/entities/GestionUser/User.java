@@ -3,8 +3,11 @@ package o.springback.entities.GestionUser;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import o.springback.entities.GestionFormation.Participation;
+import o.springback.entities.GestionPlateforme.Component;
+import o.springback.entities.GestionPlateforme.Plateforme;
+import o.springback.entities.GestionPlateforme.TypePack;
 import o.springback.entities.GestionProduits.Products;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -34,7 +37,21 @@ public class User implements Serializable {
     Date dateInscription;
     private String role;
 
+    @Enumerated(EnumType.STRING)
+    private TypePack typePack = TypePack.GUEST;
+
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name = "plateforme_id")
+    private Plateforme plateforme;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Component> components;
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Products> produits;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -6,16 +6,21 @@ import lombok.Getter;
 import lombok.Setter;
 import o.springback.entities.GestionUser.User;
 
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
 public class Participation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idParticipation;
+
+    private int idAgriculteur;
 
     @Temporal(TemporalType.DATE)
     private Date dateInscription;

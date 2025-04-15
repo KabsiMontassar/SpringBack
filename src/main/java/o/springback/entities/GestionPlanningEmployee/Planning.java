@@ -1,4 +1,5 @@
 package o.springback.entities.GestionPlanningEmployee;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import o.springback.entities.GestionPlateforme.Plateforme;
@@ -24,5 +25,10 @@ public class Planning {
     @Enumerated(EnumType.STRING)
     private TypePlanning typePlanning;
     @ManyToOne
+    @JsonIgnore
     private Tache tache;
+    @ManyToOne
+    @JsonIgnore
+    private Employee employee;
+
 }

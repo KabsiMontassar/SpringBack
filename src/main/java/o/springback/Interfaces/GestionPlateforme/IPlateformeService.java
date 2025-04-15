@@ -10,4 +10,7 @@ public interface IPlateformeService {
     void delete(Long id);
     Plateforme findById(Long id);
     List<Plateforme> findAll();
+
+
+    void changePackType(Long id, String plan);
 }

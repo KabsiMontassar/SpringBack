@@ -40,4 +40,3 @@ public class FactureServiceImpl implements IFactureService {
         return factureRepository.findAll();
     }
 }
-
