@@ -3,7 +3,7 @@ package o.springback.controller.GestionProduits;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionProduits.IProductService;
 import o.springback.entities.GestionProduits.Products;
-import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -26,7 +26,6 @@ public class ProductController {
 
     @PostMapping("/add-Produits")
     public Products save(@RequestBody Products p) {
-        System.out.println("Requête reçue pour ajouter un produit : " + p);
         return productService.save(p);
     }
 
@@ -41,6 +40,4 @@ public class ProductController {
     public void deleteProduct(@PathVariable("idProduit") Long idProduit) {
         productService.delete(idProduit);
     }
-
 }
-
