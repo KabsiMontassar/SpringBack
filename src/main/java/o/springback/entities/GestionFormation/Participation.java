@@ -25,8 +25,7 @@ public class Participation {
     private boolean enAttente = false;
 
     @ManyToOne
-    @JoinColumn(name = "idFormation", nullable = false)
-    @JsonBackReference
+    @JsonBackReference("formation-participations")
     private Formation formation;
 
     @ManyToOne

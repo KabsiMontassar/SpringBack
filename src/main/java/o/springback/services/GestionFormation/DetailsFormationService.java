@@ -17,40 +17,67 @@ public class DetailsFormationService implements IDetailsFormationService {
     private DetailsFormationRepository detailFormationRepository;
 
     @Autowired
-    private FormationRepository formationRepository; // Ajout du repository pour Formation
+    private FormationRepository formationRepository;
 
     @Override
     public DetailsFormation addDetailFormation(DetailsFormation detailFormation) {
-        // Vérifie si la formation associée existe avant d'ajouter un détail
-        if (!formationRepository.existsById(detailFormation.getFormation().getIdFormation())) {
-            throw new RuntimeException("La formation associée n'existe pas.");
+        int formationId = detailFormation.getFormation().getIdFormation();
+        Optional<Formation> formationOpt = formationRepository.findById(formationId);
+
+        if (formationOpt.isEmpty()) {
+            throw new RuntimeException("❌ La formation avec ID " + formationId + " n'existe pas.");
         }
 
-        return detailFormationRepository.save(detailFormation);
+        Formation formation = formationOpt.get();
+
+        if (formation.getDetailFormation() != null) {
+            throw new RuntimeException("❌ Cette formation a déjà des détails !");
+        }
+
+        // ✅ Lier les deux objets
+        formation.setDetailFormation(detailFormation);
+        detailFormation.setFormation(formation);
+
+        // ✅ Hibernate gère le cascade grâce à `cascade = CascadeType.ALL`
+        return formationRepository.save(formation).getDetailFormation();
     }
 
     @Override
     public DetailsFormation updateDetailFormation(int id, DetailsFormation detailFormation) {
-        detailFormation.setIdDetaille(id); // Assurez-vous que l'ID est correct
-        return detailFormationRepository.save(detailFormation);
+        Optional<DetailsFormation> existingOpt = detailFormationRepository.findById(id);
+
+        if (existingOpt.isEmpty()) {
+            throw new RuntimeException("❌ Aucune détail trouvé avec l'ID " + id);
+        }
+
+        DetailsFormation existing = existingOpt.get();
+
+        // ✅ Mise à jour des champs (ne jamais réécraser tout !)
+        existing.setObjectif(detailFormation.getObjectif());
+        existing.setContenu(detailFormation.getContenu());
+        existing.setDuree(detailFormation.getDuree());
+        existing.setMaterielRequis(detailFormation.getMaterielRequis());
+
+        return detailFormationRepository.save(existing);
     }
 
     @Override
     public void deleteDetailFormation(int id) {
         Optional<DetailsFormation> detailOpt = detailFormationRepository.findById(id);
+
         if (detailOpt.isPresent()) {
             DetailsFormation detail = detailOpt.get();
             Formation formation = detail.getFormation();
 
             if (formation != null) {
-                formation.setDetailFormation(null); // important : coupe la relation
-                formationRepository.save(formation); // Hibernate comprend qu'on supprime le détail
+                formation.setDetailFormation(null); // Rompre la relation
+                formationRepository.save(formation); // Hibernate gère le reste
             }
 
-            detailFormationRepository.delete(detail); // peut même être omis, car orphanRemoval s’en charge
-            System.out.println(">>> Détail supprimé avec succès via Formation !");
+            detailFormationRepository.delete(detail); // Suppression effective
+            System.out.println("✅ Détail supprimé !");
         } else {
-            System.out.println(">>> Aucun détail trouvé avec l'ID : " + id);
+            System.out.println("❌ Aucun détail trouvé avec ID " + id);
         }
     }
 

@@ -1,5 +1,7 @@
 package o.springback.entities.GestionFormation;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,14 +23,17 @@ public class Formation {
     private String description;
 
     @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateDebut;
 
     @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
+
     private Date dateFin;
 
     private String lieu;
     private boolean certification;
-
+    @Column(name = "photoPath", length = 1000, nullable = true)
     private String photoPath;
 
     private float noteMinPourCertificat;
@@ -41,10 +46,10 @@ public class Formation {
     private TypeFormation typeFormation;
 
     @OneToOne(mappedBy = "formation", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("formation-detail")
     private DetailsFormation detailFormation;
 
     @OneToMany(mappedBy = "formation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonManagedReference("formation-participations")
     private Set<Participation> participations;
 }
