@@ -1,5 +1,6 @@
 package o.springback.entities.GestionPlateforme;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,5 +32,6 @@ public class Sponsor {
 
     @ManyToOne
     @JoinColumn(name = "plateforme_id", nullable = false)
+    @JsonIgnore
     Plateforme plateformeSponsor;
 }
