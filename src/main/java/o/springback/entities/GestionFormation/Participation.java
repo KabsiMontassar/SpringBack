@@ -14,6 +14,8 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
+@Getter
+@Setter
 public class Participation {
 
     @Id

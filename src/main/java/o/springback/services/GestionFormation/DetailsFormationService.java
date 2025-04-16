@@ -34,12 +34,16 @@ public class DetailsFormationService implements IDetailsFormationService {
             throw new RuntimeException("❌ Cette formation a déjà des détails !");
         }
 
-        // ✅ Lier les deux objets
+        // 🧠 SUPER IMPORTANT : liaison dans les deux sens
         formation.setDetailFormation(detailFormation);
         detailFormation.setFormation(formation);
 
-        // ✅ Hibernate gère le cascade grâce à `cascade = CascadeType.ALL`
-        return formationRepository.save(formation).getDetailFormation();
+        // ✅ On sauvegarde directement le detail (et via cascade aussi si tu veux)
+        DetailsFormation savedDetail = detailFormationRepository.save(detailFormation);
+
+        System.out.println("✅ Détail sauvé : " + savedDetail);
+
+        return savedDetail;
     }
 
     @Override
@@ -84,5 +88,15 @@ public class DetailsFormationService implements IDetailsFormationService {
     @Override
     public DetailsFormation getDetailFormationById(int id) {
         return detailFormationRepository.findById(id).orElse(null);
+    }
+
+    public DetailsFormation getByFormationId(int idFormation) {
+        Optional<Formation> formationOpt = formationRepository.findById(idFormation);
+
+        if (formationOpt.isPresent()) {
+            return formationOpt.get().getDetailFormation();
+        }
+
+        return null;
     }
 }
