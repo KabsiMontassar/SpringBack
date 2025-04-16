@@ -33,6 +33,18 @@ public class UserController {
         public User retrieveUser(@PathVariable("User-id") Long UserId) {
             return userService.findById(UserId);
         }
+
+
+
+    @GetMapping("/{User-email}")
+    public User retrieveUserbyemail(@PathVariable("User-email") String email) {
+        return userService.findByEmail(email);
+    }
+
+
+
+
+
     @PostMapping("/addNewUser")
     public String addUser(@RequestBody User c) {
 
@@ -70,7 +82,8 @@ public class UserController {
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
             if (authentication.isAuthenticated()) {
-                return jwtService.generateToken(authRequest.getUsername());
+                String sanitizedUsername = org.springframework.web.util.HtmlUtils.htmlEscape(authRequest.getUsername());
+                return jwtService.generateToken(sanitizedUsername);
             } else {
                 throw new UsernameNotFoundException("Invalid user request!");
             }

@@ -1,5 +1,6 @@
 package o.springback.entities.GestionUser;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import o.springback.entities.GestionPlateforme.Plateforme;
@@ -16,8 +17,7 @@ public class Agriculteur extends User {
 
     private String localisation;
 
-    @OneToOne
-    private Plateforme plateforme;
+
 
     @OneToMany(mappedBy = "agriculteur")
     private List<Voucher> vouchers;
