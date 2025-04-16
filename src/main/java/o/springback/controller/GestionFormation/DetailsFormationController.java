@@ -6,6 +6,7 @@ import o.springback.dto.GestionFormation.DetailsFormationDTO;
 import o.springback.entities.GestionFormation.DetailsFormation;
 import o.springback.entities.GestionFormation.Formation;
 import o.springback.repositories.GestionFormation.FormationRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class DetailsFormationController {
 
     // ✅ Ajouter avec DTO
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public DetailsFormation addDetailFormation(@RequestBody DetailsFormationDTO dto) {
+    public ResponseEntity<DetailsFormation> addDetailFormation(@RequestBody DetailsFormationDTO dto) {
         Formation formation = formationRepository.findById(dto.getIdFormation())
                 .orElseThrow(() -> new RuntimeException("Formation non trouvée avec l'ID: " + dto.getIdFormation()));
 
@@ -31,12 +32,12 @@ public class DetailsFormationController {
         detail.setMaterielRequis(dto.getMaterielRequis());
         detail.setFormation(formation);
 
-        return detailFormationService.addDetailFormation(detail);
+        return ResponseEntity.ok(detailFormationService.addDetailFormation(detail));
     }
 
-    // ✅ Update avec DTO
+    // ✅ Modifier un détail
     @PutMapping(value = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public DetailsFormation updateDetailFormation(@PathVariable int id, @RequestBody DetailsFormationDTO dto) {
+    public ResponseEntity<DetailsFormation> updateDetailFormation(@PathVariable int id, @RequestBody DetailsFormationDTO dto) {
         Formation formation = formationRepository.findById(dto.getIdFormation())
                 .orElseThrow(() -> new RuntimeException("Formation non trouvée avec l'ID: " + dto.getIdFormation()));
 
@@ -48,29 +49,54 @@ public class DetailsFormationController {
         detail.setMaterielRequis(dto.getMaterielRequis());
         detail.setFormation(formation);
 
-        return detailFormationService.updateDetailFormation(id, detail);
+        return ResponseEntity.ok(detailFormationService.updateDetailFormation(id, detail));
     }
 
+    // ✅ Supprimer
     @DeleteMapping("/{id}")
-    public void deleteDetailFormation(@PathVariable int id) {
+    public ResponseEntity<Void> deleteDetailFormation(@PathVariable int id) {
         detailFormationService.deleteDetailFormation(id);
+        return ResponseEntity.noContent().build();
     }
 
+    // ✅ Obtenir par ID de DÉTAIL
     @GetMapping("/{id}")
-    public DetailsFormationDTO getDetailFormationById(@PathVariable int id) {
+    public ResponseEntity<DetailsFormationDTO> getDetailFormationById(@PathVariable int id) {
         DetailsFormation detail = detailFormationService.getDetailFormationById(id);
 
         if (detail == null) {
-            return null;
+            return ResponseEntity.notFound().build();
         }
 
-        return new DetailsFormationDTO(
+        return ResponseEntity.ok(new DetailsFormationDTO(
                 detail.getIdDetaille(),
                 detail.getObjectif(),
                 detail.getContenu(),
                 detail.getDuree(),
                 detail.getMaterielRequis(),
-                detail.getFormation().getIdFormation() // ✅ important
-        );
+                detail.getFormation().getIdFormation()
+        ));
     }
+
+    // ✅ Obtenir par ID de FORMATION
+    @GetMapping("/by-formation/{idFormation}")
+    public ResponseEntity<DetailsFormationDTO> getDetailByFormationId(@PathVariable int idFormation) {
+        DetailsFormation detail = detailFormationService.getByFormationId(idFormation);
+
+        if (detail == null) {
+            return ResponseEntity.notFound().build(); // 🔥 plus d'exception, juste un 404 propre
+        }
+
+        DetailsFormationDTO dto = new DetailsFormationDTO(
+                detail.getIdDetaille(),
+                detail.getObjectif(),
+                detail.getContenu(),
+                detail.getDuree(),
+                detail.getMaterielRequis(),
+                detail.getFormation().getIdFormation()
+        );
+
+        return ResponseEntity.ok(dto); // ✅ 200 avec le détail
+    }
+
 }
