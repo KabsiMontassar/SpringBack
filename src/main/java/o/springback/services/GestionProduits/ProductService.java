@@ -47,7 +47,7 @@ public class ProductService implements IProductService {
         List<Products> products = productRepository.findAll();
 
         Products produitPlusPopulaire = null;
-        float prixMax = 0;
+        Double prixMax = (double) 0;
 
         for (Products product : products) {
             if (product.getPrix() > prixMax) {
@@ -59,10 +59,10 @@ public class ProductService implements IProductService {
         if (produitPlusPopulaire != null) {
             for (Products product : products) {
                 if (product.getIdProduit().equals(produitPlusPopulaire.getIdProduit())) {
-                    product.setPrix(product.getPrix() * 0.8f); // 20% de réduction
+                    product.setPrix((float) (product.getPrix() * 0.8f)); // 20% de réduction
                     productRepository.save(product);
                 } else {
-                    product.setPrix(product.getPrix() * 0.95f); // 5% de réduction
+                    product.setPrix((float) (product.getPrix() * 0.95f)); // 5% de réduction
                     productRepository.save(product);
                 }
             }
