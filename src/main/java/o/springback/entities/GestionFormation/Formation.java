@@ -1,107 +1,59 @@
 package o.springback.entities.GestionFormation;
 
-
-
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
+import java.util.Set;
 
 @Entity
+@Getter
+@Setter
 public class Formation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idFormation;
-
+    @NotBlank
+    @Pattern(regexp = "^[A-Za-z0-9\\s\\-']+$", message = "Le nom contient des caractères invalides")
     private String nom;
     private String description;
 
     @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @FutureOrPresent
     private Date dateDebut;
 
     @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Future
     private Date dateFin;
 
     private String lieu;
     private boolean certification;
+    @Column(name = "photoPath", length = 1000, nullable = true)
+    private String photoPath;
+    @Min(10)
+    private float noteMinPourCertificat;
+    @Min(value = 3)
+    @Max(value = 20)
+    private int Capacity;
+
+
 
     @Enumerated(EnumType.STRING)
     private TypeFormation typeFormation;
 
-    @OneToOne(mappedBy = "formation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "formation", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonManagedReference("formation-detail")
     private DetailsFormation detailFormation;
 
-    // Getters and Setters
-    public int getIdFormation() {
-        return idFormation;
-    }
-
-    public void setIdFormation(int idFormation) {
-        this.idFormation = idFormation;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getDateDebut() {
-        return dateDebut;
-    }
-
-    public void setDateDebut(Date dateDebut) {
-        this.dateDebut = dateDebut;
-    }
-
-    public Date getDateFin() {
-        return dateFin;
-    }
-
-    public void setDateFin(Date dateFin) {
-        this.dateFin = dateFin;
-    }
-
-    public String getLieu() {
-        return lieu;
-    }
-
-    public void setLieu(String lieu) {
-        this.lieu = lieu;
-    }
-
-    public boolean isCertification() {
-        return certification;
-    }
-
-    public void setCertification(boolean certification) {
-        this.certification = certification;
-    }
-
-    public TypeFormation getTypeFormation() {
-        return typeFormation;
-    }
-
-    public void setTypeFormation(TypeFormation typeFormation) {
-        this.typeFormation = typeFormation;
-    }
-
-    public DetailsFormation getDetailFormation() {
-        return detailFormation;
-    }
-
-    public void setDetailFormation(DetailsFormation detailFormation) {
-        this.detailFormation = detailFormation;
-    }
+    @OneToMany(mappedBy = "formation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference("formation-participations")
+    private Set<Participation> participations;
 }
