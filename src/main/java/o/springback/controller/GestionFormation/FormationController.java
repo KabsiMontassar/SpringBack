@@ -53,17 +53,6 @@ public class FormationController {
 
 
     @DeleteMapping("/delete/{id}")
-    @PostMapping
-    public Formation addFormation(@RequestBody Formation formation) {
-        return formationService.addFormation(formation);
-    }
-
-    @PutMapping("/{id}")
-    public Formation updateFormation(@PathVariable int id, @RequestBody Formation formation) {
-        return formationService.updateFormation(id, formation);
-    }
-
-    @DeleteMapping("/{id}")
     public void deleteFormation(@PathVariable int id) {
         formationService.deleteFormation(id);
     }

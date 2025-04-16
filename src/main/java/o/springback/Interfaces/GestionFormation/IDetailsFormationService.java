@@ -8,4 +8,6 @@ public interface IDetailsFormationService {
     DetailsFormation updateDetailFormation(int id, DetailsFormation detailFormation);
     void deleteDetailFormation(int id);
     DetailsFormation getDetailFormationById(int id);
+
+    DetailsFormation getByFormationId(int idFormation);
 }
