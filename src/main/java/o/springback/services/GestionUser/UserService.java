@@ -2,6 +2,8 @@ package o.springback.services.GestionUser;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import o.springback.Interfaces.GestionUser.IUserService;
+import o.springback.entities.GestionPlateforme.Plateforme;
+import o.springback.entities.GestionUser.Agriculteur;
 import o.springback.entities.GestionUser.User;
 import o.springback.repositories.GestionUserRepository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,23 @@ public class UserService implements IUserService , UserDetailsService {
     public User update(User user){
         return userRepository.save(user);
     }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
+    @Override
+    public void updatePlateformeId(String email, Plateforme plateforme) {
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user != null) {
+            user.setPlateforme(plateforme);
+            userRepository.save(user);
+        }
+    }
+
+
     @Override
     public void delete(Long id){
         userRepository.deleteById(id);
