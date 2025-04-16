@@ -54,4 +54,9 @@ public class Products {
     @JoinColumn(name = "idUser")
     @JsonIgnoreProperties("products")
     private User user;
+
+    public void setPrix(float f) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setPrix'");
+    }
 }
