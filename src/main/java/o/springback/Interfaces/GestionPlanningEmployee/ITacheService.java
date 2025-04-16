@@ -19,10 +19,14 @@ public interface ITacheService {
     Map<String, Object> getProgressionParEmploye(Long employeeId);
     Tache findById(Long id);
     List<Tache> findAll();
+    // ITacheService.java
+    List<Tache> getTachesByEmployeeId(Long idEmployee);
+
     Map<String, Object> getNombreTachesParEmploye(Long employeeId);
     Map<String, Long> getNombreTachesParStatut(Long employeeId); //pour afficher tout les statuts
     Long getTachesParStatut(Long employeeId, StatutTache statut); // pour afficher kol statut wahdou
     Map<String, Object> getHistoriqueTachesParPeriode(Long employeeId, PeriodeHistorique periode);
     Map<String, Object> getHistoriqueTachesParDate(Long  employeeId, String periode);
     Map<String, Object> replanifierTache(Long employeeId, String strategie);
+    int findMaxPositionByStatut(StatutTache statut);
 }

@@ -26,12 +26,23 @@ public class TacheService implements ITacheService{
     private EmployeeRepository employeeRepository;
     @Override
     public Tache add(Tache tache) {
+        if (tache.getPosition() == null){
+            tache.setPosition(getNextPositionForStatut(tache.getStatutTache()));
+        }
         if (tache.getSousTaches() != null){
             for (Tache sousT : tache.getSousTaches()) {
                 sousT.setParent(tache);
+                if (sousT.getPosition() == null){
+                    sousT.setPosition(getNextPositionForParent(tache));
+                }
             }
+
         }
         return tacheRepository.save(tache);
+    }
+    private int getNextPositionForParent(Tache parent){
+        Integer maxPos = tacheRepository.findMaxPositionUnderParent(parent.getIdTache());
+        return maxPos != null ? maxPos + 1 : 1;
     }
 
     @Override
@@ -39,7 +50,17 @@ public class TacheService implements ITacheService{
         Tache parent = tacheRepository.findById(parentId).orElse(null);
         if (parent == null) return null;
         sousTache.setParent(parent);
+        if(sousTache.getPosition() == null){
+            sousTache.setPosition(getNextPositionForParent(parent));
+        }
+        if (sousTache.getStatutTache() == null){
+            sousTache.setStatutTache(parent.getStatutTache());
+        }
         return tacheRepository.save(sousTache);
+    }
+    private int getNextPositionForStatut(StatutTache statut){
+        Integer maxPos = tacheRepository.findMaxPositionByStatutTache(statut);
+        return maxPos != null ? maxPos + 1 : 1;
     }
 
     @Override
@@ -180,6 +201,11 @@ public class TacheService implements ITacheService{
     @Override
     public List<Tache> findAll() {
         return tacheRepository.findAll();
+    }
+
+    @Override
+    public List<Tache> getTachesByEmployeeId(Long idEmployee) {
+        return tacheRepository.findByEmployee_IdEmployee(idEmployee);
     }
 
     @Override
@@ -394,6 +420,14 @@ public class TacheService implements ITacheService{
         return result;
     }
 
+    @Override
+    public int findMaxPositionByStatut(StatutTache statut) {
+        Integer maxPosition = tacheRepository.findMaxPositionByStatutTache(statut);
+        return maxPosition != null ? maxPosition : 0;
+    }
+
+
+    // @schedule
 
 
 }

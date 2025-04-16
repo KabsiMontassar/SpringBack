@@ -1,5 +1,4 @@
 package o.springback.services.GestionUser;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import o.springback.Interfaces.GestionUser.IUserService;
 import o.springback.entities.GestionUser.User;
@@ -10,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +33,13 @@ public class UserService implements IUserService , UserDetailsService {
     public User update(User user){
         return userRepository.save(user);
     }
+
+    @Override
+    public User mapToDTO(User user) {
+        return null;
+    }
+
+
     @Override
     public void delete(Long id){
         userRepository.deleteById(id);

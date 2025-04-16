@@ -20,4 +20,20 @@ public interface PlanningRepository extends JpaRepository<Planning, Long>{
 
     @Query("SELECT p FROM Planning p WHERE p.employee.idEmployee = :id")
     List<Planning> findByEmployeeId(@Param("id") Long id);
+
+    //@Query("SELECT p FROM Planning p WHERE " +
+    //        "(p.dateDebut BETWEEN :start AND :end) OR " +
+    //        "(p.dateFin BETWEEN :start AND :end) OR " +
+    //        "(p.dateDebut <= :start AND p.dateFin >= :end)")
+    //List<Planning> findPlanningsInRange(@Param("start") Date start, @Param("end") Date end);
+
+    @Query("SELECT p FROM Planning p WHERE " +
+            "p.employee.idEmployee = :employeeId AND " +
+            "((p.dateDebut BETWEEN :start AND :end) OR " +
+            "(p.dateFin BETWEEN :start AND :end) OR " +
+            "(p.dateDebut <= :start AND p.dateFin >= :end))")
+    List<Planning> findEmployeePlanningsInRange(@Param("employeeId") Long employeeId,
+                                                @Param("start") Date start,
+                                                @Param("end") Date end);
+
 }

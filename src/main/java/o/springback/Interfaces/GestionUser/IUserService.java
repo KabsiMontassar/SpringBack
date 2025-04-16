@@ -9,5 +9,6 @@ public interface IUserService {
     User save(User user);
     void delete(Long id);
     User update(User user);
+    User mapToDTO(User user);
 
 }

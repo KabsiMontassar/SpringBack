@@ -98,6 +98,11 @@ public class TacheController {
         response.put("Nombre Taches", count);
         return response;
     }
+    @GetMapping("/employee/{employeeId}")
+    public List<Tache> getTachesByEmployee(@PathVariable Long employeeId) {
+        return tacheService.getTachesByEmployeeId(employeeId);
+    }
+
     @GetMapping("/historique/{employeeId}")
     public Map<String, Object> getHistorique(@PathVariable Long employeeId, @RequestParam PeriodeHistorique periode) {
         return tacheService.getHistoriqueTachesParPeriode(employeeId, periode);

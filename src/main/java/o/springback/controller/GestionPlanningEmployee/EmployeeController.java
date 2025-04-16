@@ -4,15 +4,18 @@ import o.springback.Interfaces.GestionPlanningEmployee.IEmployeeService;
 import o.springback.dto.EmployeeDTO;
 import o.springback.entities.GestionPlanningEmployee.Employee;
 import o.springback.entities.GestionPlanningEmployee.TypePost;
+import o.springback.repositories.GestionPlanningEmployeeRepository.PlanningRepository;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/employee")
+@CrossOrigin(origins = "http://localhost:4200")
 public class EmployeeController {
 
     IEmployeeService employeeService;
+    PlanningRepository planningRepository;
 
     @GetMapping("/retrieve-all-Employees")
     public List<Employee> getEmployees() {
@@ -40,4 +43,5 @@ public class EmployeeController {
     public List<EmployeeDTO> getEmployeeByTypePost(@RequestParam TypePost type) {
         return employeeService.findByTypePost(type);
     }
+
 }
