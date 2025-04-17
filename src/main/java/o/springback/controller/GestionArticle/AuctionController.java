@@ -43,5 +43,10 @@ public class AuctionController {
         auctionService.delete(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/top-bid")
+    public ResponseEntity<List<Auction>> getTop5AuctionsByBids() {
+        return ResponseEntity.ok(auctionService.getTop5AuctionsByBids());
+    }
+
 }
 

@@ -1,5 +1,6 @@
 package o.springback.services.GestionArticle;
 
+import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionArticle.IBidService;
 import o.springback.entities.GestionArticle.Auction;
 import o.springback.entities.GestionArticle.Bid;
@@ -12,12 +13,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class BidService implements IBidService {
-
-    @Autowired
     private BidRepository bidRepository;
-
-    @Autowired
     private AuctionRepository auctionRepository;
 
     @Override

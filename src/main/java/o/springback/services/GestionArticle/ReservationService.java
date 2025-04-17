@@ -1,5 +1,6 @@
 package o.springback.services.GestionArticle;
 
+import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionArticle.IReservationService;
 import o.springback.entities.GestionArticle.Article;
 import o.springback.entities.GestionArticle.Payment;
@@ -13,15 +14,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ReservationService implements IReservationService {
 
-    @Autowired
     private ReservationRepository reservationRepository;
-
-    @Autowired
     private ArticleRepository articleRepository;
-
-    @Autowired
     private PaymentRepository paymentRepository;
 
     @Override

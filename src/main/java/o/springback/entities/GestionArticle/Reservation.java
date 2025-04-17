@@ -1,5 +1,7 @@
 package o.springback.entities.GestionArticle;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,9 +28,11 @@ public class Reservation {
     }
 
     @OneToOne
+    @JsonManagedReference("reservation-payment")
     private Payment payment;
+
     @ManyToOne
-    @JoinColumn(name = "article_id")
+    @JsonBackReference("article-reservations")
     private Article article;
 
 }

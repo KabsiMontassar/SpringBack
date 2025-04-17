@@ -11,4 +11,6 @@ public interface IAuctionService {
     Auction save(Auction auction);
     Auction update(Auction auction);
     void delete(Long idAuction);
+
+    List<Auction> getTop5AuctionsByBids();
 }

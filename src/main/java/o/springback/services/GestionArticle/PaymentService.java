@@ -1,5 +1,6 @@
 package o.springback.services.GestionArticle;
 
+import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionArticle.IPaymentService;
 import o.springback.entities.GestionArticle.Auction;
 import o.springback.entities.GestionArticle.Payment;
@@ -14,15 +15,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class PaymentService implements IPaymentService {
 
-    @Autowired
     private PaymentRepository paymentRepository;
-
-    @Autowired
     private AuctionRepository auctionRepository;
-
-    @Autowired
     private ReservationRepository reservationRepository;
 
     @Override

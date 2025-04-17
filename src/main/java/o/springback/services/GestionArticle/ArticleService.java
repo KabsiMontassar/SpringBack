@@ -1,5 +1,6 @@
 package o.springback.services.GestionArticle;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionArticle.IArticleService;
 import o.springback.entities.GestionArticle.Article;
@@ -16,22 +17,23 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class ArticleService implements IArticleService {
-    @Autowired
     private ArticleRepository articleRepository;
-    @Autowired
     private AuctionRepository auctionRepository;
-    @Autowired
     private ReservationRepository reservationRepository;
 
+    @Override
     public List<Article> findAll() {
         return articleRepository.findAll();
     }
 
+    @Override
     public Article findById(Long idArticle) {
         return articleRepository.findById(idArticle)
                 .orElseThrow(() -> new RuntimeException("Article not found with id: " + idArticle));
     }
 
+    @Override
+    @Transactional
     public Article save(Article article) {
         article.setCreatedAt(LocalDateTime.now());
         article.setAvailable(true);
@@ -50,7 +52,7 @@ public class ArticleService implements IArticleService {
 
         return articleRepository.save(article);
     }
-
+    @Override
     public Article update(Article article) {
         Article existing = findById(article.getId());
 
@@ -77,7 +79,7 @@ public class ArticleService implements IArticleService {
 
         return articleRepository.save(existing);
     }
-
+    @Override
     public void delete(Long idArticle) {
         Article article = findById(idArticle);
 
