@@ -40,28 +40,34 @@ public class ProductService implements IProductService {
     public void delete(Long id) {
         productRepository.deleteById(id);
     }
-     @Scheduled(cron = "*/15 * * * * ?")
+
+    @Scheduled(cron = "*/15 * * * * ?")
     @Override
     public void dailyProductSummary() {
         try {
             List<Products> products = productRepository.findAll();
             Products produitPlusPopulaire = null;
-            Double prixMax = (double) 0;
+            Double prixMax = 0.0;
+
             for (Products product : products) {
                 if (product.getPrix() > prixMax) {
                     prixMax = product.getPrix();
-                    produitPlusPopulaire = product;}}
+                    produitPlusPopulaire = product;
+                }
+            }
+
             if (produitPlusPopulaire != null) {
-                for (Products product : products) {
-                    if (product.getIdProduit().equals(produitPlusPopulaire.getIdProduit())) {
-                        product.setPrix((double) (product.getPrix() * 0.8f)); // 20% de réduction
-                        productRepository.save(product);
-                    } else {
-                        product.setPrix((double) (product.getPrix() * 0.95f)); // 5% de réduction
-                        productRepository.save(product);}}
-                log.info("Le produit le plus cher est " + produitPlusPopulaire.getNom() + " avec un prix de " + prixMax);}
+                log.info("=== Rapport des produits ===");
+                log.info("Nombre total de produits: " + products.size());
+                log.info("Produit le plus cher: " + produitPlusPopulaire.getNom());
+                log.info("Prix: " + prixMax);
+                log.info("ID: " + produitPlusPopulaire.getIdProduit());
+                log.info("========================");
+            }
         } catch (Exception e) {
-            log.error("Erreur lors de l'exécution de la tâche planifiée dailyProductSummary", e);}} 
+            log.error("Erreur lors de l'exécution du rapport des produits", e);
+        }
+    }
 }
 
 
