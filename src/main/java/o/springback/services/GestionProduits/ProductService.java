@@ -40,35 +40,28 @@ public class ProductService implements IProductService {
     public void delete(Long id) {
         productRepository.deleteById(id);
     }
-
     @Scheduled(cron = "*/15 * * * * ?")
     @Override
     public void dailyProductSummary() {
-        List<Products> products = productRepository.findAll();
-
-        Products produitPlusPopulaire = null;
-        float prixMax = 0;
-
-        for (Products product : products) {
-            if (product.getPrix() > prixMax) {
-                prixMax = product.getPrix();
-                produitPlusPopulaire = product;
-            }
-        }
-
-        if (produitPlusPopulaire != null) {
+        try {
+            List<Products> products = productRepository.findAll();
+            Products produitPlusPopulaire = null;
+            Double prixMax = (double) 0;
             for (Products product : products) {
-                if (product.getIdProduit().equals(produitPlusPopulaire.getIdProduit())) {
-                    product.setPrix(product.getPrix() * 0.8f); // 20% de réduction
-                    productRepository.save(product);
-                } else {
-                    product.setPrix(product.getPrix() * 0.95f); // 5% de réduction
-                    productRepository.save(product);
-                }
-            }
-
-            log.info("Le produit le plus cher est " + produitPlusPopulaire.getNom() + 
-                    " avec un prix de " + prixMax);
-        }
-    }
+                if (product.getPrix() > prixMax) {
+                    prixMax = product.getPrix();
+                    produitPlusPopulaire = product;}}
+            if (produitPlusPopulaire != null) {
+                for (Products product : products) {
+                    if (product.getIdProduit().equals(produitPlusPopulaire.getIdProduit())) {
+                        product.setPrix((double) (product.getPrix() * 0.8f)); // 20% de réduction
+                        productRepository.save(product);
+                    } else {
+                        product.setPrix((double) (product.getPrix() * 0.95f)); // 5% de réduction
+                        productRepository.save(product);}}
+                log.info("Le produit le plus cher est " + produitPlusPopulaire.getNom() + " avec un prix de " + prixMax);}
+        } catch (Exception e) {
+            log.error("Erreur lors de l'exécution de la tâche planifiée dailyProductSummary", e);}}
 }
+
+
