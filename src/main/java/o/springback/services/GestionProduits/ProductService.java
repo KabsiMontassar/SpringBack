@@ -40,7 +40,7 @@ public class ProductService implements IProductService {
     public void delete(Long id) {
         productRepository.deleteById(id);
     }
-    @Scheduled(cron = "*/15 * * * * ?")
+     @Scheduled(cron = "*/15 * * * * ?")
     @Override
     public void dailyProductSummary() {
         try {
@@ -61,7 +61,7 @@ public class ProductService implements IProductService {
                         productRepository.save(product);}}
                 log.info("Le produit le plus cher est " + produitPlusPopulaire.getNom() + " avec un prix de " + prixMax);}
         } catch (Exception e) {
-            log.error("Erreur lors de l'exécution de la tâche planifiée dailyProductSummary", e);}}
+            log.error("Erreur lors de l'exécution de la tâche planifiée dailyProductSummary", e);}} 
 }
 
 
