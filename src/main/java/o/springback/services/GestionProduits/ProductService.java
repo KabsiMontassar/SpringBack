@@ -41,33 +41,21 @@ public class ProductService implements IProductService {
         productRepository.deleteById(id);
     }
 
-   // @Scheduled(cron = "*/15 * * * * ?")
-   /* @Override
-    public void dailyProductSummary() {
+    @Scheduled(fixedDelay = 10000) // Exécution toutes les 10 secondes
+    @Override
+    public void deleteOutOfStockProducts() {
         try {
             List<Products> products = productRepository.findAll();
-            Products produitPlusPopulaire = null;
-            Double prixMax = 0.0;
-
             for (Products product : products) {
-                if (product.getPrix() > prixMax) {
-                    prixMax = product.getPrix();
-                    produitPlusPopulaire = product;
+                if (product.getQuantiteDisponible() <= 0) {
+                    productRepository.delete(product);
+                    log.info("Produit supprimé automatiquement (hors stock) - ID: " + product.getIdProduit() + ", Nom: " + product.getNom());
                 }
             }
-
-            if (produitPlusPopulaire != null) {
-                log.info("=== Rapport des produits ===");
-                log.info("Nombre total de produits: " + products.size());
-                log.info("Produit le plus cher: " + produitPlusPopulaire.getNom());
-                log.info("Prix: " + prixMax);
-                log.info("ID: " + produitPlusPopulaire.getIdProduit());
-                log.info("========================");
-            }
         } catch (Exception e) {
-            log.error("Erreur lors de l'exécution du rapport des produits", e);
+            log.error("Erreur lors de la suppression des produits hors stock", e);
         }
-    }*/
+    }
 }
 
 
