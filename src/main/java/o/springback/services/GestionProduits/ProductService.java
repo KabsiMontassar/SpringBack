@@ -41,8 +41,8 @@ public class ProductService implements IProductService {
         productRepository.deleteById(id);
     }
 
-    @Scheduled(cron = "*/15 * * * * ?")
-    @Override
+   // @Scheduled(cron = "*/15 * * * * ?")
+   /* @Override
     public void dailyProductSummary() {
         try {
             List<Products> products = productRepository.findAll();
@@ -67,7 +67,7 @@ public class ProductService implements IProductService {
         } catch (Exception e) {
             log.error("Erreur lors de l'exécution du rapport des produits", e);
         }
-    }
+    }*/
 }
 
 

@@ -9,5 +9,5 @@ public interface IProductService {
     Products save(Products product);
     Products update(Products product);
     void delete(Long idProduit);
-    void dailyProductSummary();
+   // void dailyProductSummary();
 }
