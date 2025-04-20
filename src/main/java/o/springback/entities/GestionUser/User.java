@@ -1,10 +1,16 @@
 package o.springback.entities.GestionUser;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import o.springback.entities.GestionFormation.Participation;
+import o.springback.entities.GestionPlateforme.Component;
+import o.springback.entities.GestionPlateforme.Plateforme;
+import o.springback.entities.GestionPlateforme.TypePack;
 import o.springback.entities.GestionProduits.Products;
 import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -42,9 +48,24 @@ public class User implements Serializable {
     @Size(max = 255, message = "L'URL de l'image ne doit pas dépasser 255 caractères")
     private String verificationToken;
 
+    @Enumerated(EnumType.STRING)
+    private TypePack typePack = TypePack.GUEST;
+
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name = "plateforme_id")
+    private Plateforme plateforme;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Component> components;
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Products> produits;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<Participation> participations;
 }

@@ -1,5 +1,8 @@
 package o.springback.entities.GestionFormation;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,7 +12,6 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-
 public class DetailsFormation {
 
     @Id
@@ -23,7 +25,7 @@ public class DetailsFormation {
 
     @OneToOne
     @JoinColumn(name = "idFormation")
+    @JsonBackReference("formation-detail")
     private Formation formation;
-
 
 }

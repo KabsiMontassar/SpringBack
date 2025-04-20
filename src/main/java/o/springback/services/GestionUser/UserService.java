@@ -3,6 +3,8 @@ import jakarta.persistence.Id;
 import lombok.NoArgsConstructor;
 import o.springback.Interfaces.GestionUser.IUserService;
 import o.springback.dto.RegisterRequestDTO;
+import o.springback.entities.GestionPlateforme.Plateforme;
+import o.springback.entities.GestionUser.Agriculteur;
 import o.springback.entities.GestionUser.User;
 import o.springback.repositories.GestionUserRepository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,16 @@ public class UserService implements IUserService , UserDetailsService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+    }
+
+    @Override
+    public void updatePlateformeId(String email, Plateforme plateforme) {
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user != null) {
+            user.setPlateforme(plateforme);
+            userRepository.save(user);
+        }
     }
 
     @Override

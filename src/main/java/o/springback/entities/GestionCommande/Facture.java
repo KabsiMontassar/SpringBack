@@ -19,7 +19,7 @@ public class Facture {
     Long idFacture;
 
     @OneToOne
-    Commande commande;
+    Order order;
 
     LocalDate dateFacture;
 
