@@ -2,9 +2,7 @@ package o.springback.controller.SharedControllers;
 
 import com.google.api.gax.paging.Page;
 import com.google.cloud.storage.Blob;
-import o.springback.entities.Shared.Image;
 import o.springback.services.Shared.FirebaseStorageService;
-import o.springback.services.Shared.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,13 +28,12 @@ public class FirebaseStorageController {
     @PostMapping("/upload")
     public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         try {
-            Image image = new Image();
-            Image savedImage = imageService.saveImage(image, file);
-            String url = storageService.generateV4GetObjectSignedUrl(savedImage.getImageUrl());
+            String imageUrl = storageService.uploadFile(file);
+            String url = storageService.generateV4GetObjectSignedUrl(imageUrl);
             
             Map<String, String> response = new HashMap<>();
-            response.put("id", savedImage.getId().toString());
-            response.put("fileName", savedImage.getImageUrl());
+            response.put("id", "1");
+            response.put("fileName", imageUrl);
             response.put("url", url);
             return ResponseEntity.ok(response);
         } catch (IOException e) {
@@ -48,17 +45,9 @@ public class FirebaseStorageController {
 
     @DeleteMapping("/{imageUrl}")
     public ResponseEntity<Void> deleteFile(@PathVariable String imageUrl) {
-        if (!imageService.existsByImageUrl(imageUrl)) {
-            return ResponseEntity.notFound().build();
-        }
 
-      long id = imageService.FindOneImageByUrl(imageUrl);
+        storageService.deleteFile(imageUrl);
 
-        if (!imageService.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        imageService.deleteImage(id);
         return ResponseEntity.ok().build();
     }
 
