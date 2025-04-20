@@ -25,6 +25,8 @@ public class SecurityConfig {
 
     @Autowired
     private JwtAuthFilter authFilter;
+    //@Autowired
+    //private UserService userService; // Assuming UserService implements UserDetailsService
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -36,7 +38,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken","/**","/uploads/**").permitAll()
+                        .requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken","/**", "/auth/signup","/uploads/**").permitAll()
                         .requestMatchers("/auth/user/**").hasAuthority("ROLE_USER") // page profile
                         .requestMatchers("/auth/admin/**").hasAuthority("ROLE_ADMIN") // backoffice
                         .anyRequest().authenticated() // Protect all other endpoints

@@ -1,10 +1,12 @@
 package o.springback.repositories.GestionPlanningEmployeeRepository;
+import o.springback.entities.GestionPlanningEmployee.StatutTache;
 import o.springback.entities.GestionPlanningEmployee.Tache;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.table.TableCellEditor;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +28,14 @@ public interface TacheRepository extends JpaRepository<Tache, Long>{
                                               @Param("endDate") Date endDate);
     @Query("SELECT COUNT(t) > 0 FROM Tache t WHERE t.parent.idTache =:id")
     boolean hasChildTaches(@Param("id") Long id);
+
+    List<Tache> findByEmployee_IdEmployee(Long id);
+    @Query("SELECT MAX (t.position) FROM Tache t WHERE t.statutTache = :statut")
+    Integer findMaxPositionByStatutTache(@Param("statut") StatutTache statut);
+    @Query("SELECT t FROM Tache t WHERE t.parent.idTache = :parentId")
+    Integer findMaxPositionUnderParent(@Param("parentId") Long parentId);
+    @Query("SELECT t FROM Tache t WHERE t.dateFin BETWEEN :start AND :end")
+    List<Tache> findByDateFinBetween(@Param("start") Date start, @Param("end") Date end);
 
 
 }
