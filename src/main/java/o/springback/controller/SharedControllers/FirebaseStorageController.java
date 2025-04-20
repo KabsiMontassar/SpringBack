@@ -22,8 +22,7 @@ public class FirebaseStorageController {
     @Autowired
     private FirebaseStorageService storageService;
 
-    @Autowired
-    private ImageService imageService;
+    
 
     @PostMapping("/upload")
     public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
