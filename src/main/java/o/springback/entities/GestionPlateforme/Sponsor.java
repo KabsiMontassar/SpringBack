@@ -31,7 +31,7 @@ public class Sponsor {
     private LocalDate datepartenariat;
 
     @ManyToOne
-    @JoinColumn(name = "plateforme_id", nullable = false)
+    @JoinColumn(name = "plateforme_idPlateforme")
     @JsonIgnore
-    Plateforme plateformeSponsor;
+    private Plateforme plateformeSponsor;
 }
