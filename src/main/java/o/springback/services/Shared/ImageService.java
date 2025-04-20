@@ -1,12 +1,13 @@
 package o.springback.services.Shared;
 
-
 import jakarta.transaction.Transactional;
 import o.springback.entities.Shared.Image;
 import o.springback.repositories.Shared.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +16,10 @@ import java.util.Optional;
 public class ImageService {
 
     @Autowired
-    ImageRepository imageRepository;
+    private ImageRepository imageRepository;
+
+    @Autowired
+    private FirebaseStorageService firebaseStorageService;
 
     public List<Image> getAllImages() {
         return imageRepository.findByOrderById();
@@ -25,12 +29,19 @@ public class ImageService {
         return imageRepository.findById(id);
     }
 
-    public Image saveImage(Image image) {
+    public Image saveImage(Image image, MultipartFile file) throws IOException {
+        String imageUrl = firebaseStorageService.uploadFile(file);
+        image.setImageUrl(imageUrl);
         return imageRepository.save(image);
     }
 
     public void deleteImage(Long id) {
-        imageRepository.deleteById(id);
+        Optional<Image> imageOpt = imageRepository.findById(id);
+        if (imageOpt.isPresent()) {
+            Image image = imageOpt.get();
+            firebaseStorageService.deleteFile(image.getImageUrl());
+            imageRepository.deleteById(id);
+        }
     }
 
     public boolean existsById(Long id) {
