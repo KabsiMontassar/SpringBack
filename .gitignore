@@ -32,3 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 .env
+
+# Firebase credentials - Security sensitive
+firebaseKeys.json
+**/firebaseKeys.json
+src/main/resources/firebaseKeys.json
