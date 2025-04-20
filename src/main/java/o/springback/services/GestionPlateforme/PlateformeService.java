@@ -68,7 +68,7 @@ public class PlateformeService implements IPlateformeService {
 
 
 
-    @Scheduled(cron = "*/15 * * * * ?")
+  //  @Scheduled(cron = "*/15 * * * * ?")
     public void checkPlateformeExpiration() {
         List<Plateforme> plateformes = plateformeRepository.findAll();
         log.info("Checking for plateforme expiration...");
@@ -76,22 +76,20 @@ public class PlateformeService implements IPlateformeService {
             if (plateforme.getValabilite() != null
                     && plateforme.getValabilite().isBefore(java.time.LocalDate.now().plusDays(30))) {
 
-                log.info("Plateforme " + plateforme.getNomPlateforme() +
-                        " is about to expire on " + plateforme.getValabilite());
+                log.info("Plateforme {} is about to expire on {}", plateforme.getNomPlateforme(), plateforme.getValabilite());
             }
         }
     }
 
 
-    @Scheduled(cron = "*/15 * * * * ?")
+  //  @Scheduled(cron = "*/15 * * * * ?")
     public void deleteExpiredPlateformes() {
         List<Plateforme> plateformes = plateformeRepository.findAll();
         log.info("Deleting expired plateformes...");
         for (Plateforme plateforme : plateformes) {
             if (plateforme.getValabilite() != null && plateforme.getValabilite().isBefore(java.time.LocalDate.now())) {
                 plateformeRepository.delete(plateforme);
-               log.info("Plateforme " + plateforme.getNomPlateforme()
-                       + " has been deleted due to expiration on " + plateforme.getValabilite());
+                log.info("Plateforme {} has been deleted due to expiration on {}", plateforme.getNomPlateforme(), plateforme.getValabilite());
             }
         }
     }
