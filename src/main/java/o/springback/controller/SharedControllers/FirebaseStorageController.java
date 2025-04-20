@@ -46,11 +46,18 @@ public class FirebaseStorageController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFile(@PathVariable Long id) {
+    @DeleteMapping("/{imageUrl}")
+    public ResponseEntity<Void> deleteFile(@PathVariable String imageUrl) {
+        if (!imageService.existsByImageUrl(imageUrl)) {
+            return ResponseEntity.notFound().build();
+        }
+
+      long id = imageService.FindOneImageByUrl(imageUrl);
+
         if (!imageService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
+
         imageService.deleteImage(id);
         return ResponseEntity.ok().build();
     }

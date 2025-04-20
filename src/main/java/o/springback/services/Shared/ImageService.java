@@ -47,4 +47,18 @@ public class ImageService {
     public boolean existsById(Long id) {
         return imageRepository.existsById(id);
     }
+
+    public boolean existsByImageUrl(String url) {
+        return imageRepository.existsByImageUrl(url);
+    }
+
+    public long FindOneImageByUrl(String url) {
+        Image image = imageRepository.findByImageUrl(url);
+        if (image != null) {
+            return image.getId();
+        } else {
+            return -1; // or throw an exception
+        }
+
+    }
 }

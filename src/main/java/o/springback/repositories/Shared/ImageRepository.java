@@ -11,4 +11,8 @@ import java.util.List;
 public interface ImageRepository extends CrudRepository<Image, Long> {
 
     List<Image> findByOrderById();
+
+    boolean existsByImageUrl(String url);
+
+    Image findByImageUrl(String url);
 }
