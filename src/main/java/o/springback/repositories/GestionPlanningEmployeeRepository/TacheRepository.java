@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.table.TableCellEditor;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +34,8 @@ public interface TacheRepository extends JpaRepository<Tache, Long>{
     Integer findMaxPositionByStatutTache(@Param("statut") StatutTache statut);
     @Query("SELECT t FROM Tache t WHERE t.parent.idTache = :parentId")
     Integer findMaxPositionUnderParent(@Param("parentId") Long parentId);
+    @Query("SELECT t FROM Tache t WHERE t.dateFin BETWEEN :start AND :end")
+    List<Tache> findByDateFinBetween(@Param("start") Date start, @Param("end") Date end);
 
 
 }

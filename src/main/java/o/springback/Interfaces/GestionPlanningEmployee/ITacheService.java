@@ -29,4 +29,5 @@ public interface ITacheService {
     Map<String, Object> getHistoriqueTachesParDate(Long  employeeId, String periode);
     Map<String, Object> replanifierTache(Long employeeId, String strategie);
     int findMaxPositionByStatut(StatutTache statut);
+    Map<String, Object> getStatsGlobales();
 }

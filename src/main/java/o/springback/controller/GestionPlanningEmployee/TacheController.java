@@ -115,6 +115,11 @@ public class TacheController {
     public Map<String, Object> replanifierTaches ( @PathVariable Long employeeId, @RequestParam String strategie) {
         return tacheService.replanifierTache(employeeId, strategie);
     }
+    @GetMapping("/statistiques-globales")
+    public Map<String, Object> getStats() {
+        return tacheService.getStatsGlobales();
+    }
+
 
 
 }
