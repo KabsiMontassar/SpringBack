@@ -32,8 +32,7 @@ public class PlateformeService implements IPlateformeService {
             throw new IllegalArgumentException("Content cannot be null");
         }
         log.debug("PlateformeService.save() called with: plateforme = [{}]", plateforme);
-        Plateforme savedPlateforme = plateformeRepository.saveAndFlush(plateforme);
-        return savedPlateforme;
+        return plateformeRepository.saveAndFlush(plateforme);
     }
 
     @Override
@@ -69,9 +68,32 @@ public class PlateformeService implements IPlateformeService {
         }
     }
 
+    @Override
+    public Map<String, Integer> getMostlyBoughtPacks() {
+        List<User> users = userRepository.findAll();
+        Map<TypePack, Integer> packCount = new HashMap<>();
+
+        for (User user : users) {
+            TypePack pack = user.getTypePack();
+            if (pack != null) {
+                packCount.put(pack, packCount.getOrDefault(pack, 0) + 1);
+            }
+        }
+
+        List<Map.Entry<TypePack, Integer>> sortedPacks = new ArrayList<>(packCount.entrySet());
+
+        sortedPacks.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+
+        Map<String, Integer> result = new HashMap<>();
+        for (Map.Entry<TypePack, Integer> entry : sortedPacks) {
+            result.put(entry.getKey().name(), entry.getValue());
+        }
+
+        return result;
+    }
 
 
-  //  @Scheduled(cron = "*/15 * * * * ?")
+    @Scheduled(cron = "*/15 * * * * ?")
     public void checkPlateformeExpiration() {
         List<Plateforme> plateformes = plateformeRepository.findAll();
         log.info("Checking for plateforme expiration...");
@@ -85,7 +107,7 @@ public class PlateformeService implements IPlateformeService {
     }
 
 
-  //  @Scheduled(cron = "*/15 * * * * ?")
+   @Scheduled(cron = "*/15 * * * * ?")
     public void deleteExpiredPlateformes() {
         List<Plateforme> plateformes = plateformeRepository.findAll();
         log.info("Deleting expired plateformes...");

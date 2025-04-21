@@ -81,6 +81,11 @@ public class PlateformeController {
 
     }
 
+    @GetMapping("/mostlyBoughtPacks")
+    public Map<String, Integer> getMostlyBoughtPacks() {
+        return plateformeService.getMostlyBoughtPacks();
+    }
+
 
 
 }

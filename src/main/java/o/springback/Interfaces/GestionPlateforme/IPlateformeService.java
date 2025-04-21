@@ -16,4 +16,6 @@ public interface IPlateformeService {
 
 
     void changePackType(Long id, String plan);
+
+    Map<String, Integer> getMostlyBoughtPacks();
 }
