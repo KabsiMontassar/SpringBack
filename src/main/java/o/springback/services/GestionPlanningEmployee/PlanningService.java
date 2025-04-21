@@ -73,6 +73,22 @@ public class PlanningService implements IPlanningService{
 
         return dureeAbsence;
     }
+
+    @Override
+    public List<Planning> getPlanningsByEmployeeId(Long employeeId) {
+        return planningRepository.findByEmployeeId(employeeId);
+    }
+
+    @Override
+    public List<Planning> findPlanningsBetween(Long employeeID, Date weekStart, Date weekEnd) {
+        return planningRepository.findEmployeePlanningsInRange(employeeID, weekStart, weekEnd);
+    }
+
+    //@Override
+    //public List<Planning> findPlanningsBetween(Date start, Date end) {
+    //    return planningRepository.findPlanningsInRange(start, end);
+    //}
+
     private LocalDate convertToLocalDate(Date date) {
         return new java.sql.Date(date.getTime()).toLocalDate(); //conversion de LocalDate en java.sql.Date
     }

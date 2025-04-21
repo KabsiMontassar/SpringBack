@@ -1,11 +1,13 @@
 package o.springback.services.GestionPlanningEmployee;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import o.springback.Interfaces.GestionPlanningEmployee.ITacheService;
 import o.springback.entities.GestionPlanningEmployee.*;
 import o.springback.repositories.GestionPlanningEmployeeRepository.EmployeeRepository;
 import o.springback.repositories.GestionPlanningEmployeeRepository.TacheRepository;
 import o.springback.repositories.GestionPlanningEmployeeRepository.PlanningRepository;
 import org.springframework.cglib.core.Local;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.print.attribute.standard.JobKOctets;
@@ -20,18 +22,30 @@ import static java.time.Month.*;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class TacheService implements ITacheService{
     private TacheRepository tacheRepository;
     private PlanningRepository planningRepository;
     private EmployeeRepository employeeRepository;
     @Override
     public Tache add(Tache tache) {
+        if (tache.getPosition() == null){
+            tache.setPosition(getNextPositionForStatut(tache.getStatutTache()));
+        }
         if (tache.getSousTaches() != null){
             for (Tache sousT : tache.getSousTaches()) {
                 sousT.setParent(tache);
+                if (sousT.getPosition() == null){
+                    sousT.setPosition(getNextPositionForParent(tache));
+                }
             }
+
         }
         return tacheRepository.save(tache);
+    }
+    private int getNextPositionForParent(Tache parent){
+        Integer maxPos = tacheRepository.findMaxPositionUnderParent(parent.getIdTache());
+        return maxPos != null ? maxPos + 1 : 1;
     }
 
     @Override
@@ -39,7 +53,17 @@ public class TacheService implements ITacheService{
         Tache parent = tacheRepository.findById(parentId).orElse(null);
         if (parent == null) return null;
         sousTache.setParent(parent);
+        if(sousTache.getPosition() == null){
+            sousTache.setPosition(getNextPositionForParent(parent));
+        }
+        if (sousTache.getStatutTache() == null){
+            sousTache.setStatutTache(parent.getStatutTache());
+        }
         return tacheRepository.save(sousTache);
+    }
+    private int getNextPositionForStatut(StatutTache statut){
+        Integer maxPos = tacheRepository.findMaxPositionByStatutTache(statut);
+        return maxPos != null ? maxPos + 1 : 1;
     }
 
     @Override
@@ -51,6 +75,7 @@ public class TacheService implements ITacheService{
         exTache.setDateDebut(tache.getDateDebut());
         exTache.setDateFin(tache.getDateFin());
         exTache.setStatutTache(tache.getStatutTache());
+        exTache.setPosition(tache.getPosition());
         if (tache.getSousTaches() != null) {
             for (Tache sousT : tache.getSousTaches()) {
                 sousT.setParent(exTache);
@@ -180,6 +205,11 @@ public class TacheService implements ITacheService{
     @Override
     public List<Tache> findAll() {
         return tacheRepository.findAll();
+    }
+
+    @Override
+    public List<Tache> getTachesByEmployeeId(Long idEmployee) {
+        return tacheRepository.findByEmployee_IdEmployee(idEmployee);
     }
 
     @Override
@@ -394,6 +424,85 @@ public class TacheService implements ITacheService{
         return result;
     }
 
+    @Override
+    public int findMaxPositionByStatut(StatutTache statut) {
+        Integer maxPosition = tacheRepository.findMaxPositionByStatutTache(statut);
+        return maxPosition != null ? maxPosition : 0;
+    }
+//by status
+    @Override
+    public Map<String, Object> getStatsGlobales() {
+        List<Tache> allTaches = tacheRepository.findAll();
+
+        long total = allTaches.size();
+        long terminees = allTaches.stream().filter(t -> t.getStatutTache() == StatutTache.TERMINEE).count();
+
+        long enencours = allTaches.stream().filter(t -> t.getStatutTache() == StatutTache.EN_COURS ).count();
+
+        long afaire = allTaches.stream().filter(t -> t.getStatutTache() == StatutTache.A_FAIRE).count();
+
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalTaches", total);
+        stats.put("tachesTerminees", terminees);
+        stats.put("tachesEnCours", enencours);
+        stats.put("tachesAFaire", afaire);
+
+        return stats;
+    }
+
+
+    //@Scheduled(cron = "0 0 7 * * MON")
+    //@Scheduled(cron = "*/15 * * * * *")
+    public void notifierTacheDDL() {
+        LocalDate today = LocalDate.now();
+        List<Tache> taches = tacheRepository.findByDateFinBetween(
+                Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                Date.from(today.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant())
+        );
+        for (Tache tache : taches) {
+            log.info("Notification pour la tâche: " + tache.getTitre());
+        }
+    }
+
+
+
+    // @Scheduled(cron = "0 0 8 * * MON") // Chaque lundi à 8h du matin
+     //@Scheduled(cron = "*/20 * * * * *")
+    public void notifierTachesEnRetard() {
+        log.info("Recherche des tâches en retard");
+        LocalDate aujourdhui = LocalDate.now();
+
+        List<Tache> tachesEnRetard = tacheRepository.findAll().stream()
+                .filter(t -> t.getDateFin() != null && t.getDateFin().before(Date.from(aujourdhui.atStartOfDay(ZoneId.systemDefault()).toInstant())))
+                .toList();
+        Map<Long, List<Tache>> tachesParEmploye = new HashMap<>();
+
+        for (Tache t : tachesEnRetard) {
+            if (t.getEmployee() != null) {
+                Long idEmployee = t.getEmployee().getIdEmployee();
+                tachesParEmploye.computeIfAbsent(idEmployee, k -> new ArrayList<>()).add(t);
+            }
+        }
+
+        for (Map.Entry<Long, List<Tache>> entry : tachesParEmploye.entrySet()) {
+            Long idEmp = entry.getKey();
+            Employee emp = employeeRepository.findById(idEmp).orElse(null);
+
+            if (emp != null) {
+                log.info(" Employé: {} {}, vous avez {} tâche(s) en retard.",
+                        emp.getPrenom(), emp.getNom(), entry.getValue().size());
+
+                for (Tache tache : entry.getValue()) {
+                    log.info(" Tâche: {} (deadline: {})", tache.getTitre(), tache.getDateFin());
+                }
+            }
+        }
+    }
 
 
 }
+    // proposer une autre schedule method other then notifierTacheDDL
+    // @Scheduled(cron = "0 0 12 * * ?")
+    // p
+
