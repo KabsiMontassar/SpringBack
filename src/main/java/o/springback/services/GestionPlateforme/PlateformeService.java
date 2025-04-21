@@ -10,6 +10,7 @@ import o.springback.repositories.GestionPlateformeRepository.PlateformeRepositor
 import o.springback.repositories.GestionUserRepository.UserRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,12 +26,14 @@ public class PlateformeService implements IPlateformeService {
     private UserRepository userRepository;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Plateforme save(Plateforme plateforme) {
         if (plateforme.getContent() == null) {
             throw new IllegalArgumentException("Content cannot be null");
         }
-        System.out.println("PlateformeService.save() called with: plateforme = [" + plateforme + "]");
-        return plateformeRepository.save(plateforme);
+        log.debug("PlateformeService.save() called with: plateforme = [{}]", plateforme);
+        Plateforme savedPlateforme = plateformeRepository.saveAndFlush(plateforme);
+        return savedPlateforme;
     }
 
     @Override

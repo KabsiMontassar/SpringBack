@@ -49,20 +49,16 @@ public class UserService implements IUserService , UserDetailsService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updatePlateformeId(String email, Plateforme plateforme) {
         try {
             User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-
-
-                user.setPlateforme(plateforme);
-                userRepository.save(user);
-
+            user.setPlateforme(plateforme);
+            userRepository.saveAndFlush(user);
         } catch (Exception e) {
-            throw new RuntimeException("Error updating plateforme ID: " + e.getMessage());
+            throw new RuntimeException("Error updating plateforme ID", e);
         }
-
     }
 
     @Override
