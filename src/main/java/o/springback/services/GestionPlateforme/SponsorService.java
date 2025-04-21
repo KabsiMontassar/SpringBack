@@ -3,6 +3,7 @@ package o.springback.services.GestionPlateforme;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionPlateforme.ISponsorService;
 import o.springback.entities.GestionPlateforme.Sponsor;
+import o.springback.repositories.GestionPlateformeRepository.PlateformeRepository;
 import o.springback.repositories.GestionPlateformeRepository.SponsorRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +14,16 @@ import java.util.List;
 public class SponsorService implements ISponsorService {
 
     SponsorRepository sponsorRepository;
+    PlateformeRepository formRepository;
 
     @Override
     public Sponsor save(Sponsor sponsor) {
+
+
         return sponsorRepository.save(sponsor);
+
+
+
     }
 
     @Override

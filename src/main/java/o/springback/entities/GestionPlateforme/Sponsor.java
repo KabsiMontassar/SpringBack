@@ -1,6 +1,7 @@
 package o.springback.entities.GestionPlateforme;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,8 +31,9 @@ public class Sponsor {
 
     private LocalDate datepartenariat;
 
-    @ManyToOne
-    @JoinColumn(name = "plateforme_idPlateforme")
-    @JsonIgnore
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "plateforme_id", nullable = false)
+    @NotNull(message = "La plateforme est obligatoire")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Plateforme plateformeSponsor;
 }

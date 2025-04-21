@@ -10,6 +10,7 @@ import o.springback.repositories.GestionPlateformeRepository.PlateformeRepositor
 import o.springback.repositories.GestionUserRepository.UserRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,12 +26,13 @@ public class PlateformeService implements IPlateformeService {
     private UserRepository userRepository;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Plateforme save(Plateforme plateforme) {
         if (plateforme.getContent() == null) {
             throw new IllegalArgumentException("Content cannot be null");
         }
-        System.out.println("PlateformeService.save() called with: plateforme = [" + plateforme + "]");
-        return plateformeRepository.save(plateforme);
+        log.debug("PlateformeService.save() called with: plateforme = [{}]", plateforme);
+        return plateformeRepository.saveAndFlush(plateforme);
     }
 
     @Override
@@ -66,9 +68,37 @@ public class PlateformeService implements IPlateformeService {
         }
     }
 
+    @Override
+    public Map<String, Integer> getMostlyBoughtPacks() {
+        List<User> users = userRepository.findAll();
+        Map<TypePack, Integer> packCount = new HashMap<>();
 
 
-  //  @Scheduled(cron = "*/15 * * * * ?")
+        for (TypePack pack : TypePack.values()) {
+            packCount.put(pack, 0);
+        }
+
+        for (User user : users) {
+            TypePack pack = user.getTypePack();
+            if (pack != null) {
+                packCount.put(pack, packCount.get(pack) + 1);
+            }
+        }
+
+        List<Map.Entry<TypePack, Integer>> sortedPacks = new ArrayList<>(packCount.entrySet());
+
+        sortedPacks.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+
+        Map<String, Integer> result = new HashMap<>();
+        for (Map.Entry<TypePack, Integer> entry : sortedPacks) {
+            result.put(entry.getKey().name(), entry.getValue());
+        }
+
+        return result;
+    }
+
+
+    @Scheduled(cron = "*/15 * * * * ?")
     public void checkPlateformeExpiration() {
         List<Plateforme> plateformes = plateformeRepository.findAll();
         log.info("Checking for plateforme expiration...");
@@ -82,7 +112,7 @@ public class PlateformeService implements IPlateformeService {
     }
 
 
-  //  @Scheduled(cron = "*/15 * * * * ?")
+   @Scheduled(cron = "*/15 * * * * ?")
     public void deleteExpiredPlateformes() {
         List<Plateforme> plateformes = plateformeRepository.findAll();
         log.info("Deleting expired plateformes...");
