@@ -73,10 +73,15 @@ public class PlateformeService implements IPlateformeService {
         List<User> users = userRepository.findAll();
         Map<TypePack, Integer> packCount = new HashMap<>();
 
+
+        for (TypePack pack : TypePack.values()) {
+            packCount.put(pack, 0);
+        }
+
         for (User user : users) {
             TypePack pack = user.getTypePack();
             if (pack != null) {
-                packCount.put(pack, packCount.getOrDefault(pack, 0) + 1);
+                packCount.put(pack, packCount.get(pack) + 1);
             }
         }
 
