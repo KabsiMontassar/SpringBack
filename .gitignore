@@ -35,5 +35,5 @@ build/
 
 # Firebase credentials - Security sensitive
 firebaseKeys.json
-**/firebaseKeys.json
+firebaseKeys.json
 src/main/resources/firebaseKeys.json

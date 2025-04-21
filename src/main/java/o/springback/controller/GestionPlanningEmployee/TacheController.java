@@ -31,18 +31,18 @@ public class TacheController {
     public Tache addTache(@RequestBody Tache c) {
         return tacheService.add(c);
     }
-    @PostMapping("/add-sous-tache/{parentId}")
-    public Tache ajouterSousTache(@PathVariable Long parentId, @RequestBody Tache sousTache){
-        return tacheService.ajouterSousTache(parentId, sousTache);
-    }
+    //@PostMapping("/add-sous-tache/{parentId}")
+    //public Tache ajouterSousTache(@PathVariable Long parentId, @RequestBody Tache sousTache){
+    //    return tacheService.ajouterSousTache(parentId, sousTache);
+    //}
     @DeleteMapping("/remove-tache/{Tache-id}")
     public void removeTache(@PathVariable("Tache-id") Long TacheId) {
         tacheService.delete(TacheId);
     }
-    @DeleteMapping("/remove-sous-tache/{id}")
-    public void removeSousTache(@PathVariable Long id){
-        tacheService.deletesoustache(id);
-    }
+    //@DeleteMapping("/remove-sous-tache/{id}")
+    //public void removeSousTache(@PathVariable Long id){
+    //    tacheService.deletesoustache(id);
+    //}
     @PutMapping("/update-tache/{id}")
     public Tache updateTache(@PathVariable Long id, @RequestBody Tache tache) {
         return tacheService.update(id, tache);
@@ -52,36 +52,36 @@ public class TacheController {
         return tacheService.updateSousTache(id, sousTache);
     }
 
-    @GetMapping("/has-sous-taches/{id}")
-    public boolean hasSousTache (@PathVariable Long id){
-        return tacheService.hasSousTaches(id);
-    }
-    @GetMapping("/descendants/{id}")
-    public List<Tache> getAllDescendants(@PathVariable Long id){
-        Tache tache = tacheService.findById(id);
-        return (tache != null) ? tacheService.getAllDescendants(tache) : Collections.emptyList();
-    }
-    @GetMapping("/descendants/count/{id}")
-    public Map<String, Object> countAllDescendants(@PathVariable Long id){
-        Tache tache = tacheService.findById(id);
-        if (tache == null){
-            return Map.of("message", "Tâche introuvable", "count", 0);
-        }
-        int count = tacheService.countAllDescendants(tache);
-        return Map.of(
-                "idTache", id,
-                "titre", tache.getTitre(),
-                "nombreSousTaches", count
-        );
-    }
-    @GetMapping("/progression/{tacheId}")
-    public Map<String, Object> getProgressionTache(@PathVariable Long tacheId){
-        return tacheService.getProgressionTache(tacheId);
-    }
-    @GetMapping("/progression-employe/{employeeId}")
-    public Map<String, Object> getProgressionParEmployee(@PathVariable Long employeeId) {
-        return tacheService.getProgressionParEmploye(employeeId);
-    }
+    //@GetMapping("/has-sous-taches/{id}")
+    //public boolean hasSousTache (@PathVariable Long id){
+    //    return tacheService.hasSousTaches(id);
+    //}
+    //@GetMapping("/descendants/{id}")
+    //public List<Tache> getAllDescendants(@PathVariable Long id){
+    //    Tache tache = tacheService.findById(id);
+    //    return (tache != null) ? tacheService.getAllDescendants(tache) : Collections.emptyList();
+    //}
+    //@GetMapping("/descendants/count/{id}")
+    //public Map<String, Object> countAllDescendants(@PathVariable Long id){
+    //    Tache tache = tacheService.findById(id);
+    //    if (tache == null){
+    //        return Map.of("message", "Tâche introuvable", "count", 0);
+    //    }
+    //int count = tacheService.countAllDescendants(tache);
+    //    return Map.of(
+    //            "idTache", id,
+    //            "titre", tache.getTitre(),
+    //            "nombreSousTaches", count
+    //    );
+    //}
+    //@GetMapping("/progression/{tacheId}")
+    //public Map<String, Object> getProgressionTache(@PathVariable Long tacheId){
+    //    return tacheService.getProgressionTache(tacheId);
+    //}
+    //@GetMapping("/progression-employe/{employeeId}")
+    //public Map<String, Object> getProgressionParEmployee(@PathVariable Long employeeId) {
+    //    return tacheService.getProgressionParEmploye(employeeId);
+    //}
     @GetMapping("/nombre-taches-par-employe/{id}")
     public Map<String, Object> getNombreTachesParEmploye(@PathVariable Long id){
         return tacheService.getNombreTachesParEmploye(id);

@@ -34,8 +34,8 @@ public class Tache {
     @OneToMany(mappedBy = "tache")
     private List<Planning> plannings;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true) //orphanRemoval tfassakh l'entité elli maadch aandha parent (orphaned entity) mel db
-    private List<Tache> sousTaches = new ArrayList<>();
+    //@OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true) //orphanRemoval tfassakh l'entité elli maadch aandha parent (orphaned entity) mel db
+    //private List<Tache> sousTaches = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "parent_id")
     @JsonIgnore //pour éviter les boucles

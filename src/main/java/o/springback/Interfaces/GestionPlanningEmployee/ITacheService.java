@@ -11,12 +11,12 @@ public interface ITacheService {
     Tache update(Long id, Tache tache);
     Tache updateSousTache(Long id, Tache sousTache);
     void delete(Long id);
-    void deletesoustache(Long id);
-    Boolean hasSousTaches(Long idTache);
-    List<Tache> getAllDescendants(Tache tache);
-    int countAllDescendants(Tache tache);
-    Map<String, Object> getProgressionTache(Long tacheId);
-    Map<String, Object> getProgressionParEmploye(Long employeeId);
+    //void deletesoustache(Long id);
+    //Boolean hasSousTaches(Long idTache);
+    //List<Tache> getAllDescendants(Tache tache);
+    //int countAllDescendants(Tache tache);
+    //Map<String, Object> getProgressionTache(Long tacheId);
+    //Map<String, Object> getProgressionParEmploye(Long employeeId);
     Tache findById(Long id);
     List<Tache> findAll();
     // ITacheService.java

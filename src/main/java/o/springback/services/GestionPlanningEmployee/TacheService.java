@@ -32,15 +32,15 @@ public class TacheService implements ITacheService{
         if (tache.getPosition() == null){
             tache.setPosition(getNextPositionForStatut(tache.getStatutTache()));
         }
-        if (tache.getSousTaches() != null){
-            for (Tache sousT : tache.getSousTaches()) {
-                sousT.setParent(tache);
-                if (sousT.getPosition() == null){
-                    sousT.setPosition(getNextPositionForParent(tache));
-                }
-            }
+        //if (tache.getSousTaches() != null){
+        //    for (Tache sousT : tache.getSousTaches()) {
+        //        sousT.setParent(tache);
+        //        if (sousT.getPosition() == null){
+        //            sousT.setPosition(getNextPositionForParent(tache));
+        //        }
+        //    }
 
-        }
+        //}
         return tacheRepository.save(tache);
     }
     private int getNextPositionForParent(Tache parent){
@@ -76,12 +76,12 @@ public class TacheService implements ITacheService{
         exTache.setDateFin(tache.getDateFin());
         exTache.setStatutTache(tache.getStatutTache());
         exTache.setPosition(tache.getPosition());
-        if (tache.getSousTaches() != null) {
-            for (Tache sousT : tache.getSousTaches()) {
-                sousT.setParent(exTache);
-            }
-            exTache.setSousTaches(tache.getSousTaches());
-        }
+        //if (tache.getSousTaches() != null) {
+        //    for (Tache sousT : tache.getSousTaches()) {
+        //        sousT.setParent(exTache);
+        //    }
+        //    exTache.setSousTaches(tache.getSousTaches());
+        //}
         return tacheRepository.save(exTache);
     }
 
@@ -105,95 +105,94 @@ public class TacheService implements ITacheService{
         }
     }
 
-    @Override
-    public void deletesoustache(Long id) {
-        Tache sousTache = tacheRepository.findById(id).orElse(null);
-        if (sousTache != null && sousTache.getParent() != null){
-            Tache parent = sousTache.getParent();
-            parent.getSousTaches().remove(sousTache);
-            tacheRepository.deleteById(id);
-        }
-    }
+    //@Override
+    //public void deletesoustache(Long id) {
+    //    Tache sousTache = tacheRepository.findById(id).orElse(null);
+    //    if (sousTache != null && sousTache.getParent() != null){
+    //        Tache parent = sousTache.getParent();
+    //        parent.getSousTaches().remove(sousTache);
+    //        tacheRepository.deleteById(id);
+    //    }
+    //}
 
-    @Override
-    public Boolean hasSousTaches(Long idTache) {
-        return tacheRepository.hasChildTaches(idTache);
-    }
+    //@Override
+    //public Boolean hasSousTaches(Long idTache) {
+    //    return tacheRepository.hasChildTaches(idTache);
+    //}
 
-    @Override
-    public List<Tache> getAllDescendants(Tache tache) {
-        List<Tache> all = new ArrayList<>();
-        if (tache.getSousTaches() != null){
-            for (Tache child : tache.getSousTaches()) {
-                all.add(child);
-                all.addAll(getAllDescendants(child));
-            }
-        }
-        return all;
-    }
+    //@Override
+    //public List<Tache> getAllDescendants(Tache tache) {
+    //    List<Tache> all = new ArrayList<>();
+    //    if (tache.getSousTaches() != null){
+    //        for (Tache child : tache.getSousTaches()) {
+    //            all.add(child);
+    //            all.addAll(getAllDescendants(child));
+    //        }
+    //    }
+    //    return all;
+    //}
 
-    @Override
-    public int countAllDescendants(Tache tache) {
-        return getAllDescendants(tache).size();
-    }
+    //@Override
+    //public int countAllDescendants(Tache tache) {
+    //    return getAllDescendants(tache).size();
+    //}
 
-    @Override
-    public Map<String, Object> getProgressionTache(Long tacheId) {
-        Tache tache = tacheRepository.findById(tacheId).orElse(null);
-        if (tache == null) return null;
-        List<Tache> sousTaches = tache.getSousTaches();
-        long total = sousTaches.size();
-        long terminees = sousTaches.stream()
-                .filter(st -> st.getStatutTache() == StatutTache.TERMINEE)
-                .count();
-        double progression = total > 0 ? (double) terminees /total * 100:0 ;
+    //@Override
+    //public Map<String, Object> getProgressionTache(Long tacheId) {
+    //    Tache tache = tacheRepository.findById(tacheId).orElse(null);
+    //    if (tache == null) return null;
+    //    List<Tache> sousTaches = tache.getSousTaches();
+    //    long total = sousTaches.size();
+    //    long terminees = sousTaches.stream()
+    //            .filter(st -> st.getStatutTache() == StatutTache.TERMINEE)
+    //            .count();
+    //    double progression = total > 0 ? (double) terminees /total * 100:0 ;
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("tache", tache.getIdTache());
-        result.put("totalSousTaches", total);
-        result.put("totalSousTachesTerminee", terminees);
-        result.put("progression", progression);
+    //    Map<String, Object> result = new HashMap<>();
+    //    result.put("tache", tache.getIdTache());
+    //    result.put("totalSousTaches", total);
+    //    result.put("totalSousTachesTerminee", terminees);
+    //    result.put("progression", progression);
 
-        return result;
-    }
+    //    return result;
+    //}
 
-    @Override
-    public Map<String, Object> getProgressionParEmploye(Long employeeId) {
-        List<Tache> taches = tacheRepository.findAll();
-        int total = 0;
-        int terminees = 0;
-        String nom = "";
-        String prenom = "";
+    //@Override
+    //public Map<String, Object> getProgressionParEmploye(Long employeeId) {
+    //    List<Tache> taches = tacheRepository.findAll();
+    //    int total = 0;
+    //    int terminees = 0;
+    //    String nom = "";
+    //    String prenom = "";
 
-        for (Tache tache : taches) {
-            if (tache.getEmployee() != null && tache.getEmployee().getIdEmployee().equals(employeeId)) {
-                if (nom.isEmpty()){
-                    nom = tache.getEmployee().getNom();
-                    prenom = tache.getEmployee().getPrenom();
-                }
-                List<Tache> descendants = getAllDescendants(tache);
-                if (descendants.isEmpty()) {
-                    total++;
-                    if (tache.getStatutTache() == StatutTache.TERMINEE) terminees++;
-                } else {
-                    for (Tache sousT : descendants) {
-                        total++;
-                        if (sousT.getStatutTache() == StatutTache.TERMINEE) terminees++;
-                    }
-                }
-            }
-        }
-        double progression = (total > 0) ? (terminees * 100.0 / total) : 0.0;
-        Map<String, Object> result = new HashMap<>();
-        result.put("nom", nom);
-        result.put("prénom", prenom);
-            result.put("Total", total);
-            result.put("terminées", terminees);
-            result.put("progression", progression);
-            result.put("plannings", planningRepository.findByEmployeeId(employeeId));
-
-            return result;
-        }
+    //    for (Tache tache : taches) {
+    //        if (tache.getEmployee() != null && tache.getEmployee().getIdEmployee().equals(employeeId)) {
+    //            if (nom.isEmpty()){
+    //                nom = tache.getEmployee().getNom();
+    //                prenom = tache.getEmployee().getPrenom();
+    //            }
+    //            //List<Tache> descendants = getAllDescendants(tache);
+    //            if (descendants.isEmpty()) {
+    //                total++;
+    //                if (tache.getStatutTache() == StatutTache.TERMINEE) terminees++;
+    //            } else {
+    //                for (Tache sousT : descendants) {
+    //                    total++;
+    //                    if (sousT.getStatutTache() == StatutTache.TERMINEE) terminees++;
+    //                }
+    //            }
+    //        }
+    //    }
+    //    double progression = (total > 0) ? (terminees * 100.0 / total) : 0.0;
+    //    Map<String, Object> result = new HashMap<>();
+    //    result.put("nom", nom);
+    //    result.put("prénom", prenom);
+    //        result.put("Total", total);
+    //        result.put("terminées", terminees);
+    //        result.put("progression", progression);
+    //        result.put("plannings", planningRepository.findByEmployeeId(employeeId));
+    //        return result;
+    //    }
 
 
 
@@ -453,7 +452,7 @@ public class TacheService implements ITacheService{
 
 
     //@Scheduled(cron = "0 0 7 * * MON")
-    //@Scheduled(cron = "*/15 * * * * *")
+    @Scheduled(cron = "*/15 * * * * *")
     public void notifierTacheDDL() {
         LocalDate today = LocalDate.now();
         List<Tache> taches = tacheRepository.findByDateFinBetween(
@@ -468,7 +467,7 @@ public class TacheService implements ITacheService{
 
 
     // @Scheduled(cron = "0 0 8 * * MON") // Chaque lundi à 8h du matin
-     //@Scheduled(cron = "*/20 * * * * *")
+    @Scheduled(cron = "*/20 * * * * *")
     public void notifierTachesEnRetard() {
         log.info("Recherche des tâches en retard");
         LocalDate aujourdhui = LocalDate.now();

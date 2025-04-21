@@ -23,4 +23,5 @@ public class RegisterRequestDTO {
     @Size(min=6, message = "Password should be at least 6 characters")
     private String password;
     private String adresse;
+    private String role;
 }

@@ -76,6 +76,7 @@ public class UserService implements IUserService , UserDetailsService {
         user.setDateInscription(new Date());
         user.setRole("ROLE_USER");
 
+
         return userRepository.save(user);
     }
     @Override
