@@ -3,6 +3,7 @@ package o.springback.Interfaces.GestionPlateforme;
 import o.springback.entities.GestionPlateforme.Component;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IComponentService {
     Component save(Component component);
@@ -11,4 +12,6 @@ public interface IComponentService {
     Component findById(Long id);
     List<Component> findAll();
     List<Component> findByUserId(Long userId);
+
+    Map<String,Double> getUsageRate();
 }

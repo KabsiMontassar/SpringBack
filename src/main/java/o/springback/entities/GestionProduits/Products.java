@@ -56,4 +56,6 @@ public class Products {
     @JoinColumn(name = "idUser")
     @JsonIgnoreProperties("products")
     private User user;
+
+
 }
