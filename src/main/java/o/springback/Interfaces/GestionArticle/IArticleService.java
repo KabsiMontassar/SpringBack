@@ -12,4 +12,5 @@ public interface IArticleService {
     void delete(Long idArticle);
     List<Article> findByTypeArticle(Payment.PaymentType typeArticle);
 
+    void AffectAuctionToArticle(Long idArticle, Long idAuction);
 }

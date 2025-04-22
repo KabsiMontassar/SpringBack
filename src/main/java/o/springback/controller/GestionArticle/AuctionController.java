@@ -1,5 +1,6 @@
 package o.springback.controller.GestionArticle;
 import lombok.RequiredArgsConstructor;
+import o.springback.Interfaces.GestionArticle.IArticleService;
 import o.springback.Interfaces.GestionArticle.IAuctionService;
 import o.springback.Interfaces.GestionArticle.IReservationService;
 import o.springback.entities.GestionArticle.Auction;
@@ -15,6 +16,8 @@ public class AuctionController {
 
     private final IAuctionService auctionService;
 
+    private final IArticleService articleService;
+
     @GetMapping
     public ResponseEntity<List<Auction>> getAllAuctions() {
         return ResponseEntity.ok(auctionService.findAll());
@@ -25,10 +28,12 @@ public class AuctionController {
         return ResponseEntity.ok(auctionService.findById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<Auction> createAuction(@RequestBody Auction auction) {
-        Auction saved = auctionService.save(auction);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    @PostMapping("/{id}")
+    public ResponseEntity<Auction> createAuction(@RequestBody Auction auction , @PathVariable Long id) {
+        Auction Newauction = auctionService.save(auction);
+        articleService.AffectAuctionToArticle(id, Newauction.getId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(Newauction);
     }
 
     @PutMapping("/{id}")

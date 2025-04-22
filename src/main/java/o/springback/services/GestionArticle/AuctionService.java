@@ -3,8 +3,10 @@ package o.springback.services.GestionArticle;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionArticle.IAuctionService;
+import o.springback.entities.GestionArticle.Article;
 import o.springback.entities.GestionArticle.Auction;
 import o.springback.entities.GestionArticle.Bid;
+import o.springback.repositories.GestionArticle.ArticleRepository;
 import o.springback.repositories.GestionArticle.AuctionRepository;
 import o.springback.repositories.GestionArticle.BidRepository;
 import o.springback.repositories.GestionArticle.PaymentRepository;
@@ -21,6 +23,7 @@ public class AuctionService implements IAuctionService {
     private AuctionRepository auctionRepository;
     private BidRepository bidRepository;
     private PaymentRepository paymentRepository;
+    private ArticleRepository articleRepository;
 
     @Override
     public List<Auction> findAll() {
@@ -94,6 +97,17 @@ public class AuctionService implements IAuctionService {
             paymentRepository.delete(auction.getPayment());
         }
 
+
+
+   Article article = articleRepository.findByAuctionId(idAuction);
+
+
+        if(article != null) {
+            article.setAuction(null);
+            article.setAvailable(true);
+            articleRepository.save(article);
+        }
+
         auctionRepository.delete(auction);
     }
 /*    @Scheduled(fixedRate = 50000)
@@ -142,10 +156,18 @@ public class AuctionService implements IAuctionService {
     public List<Auction> getTop5AuctionsByBids() {
         return auctionRepository.findTop5ByBidsCount();
     }
+
+
+
     @Override
     public List<Auction> findByArticleId(Long articleId) {
         return auctionRepository.findByArticleId(articleId);
     }
+
+
+
+
+
 
 
 }

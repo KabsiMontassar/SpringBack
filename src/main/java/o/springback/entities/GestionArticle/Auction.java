@@ -30,20 +30,20 @@ public class Auction {
     private Float currentPrice;
 
     @NotNull(message = "Start time is required")
-    @FutureOrPresent(message = "Start time must be in the present or future")
+   // @FutureOrPresent(message = "Start time must be in the present or future")
     private LocalDateTime startTime=LocalDateTime.now();
 
     @NotNull(message = "End time is required")
-    @Future(message = "End time must be in the future")
+  //  @Future(message = "End time must be in the future")
     private LocalDateTime endTime;
 
     @NotNull(message = "Active status is required")
     private boolean isActive = true;
 
-    @OneToOne(mappedBy = "auction", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToOne(mappedBy = "auction")
     @JsonBackReference("article-auction")
-    @JsonIgnore
     private Article article;
+
 
     @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("auction-bids")

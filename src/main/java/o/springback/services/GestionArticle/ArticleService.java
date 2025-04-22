@@ -10,7 +10,6 @@ import o.springback.entities.GestionArticle.Reservation;
 import o.springback.repositories.GestionArticle.ArticleRepository;
 import o.springback.repositories.GestionArticle.AuctionRepository;
 import o.springback.repositories.GestionArticle.ReservationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -219,5 +218,38 @@ public class ArticleService implements IArticleService {
     public List<Article> findByTypeArticle(Payment.PaymentType typeArticle) {
         return articleRepository.findByTypeArticle(typeArticle);
     }
+
+
+
+
+
+  @Override
+  public void AffectAuctionToArticle(Long idArticle, Long idAuction) {
+        Article article = findById(idArticle);
+        Auction auction = auctionRepository.findById(idAuction)
+                .orElseThrow(() -> new RuntimeException("Auction not found with id: " + idAuction));
+
+        article.setAuction(auction);
+        article.setAvailable(false);
+        articleRepository.save(article);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
