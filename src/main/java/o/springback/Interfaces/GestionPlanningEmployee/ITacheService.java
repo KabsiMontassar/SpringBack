@@ -30,4 +30,6 @@ public interface ITacheService {
     Map<String, Object> replanifierTache(Long employeeId, String strategie);
     int findMaxPositionByStatut(StatutTache statut);
     Map<String, Object> getStatsGlobales();
+    Map<String, Object> getStatsGlobalesParEmploye(Long employeeId);
+
 }

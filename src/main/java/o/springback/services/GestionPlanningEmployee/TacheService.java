@@ -450,6 +450,26 @@ public class TacheService implements ITacheService{
         return stats;
     }
 
+    @Override
+    public Map<String, Object> getStatsGlobalesParEmploye(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId).orElse(null);
+        if (employee == null){
+            throw new IllegalArgumentException("L'employé avec l'ID " + employeeId + " n'existe pas.");
+        }
+        List<Tache> taches = employee.getTaches();
+        long total = taches.size();
+        long terminees = taches.stream().filter(t -> t.getStatutTache() == StatutTache.TERMINEE).count();
+        long enCours = taches.stream().filter(t-> t.getStatutTache() == StatutTache.EN_COURS).count();
+        long aFaire = taches.stream().filter(t -> t.getStatutTache() == StatutTache.A_FAIRE).count();
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalTaches", total);
+        stats.put("tachesTerminees", terminees);
+        stats.put("tachesEnCours", enCours);
+        stats.put("tachesAFaire", aFaire);
+        return stats;
+    }
+
 
     //@Scheduled(cron = "0 0 7 * * MON")
     @Scheduled(cron = "*/15 * * * * *")

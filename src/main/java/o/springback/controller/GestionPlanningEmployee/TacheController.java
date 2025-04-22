@@ -119,6 +119,10 @@ public class TacheController {
     public Map<String, Object> getStats() {
         return tacheService.getStatsGlobales();
     }
+    @GetMapping("/statistiques-globales-employe/{employeeId}")
+    public Map<String, Object> getStatsParEmploye(@PathVariable Long employeeId) {
+        return tacheService.getStatsGlobalesParEmploye(employeeId);
+    }
 
 
 
