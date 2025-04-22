@@ -1,15 +1,15 @@
 package o.springback.Interfaces.GestionCommande;
 
-import o.springback.entities.GestionCommande.Paiement;
+import o.springback.entities.GestionCommande.Payment;
 
 import java.util.List;
 
 public interface IPaiementService {
-    Paiement createPaiement(Paiement paiement);
-    Paiement updatePaiement(Long id, Paiement paiement);
+    Payment createPaiement(Payment payment);
+    Payment updatePaiement(Long id, Payment payment);
     void deletePaiement(Long id);
-    Paiement getPaiementById(Long id);
-    List<Paiement> getAllPaiements();
+    Payment getPaiementById(Long id);
+    List<Payment> getAllPaiements();
 
     //String checkPaymentStatus(Long id);
 }
