@@ -435,17 +435,17 @@ public class TacheService implements ITacheService{
 
         long total = allTaches.size();
         long terminees = allTaches.stream().filter(t -> t.getStatutTache() == StatutTache.TERMINEE).count();
-
         long enencours = allTaches.stream().filter(t -> t.getStatutTache() == StatutTache.EN_COURS ).count();
-
         long afaire = allTaches.stream().filter(t -> t.getStatutTache() == StatutTache.A_FAIRE).count();
 
+        double tauxProgression = total > 0 ? (terminees * 100.0) / total : 0;
 
         Map<String, Object> stats = new HashMap<>();
         stats.put("totalTaches", total);
         stats.put("tachesTerminees", terminees);
         stats.put("tachesEnCours", enencours);
         stats.put("tachesAFaire", afaire);
+        stats.put("tauxProgression", Math.round(tauxProgression));
 
         return stats;
     }
@@ -462,11 +462,13 @@ public class TacheService implements ITacheService{
         long enCours = taches.stream().filter(t-> t.getStatutTache() == StatutTache.EN_COURS).count();
         long aFaire = taches.stream().filter(t -> t.getStatutTache() == StatutTache.A_FAIRE).count();
 
+        double tauxProgression = total > 0 ? (terminees* 100.0) /total : 0;
         Map<String, Object> stats = new HashMap<>();
         stats.put("totalTaches", total);
         stats.put("tachesTerminees", terminees);
         stats.put("tachesEnCours", enCours);
         stats.put("tachesAFaire", aFaire);
+        stats.put("tauxProgression", Math.round(tauxProgression));
         return stats;
     }
 
