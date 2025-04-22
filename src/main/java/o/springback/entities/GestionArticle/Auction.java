@@ -1,6 +1,7 @@
 package o.springback.entities.GestionArticle;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -30,7 +31,7 @@ public class Auction {
 
     @NotNull(message = "Start time is required")
     @FutureOrPresent(message = "Start time must be in the present or future")
-    private LocalDateTime startTime;
+    private LocalDateTime startTime=LocalDateTime.now();
 
     @NotNull(message = "End time is required")
     @Future(message = "End time must be in the future")
@@ -39,11 +40,12 @@ public class Auction {
     @NotNull(message = "Active status is required")
     private boolean isActive = true;
 
-    @OneToOne(mappedBy = "auction", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "auction", cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonBackReference("article-auction")
+    @JsonIgnore
     private Article article;
 
-    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("auction-bids")
     private List<Bid> bids;
 

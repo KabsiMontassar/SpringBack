@@ -1,22 +1,20 @@
 package o.springback.services.GestionArticle;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionArticle.IAuctionService;
 import o.springback.entities.GestionArticle.Auction;
 import o.springback.entities.GestionArticle.Bid;
-import o.springback.entities.GestionArticle.Payment;
 import o.springback.repositories.GestionArticle.AuctionRepository;
 import o.springback.repositories.GestionArticle.BidRepository;
 import o.springback.repositories.GestionArticle.PaymentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class AuctionService implements IAuctionService {
 
@@ -98,7 +96,7 @@ public class AuctionService implements IAuctionService {
 
         auctionRepository.delete(auction);
     }
-    @Scheduled(fixedRate = 50000)
+/*    @Scheduled(fixedRate = 50000)
     public void deleteExpiredUnpaidAuctions() {
         List<Auction> expiredUnpaidAuctions = auctionRepository.findByIsActiveFalseAndPaymentStatusNotAndEndTimeBefore(
                Payment.Status.PENDING, LocalDateTime.now().minusDays(7));
@@ -140,9 +138,13 @@ public class AuctionService implements IAuctionService {
         } else {
             System.out.println("Aucune enchère terminée à traiter");
         }
-    }
+    }*/
     public List<Auction> getTop5AuctionsByBids() {
         return auctionRepository.findTop5ByBidsCount();
+    }
+    @Override
+    public List<Auction> findByArticleId(Long articleId) {
+        return auctionRepository.findByArticleId(articleId);
     }
 
 

@@ -42,11 +42,11 @@ public class Payment {
         PENDING, COMPLETED, FAILED
     }
 
-    @OneToOne(mappedBy = "payment", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "payment", cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonBackReference("auction-payment")
     private Auction auction;
 
-    @OneToOne(mappedBy = "payment", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "payment", cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonBackReference("reservation-payment")
     private Reservation reservation;
 

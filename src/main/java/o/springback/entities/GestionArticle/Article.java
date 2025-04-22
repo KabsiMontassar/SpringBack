@@ -28,15 +28,22 @@ public class Article {
     @Size(min = 10, max = 500, message = "Description must be between 10 and 500 characters")
     private String description;
 
+    @PositiveOrZero(message = "Prix must be positive or zero")
+    private Float prix;
+
     @NotBlank(message = "Image URL is required")
     private String imageUrl;
 
-    @NotNull(message = "Price per hour is required")
-    @Positive(message = "Price per hour must be positive")
+    @PositiveOrZero(message = "Price per hour must be positive")
     private Float pricePerHour;
 
     @NotNull(message = "Availability status is required")
     private boolean isAvailable;
+
+    @NotNull(message = "Article type cannot be null")
+    @Enumerated(EnumType.STRING)
+    private Payment.PaymentType typeArticle;
+
 
     @NotNull(message = "Creation date is required")
     private LocalDateTime createdAt;
@@ -46,39 +53,8 @@ public class Article {
     @JsonManagedReference("article-auction")
     private Auction auction;
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonManagedReference("article-reservations")
     private List<Reservation> reservations;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return isAvailable == article.isAvailable && Objects.equals(id, article.id) && Objects.equals(title, article.title) && Objects.equals(description, article.description) && Objects.equals(imageUrl, article.imageUrl) && Objects.equals(pricePerHour, article.pricePerHour) && Objects.equals(createdAt, article.createdAt) && Objects.equals(auction, article.auction) && Objects.equals(reservations, article.reservations);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, description, imageUrl, pricePerHour, isAvailable, createdAt, auction, reservations);
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", pricePerHour=" + pricePerHour +
-                ", isAvailable=" + isAvailable +
-                ", createdAt=" + createdAt +
-                ", auction=" + auction +
-                ", reservations=" + reservations +
-                '}';
-    }
 }
-
-
-
-

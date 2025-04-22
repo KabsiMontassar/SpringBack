@@ -3,6 +3,7 @@ import lombok.RequiredArgsConstructor;
 import o.springback.Interfaces.GestionArticle.IArticleService;
 import o.springback.Interfaces.GestionArticle.IReservationService;
 import o.springback.entities.GestionArticle.Article;
+import o.springback.entities.GestionArticle.Payment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,10 @@ public class ArticleController {
     public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
         articleService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/type/{type}")
+    public ResponseEntity<List<Article>> getArticlesByType(@PathVariable Payment.PaymentType type) {
+        return ResponseEntity.ok(articleService.findByTypeArticle(type));
     }
 }
 

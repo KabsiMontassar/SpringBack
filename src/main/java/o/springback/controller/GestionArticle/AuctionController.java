@@ -47,6 +47,10 @@ public class AuctionController {
     public ResponseEntity<List<Auction>> getTop5AuctionsByBids() {
         return ResponseEntity.ok(auctionService.getTop5AuctionsByBids());
     }
-
+    @GetMapping("/by-article/{articleId}")
+    public ResponseEntity<List<Auction>> getAuctionsByArticleId(@PathVariable Long articleId) {
+        List<Auction> auctions = auctionService.findByArticleId(articleId);
+        return ResponseEntity.ok(auctions);
+    }
 }
 

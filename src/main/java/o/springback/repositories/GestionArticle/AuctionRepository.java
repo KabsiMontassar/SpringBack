@@ -15,4 +15,7 @@ public interface AuctionRepository extends JpaRepository<Auction,Long> {
     @Query("SELECT a FROM Auction a LEFT JOIN a.bids b GROUP BY a ORDER BY COUNT(b) DESC")
     List<Auction> findTop5ByBidsCount();
 
+    List<Auction> findByArticleId(Long articleId);
+
+
 }

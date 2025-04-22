@@ -1,5 +1,6 @@
 package o.springback.services.GestionArticle;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionArticle.IBidService;
 import o.springback.entities.GestionArticle.Auction;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class BidService implements IBidService {
     private BidRepository bidRepository;
     private AuctionRepository auctionRepository;
