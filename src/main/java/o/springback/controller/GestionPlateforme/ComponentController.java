@@ -6,6 +6,7 @@ import o.springback.entities.GestionPlateforme.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/components")
@@ -42,6 +43,13 @@ public class ComponentController {
     @GetMapping("/user/{userId}")
     public List<Component> getComponentsByUserId(@PathVariable("userId")  Long userId) {
         return componentService.findByUserId(userId);
+    }
+
+
+
+    @GetMapping("/usageRate")
+    public Map<String,Double> getComponentsByUsageRate() {
+        return componentService.getUsageRate();
     }
 
 

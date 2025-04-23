@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import o.springback.services.GestionUser.EmailService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -47,12 +49,15 @@ public class UserService implements IUserService , UserDetailsService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updatePlateformeId(String email, Plateforme plateforme) {
-        User user = userRepository.findByEmail(email).orElse(null);
-
-        if (user != null) {
+        try {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
             user.setPlateforme(plateforme);
-            userRepository.save(user);
+            userRepository.saveAndFlush(user);
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating plateforme ID", e);
         }
     }
 
