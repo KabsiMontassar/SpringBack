@@ -10,4 +10,6 @@ public interface IReservationService {
     Reservation save(Reservation reservation);
     Reservation update(Reservation reservation);
     void delete(Long idReservation);
+
+    List<Reservation> findByArticleId(Long articleId);
 }

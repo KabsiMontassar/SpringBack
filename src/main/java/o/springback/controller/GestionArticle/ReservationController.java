@@ -49,5 +49,13 @@ public class ReservationController {
         reservationService.delete(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/by-article/{articleId}")
+    public ResponseEntity<List<Reservation>> getReservationsByArticle(@PathVariable Long articleId) {
+        List<Reservation> reservations = reservationService.findByArticleId(articleId);
+        if (reservations.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Retourne 204 si aucune réservation n'est trouvée
+        }
+        return ResponseEntity.ok(reservations);
+    }
 }
 

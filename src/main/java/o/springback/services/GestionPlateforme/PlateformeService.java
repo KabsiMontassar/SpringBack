@@ -98,8 +98,8 @@ public class PlateformeService implements IPlateformeService {
     }
 
 
-    @Scheduled(cron = "*/15 * * * * ?")
-    public void checkPlateformeExpiration() {
+//    @Scheduled(cron = "*/15 * * * * ?")
+/*    public void checkPlateformeExpiration() {
         List<Plateforme> plateformes = plateformeRepository.findAll();
         log.info("Checking for plateforme expiration...");
         for (Plateforme plateforme : plateformes) {
@@ -112,8 +112,8 @@ public class PlateformeService implements IPlateformeService {
     }
 
 
-   @Scheduled(cron = "*/15 * * * * ?")
-    public void deleteExpiredPlateformes() {
+ *///  @Scheduled(cron = "*/15 * * * * ?")
+ /*   public void deleteExpiredPlateformes() {
         List<Plateforme> plateformes = plateformeRepository.findAll();
         log.info("Deleting expired plateformes...");
         for (Plateforme plateforme : plateformes) {
@@ -124,7 +124,7 @@ public class PlateformeService implements IPlateformeService {
         }
     }
 
-
+*/
     public Map<String,Integer> generateReport() {
         Map<String,Integer> result = new HashMap<>();
         List<Plateforme> plateformes = plateformeRepository.findAll();

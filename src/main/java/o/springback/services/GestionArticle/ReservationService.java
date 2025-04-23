@@ -105,4 +105,9 @@ public class ReservationService implements IReservationService {
         }
         reservationRepository.deleteById(idReservation);
     }
+
+    @Override
+    public List<Reservation> findByArticleId(Long articleId) {
+        return reservationRepository.findByArticleId(articleId);
+    }
 }
