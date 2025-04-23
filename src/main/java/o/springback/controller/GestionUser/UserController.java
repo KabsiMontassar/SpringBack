@@ -1,17 +1,24 @@
 package o.springback.controller.GestionUser;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionUser.IUserService;
+import o.springback.dto.AuthenticationResponseDTO;
+import o.springback.dto.RegisterRequestDTO;
 import o.springback.entities.GestionUser.AuthRequest;
 import o.springback.entities.GestionUser.User;
 import o.springback.services.GestionUser.JwtService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -77,15 +84,60 @@ public class UserController {
         }
 
        @PostMapping("/generateToken")
-        public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+        public ResponseEntity<AuthenticationResponseDTO> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
             if (authentication.isAuthenticated()) {
+                String token = jwtService.generateToken(authRequest.getUsername());
+                User user = userService.findByEmail(authRequest.getUsername());
                 String sanitizedUsername = org.springframework.web.util.HtmlUtils.htmlEscape(authRequest.getUsername());
-                return jwtService.generateToken(sanitizedUsername);
+
+                return ResponseEntity.ok(new AuthenticationResponseDTO(token, user));
+
             } else {
                 throw new UsernameNotFoundException("Invalid user request!");
+            }
+    }
+    @PostMapping("/signup")
+    public ResponseEntity<Map<String, String>> signup(@RequestBody @Valid RegisterRequestDTO request) {
+        try {
+            User user = userService.register(request);
+            String token = jwtService.generateToken(user.getEmail());
+            Map<String, String> response = new HashMap<>();
+            response.put("token", token);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(error);
+        }
+    }
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email){
+            try{
+                userService.forgotPassword(email);
+                return ResponseEntity.ok("Email de réinitialisation envoyé.");
+            } catch (RuntimeException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        try {
+            userService.resetPassword(token, newPassword);
+            return ResponseEntity.ok("Mot de passe réinitialisé avec succès.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PutMapping("/change-password/{id}")
+    public ResponseEntity<String> changePassword(@PathVariable Long id, @RequestParam String currentPassword, @RequestParam String newPassword){
+            try {
+                userService.changePassword(id, currentPassword, newPassword);
+                return ResponseEntity.ok("Mot de passe changé avec succès.");
+            } catch (RuntimeException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
             }
     }
 }

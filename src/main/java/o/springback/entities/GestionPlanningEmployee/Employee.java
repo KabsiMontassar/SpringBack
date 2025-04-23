@@ -31,6 +31,7 @@ public class Employee{
     @JsonIgnore
     private Plateforme plateforme;
     @OneToMany(mappedBy = "employee")
+    @JsonIgnore
     private List<Tache> taches;
 
 

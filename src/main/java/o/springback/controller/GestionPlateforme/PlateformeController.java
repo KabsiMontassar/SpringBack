@@ -7,6 +7,7 @@ import o.springback.entities.GestionPlateforme.Plateforme;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -62,6 +63,14 @@ public class PlateformeController {
             @PathVariable("id") Long id,
             @PathVariable("plan") String plan) {
         plateformeService.changePackType(id, plan);
+    }
+
+
+
+    @GetMapping("/generateReport")
+    public Map<String,Integer> generateReport() {
+       return plateformeService.generateReport();
+
     }
 
 

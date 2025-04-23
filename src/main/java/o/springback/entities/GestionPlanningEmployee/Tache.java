@@ -27,7 +27,9 @@ public class Tache {
     private Date dateFin;
     @Enumerated(EnumType.STRING)
     private StatutTache statutTache;
+    private Integer position;
     @ManyToOne
+    //@JsonIgnore
     private Employee employee;
     @OneToMany(mappedBy = "tache")
     private List<Planning> plannings;
