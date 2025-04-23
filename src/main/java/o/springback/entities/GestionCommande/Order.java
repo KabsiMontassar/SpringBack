@@ -35,6 +35,11 @@ public class Order {
     @Valid  //bch tsir validation aal les attributs mtaa orderproduct
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    Livraison livraison;
+
+
+
     @Transient
     public Double getTotalOrderPrice() {
         double sum = 0D;
@@ -49,6 +54,7 @@ public class Order {
     public int getNumberOfProducts() {
         return this.orderProducts.size();
     }
+
 
 
 }

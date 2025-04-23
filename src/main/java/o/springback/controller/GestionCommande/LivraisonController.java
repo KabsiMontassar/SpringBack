@@ -1,9 +1,13 @@
 package o.springback.controller.GestionCommande;
 
 import lombok.AllArgsConstructor;
+import o.springback.Interfaces.GestionCommande.ILivraisonService;
+import o.springback.dto.LivraisonDTO;
 import o.springback.entities.GestionCommande.Livraison;
+import o.springback.entities.GestionCommande.Order;
 import o.springback.services.GestionCommande.LivraisonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,13 +16,21 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/livraison")
 public class LivraisonController {
-    @Autowired
-    private LivraisonServiceImpl livraisonService;
 
-    @PostMapping("/add")
-    public Livraison createLivraison(@RequestBody Livraison livraison) {
-        return livraisonService.createLivraison(livraison);
+    private ILivraisonService livraisonService;
+
+    @PostMapping
+    public ResponseEntity<Livraison> createLivraison(@RequestBody LivraisonDTO dto) {
+        Livraison livraison = new Livraison();
+        livraison.setAdresse(dto.getAdresse());
+        livraison.setDescription(dto.getDescription());
+        livraison.setLatitude(dto.getLatitude());
+        livraison.setLongitude(dto.getLongitude());
+
+        livraisonService.affecterLivraisonToOrder(livraison, dto.getCommandeId());
+        return ResponseEntity.ok(livraison);
     }
+
 
     @PutMapping("/update/{id}")
     public Livraison updateLivraison(@PathVariable Long id, @RequestBody Livraison livraison) {
@@ -30,7 +42,7 @@ public class LivraisonController {
         livraisonService.deleteLivraison(id);
     }
 
-    @GetMapping("/retrieve/{id}")
+    @GetMapping("/{id}")
     public Livraison getLivraisonById(@PathVariable Long id) {
         return livraisonService.getLivraisonById(id);
     }
@@ -39,4 +51,6 @@ public class LivraisonController {
     public List<Livraison> getAllLivraisons() {
         return livraisonService.getAllLivraisons();
     }
+
+
 }
