@@ -10,10 +10,11 @@ import o.springback.entities.GestionCommande.OrderProduct;
 import o.springback.entities.GestionCommande.OrderStatus;
 import o.springback.entities.GestionProduits.Products;
 import o.springback.exception.ResourceNotFoundException;
+import o.springback.repositories.Gestioncommande.OrderRepo;
+import o.springback.services.GestionCommande.PDFGeneratorService;
 import o.springback.services.GestionProduits.ProductService;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -117,6 +118,29 @@ public class OrderController {
     @DeleteMapping("/{id}")
     public void deleteCommande(@PathVariable Long id) {
         orderService.deleteCommande(id);
+    }
+
+    @Autowired
+    private PDFGeneratorService pdfGeneratorService;
+    @GetMapping("/{orderId}/invoice")
+    public ResponseEntity<byte[]> generateInvoice(@PathVariable Long orderId) {
+        try {
+            Order order = orderService.getOrderById(orderId);
+
+
+            byte[] pdfBytes = pdfGeneratorService.generateOrderInvoice(order);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDisposition(
+                    ContentDisposition.builder("attachment")
+                            .filename("facture-" + orderId + ".pdf")
+                            .build());
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 

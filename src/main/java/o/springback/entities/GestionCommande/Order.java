@@ -39,6 +39,7 @@ public class Order {
     Livraison livraison;
 
 
+
     @Transient
     public Double getTotalOrderPrice() {
         double sum = 0D;
@@ -53,6 +54,7 @@ public class Order {
     public int getNumberOfProducts() {
         return this.orderProducts.size();
     }
+
 
 
 }

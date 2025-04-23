@@ -49,4 +49,9 @@ public class PaymentServiceImpl implements IPaiementService {
     public List<Payment> getAllPaiements() {
         return paiementRepository.findAll();
     }
+
+    @Override
+    public Payment findByStripePaymentIntentId(String intentId) {
+        return paiementRepository.findByStripePaymentIntentId(intentId);
+    }
 }
