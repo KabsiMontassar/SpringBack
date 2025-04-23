@@ -2,12 +2,18 @@ package o.springback.controller.GestionPlanningEmployee;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionPlanningEmployee.IPlanningService;
 import o.springback.Interfaces.GestionPlanningEmployee.IEmployeeService;
-
+import o.springback.repositories.GestionPlanningEmployeeRepository.PlanningRepository;
 import o.springback.entities.GestionPlanningEmployee.Employee;
 import o.springback.entities.GestionPlanningEmployee.Planning;
 import o.springback.entities.GestionPlanningEmployee.TypePlanning;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.SocketOption;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +23,7 @@ import java.util.Map;
 public class PlanningController {
 
     IPlanningService planningService;
+    PlanningRepository planningRepository;
     @Autowired
     IEmployeeService employeeService;
 
@@ -64,4 +71,28 @@ public class PlanningController {
     public Map<TypePlanning, Long> getDureeAbsenceParType(@PathVariable Long employeeId) {
         return planningService.getDureeAbsenceParType(employeeId);
     }
+    @GetMapping("/employee-planning/{employeeId}")
+    public List<Planning> getPlanningsByEmployee(@PathVariable Long employeeId) {
+        return planningService.getPlanningsByEmployeeId(employeeId);
+    }
+    @GetMapping("employee/{employeeId}/week")
+    public List<Planning> getPlanningsInRange(@PathVariable Long employeeId,
+                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date weekStart,
+                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date weekEnd
+                                              ) {
+        try {
+            return planningService.findPlanningsBetween(employeeId, weekStart, weekEnd);
+        } catch (Exception e) {
+            throw new RuntimeException("Employee not found with ID: " + employeeId, e);
+        }
+
+    //        @RequestParam Date start,
+    //        @RequestParam Date end
+    //) {
+    //    System.out.println("Start date: " + start);
+    //    System.out.println("End date: " + end);
+    //    return planningService.findPlanningsBetween(start, end);
+    }
+
+
 }
