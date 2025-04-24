@@ -53,4 +53,8 @@ public class Auction {
     @JsonManagedReference("auction-payment")
     private Payment payment;
 
+    @Transient
+    public String getArticleTitle() {
+        return article != null ? article.getTitle() : null;
+    }
 }

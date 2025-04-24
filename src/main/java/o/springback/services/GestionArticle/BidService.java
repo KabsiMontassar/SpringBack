@@ -7,7 +7,6 @@ import o.springback.entities.GestionArticle.Auction;
 import o.springback.entities.GestionArticle.Bid;
 import o.springback.repositories.GestionArticle.AuctionRepository;
 import o.springback.repositories.GestionArticle.BidRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -70,4 +69,14 @@ public class BidService implements IBidService {
         }
         bidRepository.deleteById(idBid);
     }
+
+    @Override
+    public List<Bid> findByArticleId(Long articleId) {
+        return bidRepository.findByAuctionArticleId(articleId);
+    }
+    @Override
+    public List<Bid> findByAuctionId(Long auctionId) {
+        return bidRepository.findByAuctionId(auctionId);
+    }
+
 }

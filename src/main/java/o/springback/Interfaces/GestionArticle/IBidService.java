@@ -10,4 +10,8 @@ public interface IBidService {
     Bid save(Bid bid);
     Bid update(Bid bid);
     void delete(Long idBid);
+
+    List<Bid> findByArticleId(Long articleId);
+
+    List<Bid> findByAuctionId(Long auctionId);
 }

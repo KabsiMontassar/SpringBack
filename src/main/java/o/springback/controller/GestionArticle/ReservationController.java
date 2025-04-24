@@ -29,17 +29,26 @@ public class ReservationController {
     }
 
     // 🔹 Create new reservation
-    @PostMapping
+    @PostMapping("/articles/{articleId}")
     public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
         Reservation saved = reservationService.save(reservation);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
     // 🔹 Update existing reservation
-    @PutMapping("/{id}")
+/*    @PutMapping("/{id}")
     public ResponseEntity<Reservation> updateReservation(@PathVariable Long id, @RequestBody Reservation reservation) {
         reservation.setId(id); // Ensure ID is set
         Reservation updated = reservationService.update(reservation);
+        return ResponseEntity.ok(updated);
+    }*/
+    @PutMapping("/articles/{articleId}/reservations/{reservationId}")
+    public ResponseEntity<Reservation> updateReservation(
+            @PathVariable Long articleId,
+            @PathVariable Long reservationId,
+            @RequestBody Reservation updatedReservation) {
+
+        Reservation updated = reservationService.update(articleId, reservationId, updatedReservation);
         return ResponseEntity.ok(updated);
     }
 

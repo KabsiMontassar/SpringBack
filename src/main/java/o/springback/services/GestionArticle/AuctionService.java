@@ -30,14 +30,16 @@ public class AuctionService implements IAuctionService {
         return auctionRepository.findAll();
     }
 
-    @Override
+ /*   @Override
     public Auction findById(Long idAuction) {
-        // retourner lid de larticle liené à l'enchère
-        Article article = articleRepository.findByAuctionId(idAuction);
-
         return auctionRepository.findById(idAuction)
                 .orElseThrow(() -> new RuntimeException("Auction not found with id: " + idAuction));
-    }
+    }*/
+ @Override
+ public Auction findById(Long id) {
+     return auctionRepository.findByIdWithArticle(id)
+             .orElseThrow(() -> new RuntimeException("Auction not found with id: " + id));
+ }
 
     @Override
     public Auction save(Auction auction) {

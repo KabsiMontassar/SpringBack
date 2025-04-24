@@ -2,11 +2,14 @@ package o.springback.repositories.GestionArticle;
 
 import o.springback.entities.GestionArticle.Auction;
 import o.springback.entities.GestionArticle.Payment;
+import o.springback.entities.GestionArticle.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface AuctionRepository extends JpaRepository<Auction,Long> {
     List<Auction> findByIsActiveFalseAndPaymentStatusNotAndEndTimeBefore(Payment.Status status, LocalDateTime time);
@@ -16,6 +19,8 @@ public interface AuctionRepository extends JpaRepository<Auction,Long> {
     List<Auction> findTop5ByBidsCount();
 
     List<Auction> findByArticleId(Long articleId);
+    @Query("SELECT a FROM Auction a JOIN FETCH a.article WHERE a.id = :id")
+    Optional<Auction> findByIdWithArticle(@Param("id") Long id);
 
 
 }

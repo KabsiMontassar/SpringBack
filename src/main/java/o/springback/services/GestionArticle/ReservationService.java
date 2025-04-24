@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionArticle.IReservationService;
 import o.springback.entities.GestionArticle.Article;
-import o.springback.entities.GestionArticle.Payment;
 import o.springback.entities.GestionArticle.Reservation;
 import o.springback.repositories.GestionArticle.ArticleRepository;
 import o.springback.repositories.GestionArticle.PaymentRepository;
@@ -22,17 +21,18 @@ public class ReservationService implements IReservationService {
     private final ReservationRepository reservationRepository;
     private final ArticleRepository articleRepository;
     private final PaymentRepository paymentRepository;
+    private final ArticleService articleService;
 
     @Override
     public List<Reservation> findAll() {
         return reservationRepository.findAll();
     }
 
-    @Override
+/*    @Override
     public Reservation findById(Long idReservation) {
         return reservationRepository.findById(idReservation)
                 .orElseThrow(() -> new RuntimeException("Reservation not found with id: " + idReservation));
-    }
+    }*/
 
     @Override
     public Reservation save(Reservation reservation) {
@@ -60,43 +60,43 @@ public class ReservationService implements IReservationService {
             return reservationRepository.save(reservation);
         }
     }
+
+
+
     @Override
-    public Reservation update(Reservation reservation) {
-        // Récupérer la réservation existante
-        Reservation existing = findById(reservation.getId());
+    public Reservation update(Long articleId, Long reservationId, Reservation updatedReservation) {
+        Article article = articleService.findById(articleId);
+        if (article == null) {
+            throw new RuntimeException("Article not found with ID: " + articleId);
+        }
+
+        // Vérifier si la réservation existe
+        Reservation existingReservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new RuntimeException("Reservation not found with ID: " + reservationId));
+
+        // Vérifier si la réservation appartient bien à l'article donné
+        if (!existingReservation.getArticle().getId().equals(articleId)) {
+            throw new RuntimeException("Reservation " + reservationId + " does not belong to article with ID " + articleId);
+        }
 
         // Mettre à jour les champs modifiables
-        existing.setStartDatetime(reservation.getStartDatetime());
-        existing.setEndDatetime(reservation.getEndDatetime());
-        existing.setStatus(reservation.getStatus());
+        existingReservation.setStartDatetime(updatedReservation.getStartDatetime());
+        existingReservation.setEndDatetime(updatedReservation.getEndDatetime());
+        existingReservation.setStatus(updatedReservation.getStatus());
 
-        // Vérifier et mettre à jour l'article (si fourni)
-        if (reservation.getArticle() != null && reservation.getArticle().getId() != null) {
-            Article article = articleRepository.findById(reservation.getArticle().getId())
-                    .orElseThrow(() -> new RuntimeException("Article not found with id: " + reservation.getArticle().getId()));
-            existing.setArticle(article);
-        }
-
-        // Vérifier et mettre à jour le paiement (si fourni)
-        if (reservation.getPayment() != null && reservation.getPayment().getId() != null) {
-            Payment payment = paymentRepository.findById(reservation.getPayment().getId())
-                    .orElseThrow(() -> new RuntimeException("Payment not found with id: " + reservation.getPayment().getId()));
-            existing.setPayment(payment);
-        }
-
-        // Recalculer le prix total si les dates sont modifiées
-        if (existing.getStartDatetime() != null && existing.getEndDatetime() != null) {
-            long hours = Duration.between(existing.getStartDatetime(), existing.getEndDatetime()).toHours();
+        // Validation des dates et calcul du prix
+        if (existingReservation.getStartDatetime() != null && existingReservation.getEndDatetime() != null) {
+            long hours = Duration.between(existingReservation.getStartDatetime(), existingReservation.getEndDatetime()).toHours();
             if (hours <= 0) {
                 throw new IllegalArgumentException("End datetime must be after start datetime.");
             }
-            float totalPrice = hours * existing.getArticle().getPricePerHour();
-            existing.setTotalPrice(totalPrice);
+            float totalPrice = hours * article.getPricePerHour();
+            existingReservation.setTotalPrice(totalPrice);
         }
 
-        // Enregistrer les modifications
-        return reservationRepository.save(existing);
+        return reservationRepository.save(existingReservation);
     }
+
 
     @Override
     public void delete(Long idReservation) {
@@ -109,5 +109,10 @@ public class ReservationService implements IReservationService {
     @Override
     public List<Reservation> findByArticleId(Long articleId) {
         return reservationRepository.findByArticleId(articleId);
+    }
+    @Override
+    public Reservation findById(Long id) {
+        return reservationRepository.findByIdWithArticle(id)
+                .orElseThrow(() -> new RuntimeException("Reservation not found with id: " + id));
     }
 }

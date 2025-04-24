@@ -55,7 +55,10 @@ public class ArticleService implements IArticleService {
 
     @Override
     public Article save(Article article) {
-        // Créer un nouvel article pour éviter les entités détachées
+        if (articleRepository.existsByTitle(article.getTitle())) {
+            throw new IllegalArgumentException("An article with the title '" + article.getTitle() + "' already exists.");
+        }
+
         Article newArticle = new Article();
         newArticle.setTitle(article.getTitle());
         newArticle.setDescription(article.getDescription());
@@ -78,7 +81,7 @@ public class ArticleService implements IArticleService {
                     auction.setCurrentPrice(article.getPrix());
                     auction.setArticle(newArticle);
                     newArticle.setAuction(auction);
-                    newArticle.setPricePerHour(0.0f); // désactiver prix/h pour enchères
+                    newArticle.setPricePerHour(0.0f);
                     newArticle.setAvailable(false);
                 }
                 break;
@@ -104,7 +107,7 @@ public class ArticleService implements IArticleService {
                         newReservations.add(reservation);
                     }
                     newArticle.setReservations(newReservations);
-                    newArticle.setPrix(0.0f); // désactiver prix fixe pour les réservations
+                    newArticle.setPrix(0.0f);
                     newArticle.setAvailable(false);
                 }
                 break;
@@ -115,87 +118,76 @@ public class ArticleService implements IArticleService {
 
     @Override
     public Article update(Article updatedArticle) {
-        // Reload the existing article from the database
         Article existing = findById(updatedArticle.getId());
 
-        // Update scalar fields
+        if (!existing.getTitle().equals(updatedArticle.getTitle()) && articleRepository.existsByTitle(updatedArticle.getTitle())) {
+            throw new IllegalArgumentException("An article with the title '" + updatedArticle.getTitle() + "' already exists.");
+        }
+
         existing.setTitle(updatedArticle.getTitle());
         existing.setDescription(updatedArticle.getDescription());
         existing.setImageUrl(updatedArticle.getImageUrl());
         existing.setTypeArticle(updatedArticle.getTypeArticle());
         existing.setAvailable(updatedArticle.isAvailable());
 
-        // Validate prix based on the article type
         if (updatedArticle.getTypeArticle() == Payment.PaymentType.AUCTION && updatedArticle.getPrix() <= 0) {
             throw new IllegalArgumentException("The prix must be greater than 0 for AUCTION type.");
         }
 
-        // Handle logic based on the article type
         switch (updatedArticle.getTypeArticle()) {
             case AUCTION:
-                // Ensure an auction-type article does not have reservations
                 if (updatedArticle.getReservations() != null && !updatedArticle.getReservations().isEmpty()) {
                     throw new IllegalArgumentException("An article of type AUCTION cannot have reservations.");
                 }
 
-                // Update the prix field directly
                 existing.setPrix(updatedArticle.getPrix());
 
-                // Handle auction-specific logic if an auction object is provided
                 if (updatedArticle.getAuction() != null) {
                     Auction auction = updatedArticle.getAuction();
                     auction.setStartPrice(updatedArticle.getPrix());
                     auction.setCurrentPrice(updatedArticle.getPrix());
                     auction.setArticle(existing);
 
-                    // Save the auction
                     auctionRepository.save(auction);
 
-                    // Update auction and disable price per hour
+
                     existing.setAuction(auction);
                 } else {
-                    existing.setAuction(null); // Clear auction if not provided
+                    existing.setAuction(null);
                 }
 
-                // Disable price per hour for auction type
                 existing.setPricePerHour(0.0f);
                 break;
 
             case RESERVATION:
-                // Ensure a reservation-type article does not have an auction
                 if (updatedArticle.getAuction() != null) {
                     throw new IllegalArgumentException("An article of type RESERVATION cannot have an auction.");
                 }
 
-                // Handle reservations safely
                 if (updatedArticle.getReservations() != null) {
-                    existing.getReservations().clear(); // Clear existing reservations
+                    existing.getReservations().clear();
 
                     for (Reservation reservation : updatedArticle.getReservations()) {
                         reservation.setArticle(existing);
-                        existing.getReservations().add(reservation); // Add to the existing collection
+                        existing.getReservations().add(reservation);
                     }
 
-                    // Save all reservations for the article
+
                     reservationRepository.saveAll(existing.getReservations());
                 } else {
-                    existing.getReservations().clear(); // Clear reservations if not provided
+                    existing.getReservations().clear();
                 }
 
-                // Disable prix for reservation-type articles
                 existing.setPrix(0.0f);
 
-                // Validate price per hour for RESERVATION type
                 if (updatedArticle.getPricePerHour() == null || updatedArticle.getPricePerHour() <= 0) {
                     throw new IllegalArgumentException("Price per hour must be set for RESERVATION type.");
                 }
 
-                // Update price per hour for reservations
                 existing.setPricePerHour(updatedArticle.getPricePerHour());
                 break;
         }
 
-        // Save the updated article
         return articleRepository.save(existing);
     }
 
@@ -220,14 +212,23 @@ public class ArticleService implements IArticleService {
     }
 
 
+    public Article getArticleByTitle(String title) {
+        return articleRepository.findByTitle(title);}
 
 
 
-  @Override
-  public void AffectAuctionToArticle(Long idArticle, Long idAuction) {
-        Article article = findById(idArticle);
+
+    @Override
+    public void AffectAuctionToArticle(Long idArticle, Long idAuction) {
+        Article article = articleRepository.findById(idArticle)
+                .orElseThrow(() -> new RuntimeException("Article not found with id: " + idArticle));
+
         Auction auction = auctionRepository.findById(idAuction)
                 .orElseThrow(() -> new RuntimeException("Auction not found with id: " + idAuction));
+
+        if (!article.isAvailable()) {
+            throw new IllegalArgumentException("Article is not available for auction.");
+        }
 
         article.setAuction(auction);
         article.setAvailable(false);

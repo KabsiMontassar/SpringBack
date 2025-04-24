@@ -13,5 +13,6 @@ public interface IAuctionService {
     void delete(Long idAuction);
 
     List<Auction> getTop5AuctionsByBids();
+
     List<Auction> findByArticleId(Long articleId);
 }

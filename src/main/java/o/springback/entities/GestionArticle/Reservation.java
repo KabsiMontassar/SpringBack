@@ -35,4 +35,8 @@ public class Reservation {
     @JsonBackReference("article-reservations")
     private Article article;
 
+    @Transient // Indique que ce champ n'est pas persisté en base de données
+    public String getArticleTitle() {
+        return article != null ? article.getTitle() : null;
+    }
 }

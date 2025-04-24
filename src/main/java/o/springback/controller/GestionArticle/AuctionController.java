@@ -28,7 +28,7 @@ public class AuctionController {
         return ResponseEntity.ok(auctionService.findById(id));
     }
 
-    @PostMapping("/{id}")
+  @PostMapping("/{id}")
     public ResponseEntity<Auction> createAuction(@RequestBody Auction auction , @PathVariable Long id) {
         Auction Newauction = auctionService.save(auction);
         articleService.AffectAuctionToArticle(id, Newauction.getId());
@@ -36,13 +36,35 @@ public class AuctionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(Newauction);
     }
 
+    /*   @PutMapping("/article/{articleId}/edit/{auctionId}")
+     public ResponseEntity<Auction> updateAuction(@PathVariable Long articleId,
+                                                  @PathVariable Long auctionId,
+                                                  @RequestBody Auction auction) {
+         auction.setId(auctionId);
+         auction.setArticle(articleService.findById(articleId));
+         Auction updated = auctionService.update(auction);
+         return ResponseEntity.ok(updated);
+     }*/
+ @PutMapping("/article/{articleId}/edit/{auctionId}")
+ public ResponseEntity<Auction> updateAuction(
+         @PathVariable Long articleId,
+         @PathVariable Long auctionId,
+         @RequestBody Auction auction) {
+     auction.setId(auctionId);
+     auction.setArticle(articleService.findById(articleId));
+     Auction updated = auctionService.update(auction);
+     return ResponseEntity.ok(updated);
+ }
+
+    // Keep the old endpoint for backward compatibility if needed
     @PutMapping("/{id}")
-    public ResponseEntity<Auction> updateAuction(@PathVariable Long id, @RequestBody Auction auction) {
+    public ResponseEntity<Auction> updateAuctionLegacy(
+            @PathVariable Long id,
+            @RequestBody Auction auction) {
         auction.setId(id);
         Auction updated = auctionService.update(auction);
         return ResponseEntity.ok(updated);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAuction(@PathVariable Long id) {
         auctionService.delete(id);
