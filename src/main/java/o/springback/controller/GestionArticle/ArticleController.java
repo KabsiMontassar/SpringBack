@@ -48,5 +48,19 @@ public class ArticleController {
     public ResponseEntity<List<Article>> getArticlesByType(@PathVariable Payment.PaymentType type) {
         return ResponseEntity.ok(articleService.findByTypeArticle(type));
     }
+
+    @GetMapping("/articlesearch")
+    public List<Article> searchArticle(@RequestParam String title) {
+        return articleService.searchByTitle(title);
+    }
+
+    @GetMapping("/by-availability-and-type")
+    public ResponseEntity<List<Article>> getArticlesByAvailabilityAndType(
+            @RequestParam boolean available,
+            @RequestParam Payment.PaymentType type) {
+        return ResponseEntity.ok(articleService.findByIsAvailableAndTypeArticle(available, type));
+    }
+
+
 }
 

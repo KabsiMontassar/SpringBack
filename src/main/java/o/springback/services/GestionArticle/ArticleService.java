@@ -235,6 +235,14 @@ public class ArticleService implements IArticleService {
         articleRepository.save(article);
     }
 
+    @Override
+    public List<Article> searchByTitle(String title) {
+        return articleRepository.findByTitleContainingIgnoreCase(title);
+    }
+
+    public List<Article> findByIsAvailableAndTypeArticle(boolean isAvailable, Payment.PaymentType typeArticle) {
+        return articleRepository.findByIsAvailableAndTypeArticle(isAvailable, typeArticle);
+    }
 
 
 

@@ -11,6 +11,7 @@ public interface IArticleService {
     Article update(Article article);
     void delete(Long idArticle);
     List<Article> findByTypeArticle(Payment.PaymentType typeArticle);
-
     void AffectAuctionToArticle(Long idArticle, Long idAuction);
+    List<Article> searchByTitle(String title);
+    List<Article> findByIsAvailableAndTypeArticle(boolean available, Payment.PaymentType type);
 }

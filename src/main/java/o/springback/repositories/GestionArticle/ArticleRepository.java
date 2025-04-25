@@ -21,5 +21,7 @@ public interface ArticleRepository  extends JpaRepository<Article,Long> {
     boolean existsByTitle(@Param("title") String title);
     @Query("SELECT a FROM Article a WHERE a.title = :title")
     Article findByTitle(@Param("title") String title);
+    List<Article> findByTitleContainingIgnoreCase(String title);
 
+    List<Article> findByIsAvailableAndTypeArticle(boolean isAvailable, Payment.PaymentType typeArticle);
 }
