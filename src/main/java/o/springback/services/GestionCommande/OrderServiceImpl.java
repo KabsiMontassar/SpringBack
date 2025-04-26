@@ -13,27 +13,33 @@ import java.time.LocalDate;
 @Transactional
 public class OrderServiceImpl implements OrderService {
 
+
     @Autowired
-    OrderRepo orderRepository;
+    OrderRepo orderRepo;
     @Override
     public Iterable<Order> getAllOrders() {
-        return this.orderRepository.findAll();
+        return this.orderRepo.findAll();
     }
 
     @Override
     public Order create(Order order) {
         order.setDateCreated(LocalDate.now());
-        return this.orderRepository.save(order);
+        return this.orderRepo.save(order);
     }
 
     @Override
     public void update(Order order) {
-        this.orderRepository.save(order);
+        this.orderRepo.save(order);
     }
 
     @Override
     public void deleteCommande(Long id) {
-        orderRepository.deleteById(id);
+        orderRepo.deleteById(id);
+    }
+
+    @Override
+    public Order getOrderById(Long id) {
+        return orderRepo.findById(id).orElse(null);
     }
 
     /*
