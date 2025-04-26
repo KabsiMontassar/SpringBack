@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -22,6 +23,9 @@ public class PlanningService implements IPlanningService{
     private EmployeeRepository employeeRepository;
     @Override
     public Planning save(Planning planning) {
+        if(planning.getDateFin().before(planning.getDateDebut())) {
+            throw new IllegalArgumentException("your date choice is unvalide");
+        }
         return planningRepository.save(planning);
     }
     @Override
@@ -45,7 +49,38 @@ public class PlanningService implements IPlanningService{
     public Planning addPlanningForEmployee(Long employeeId, Planning planning) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new RuntimeException("Employé non trouvé avec ID: " + employeeId));
+        if(planning.getDateDebut() == null || planning.getDateFin() == null) {
+            throw new IllegalArgumentException("you have to specify a date range for " + planning.getTypePlanning());
+        }
+        if (planning.getDateFin().before(planning.getDateDebut())){
+            throw new IllegalArgumentException("your date choice is invalid");
+        }
+        if (planning.isTimeSpecific()) {
+            if(planning.getStartTime() == null || planning.getEndTime() == null) {
+                throw new IllegalArgumentException("You need to specify a time range for this " + planning.getTypePlanning());
+            }
+            if (planning.getEndTime().isBefore(planning.getStartTime())) {
+                throw new IllegalArgumentException("Your choice of time range is invalid");
+            }
+        }
         planning.setEmployee(employee);
+        if (planning.getEmployee() != null &&planning.getEmployee().getIdEmployee() !=null){
+            List<Planning> conflits = planningRepository.findEmployeePlanningsInRange(
+                    planning.getEmployee().getIdEmployee(),
+                    planning.getDateDebut(), planning.getDateFin()
+            );
+            if(planning.getIdPlanning() != null) {
+                conflits = conflits.stream()
+                        .filter(p -> !p.getIdPlanning().equals(planning.getIdPlanning()))
+                        .collect(Collectors.toList());
+            }
+            if (!conflits.isEmpty()) {
+                throw new IllegalStateException("Employee already has planning(s) in this date range:"
+                        +conflits.stream().map(p -> p.getTypePlanning() + "(" + p.getDateDebut() + "to" +p.getDateFin() +")")
+                        .collect(Collectors.joining(", ")));
+            }
+
+        }
         return planningRepository.save(planning);
     }
 
@@ -82,6 +117,33 @@ public class PlanningService implements IPlanningService{
     @Override
     public List<Planning> findPlanningsBetween(Long employeeID, Date weekStart, Date weekEnd) {
         return planningRepository.findEmployeePlanningsInRange(employeeID, weekStart, weekEnd);
+    }
+
+    @Override
+    public List<Planning> getEmployeePlanningForDay(Long employeeId, Date day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(day);
+
+        // Set to start of day (00:00:00)
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date startOfDay = calendar.getTime();
+
+        // Set to end of day (23:59:59.999)
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        Date endOfDay = calendar.getTime();
+
+        return planningRepository.findByEmployeeAndDay(employeeId, day, startOfDay, endOfDay);
+    }
+
+    @Override
+    public List<Planning> findPlanningsByType(TypePlanning type) {
+        return planningRepository.findByTypePlanningOrderByDateDebut(type);
     }
 
     //@Override

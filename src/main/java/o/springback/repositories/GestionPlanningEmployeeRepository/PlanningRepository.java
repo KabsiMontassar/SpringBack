@@ -36,4 +36,17 @@ public interface PlanningRepository extends JpaRepository<Planning, Long>{
                                                 @Param("start") Date start,
                                                 @Param("end") Date end);
 
+    @Query("SELECT p FROM Planning p WHERE " +
+            "p.employee.idEmployee = :employeeId AND " +
+            "((p.dateDebut <= :endOfDay AND p.dateFin >= :startOfDay) OR " +
+            "(CAST(p.dateDebut AS date) = CAST(:day AS date)))")
+    List<Planning> findByEmployeeAndDay(
+            @Param("employeeId") Long employeeId,
+            @Param("day") Date day,
+            @Param("startOfDay") Date startOfDay,
+            @Param("endOfDay") Date endOfDay);
+
+    @Query("SELECT p FROM Planning p WHERE p.typePlanning = :type ORDER BY p.dateDebut")
+    List<Planning> findByTypePlanningOrderByDateDebut(@Param("type") TypePlanning type);
+
 }

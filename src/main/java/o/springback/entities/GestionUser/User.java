@@ -47,6 +47,8 @@ public class User implements Serializable {
     private String role;
     @Size(max = 255, message = "L'URL de l'image ne doit pas dépasser 255 caractères")
     private String verificationToken;
+    @Column(name = "is_verified", columnDefinition = "boolean default false")
+    private boolean verified = false;
 
     @Enumerated(EnumType.STRING)
     private TypePack typePack = TypePack.GUEST;

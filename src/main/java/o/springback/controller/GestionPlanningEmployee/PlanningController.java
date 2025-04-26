@@ -51,12 +51,7 @@ public class PlanningController {
     }
     @PostMapping("/add-employee-planning/{employeeId}")
     public Planning addEmployeePlanning(@PathVariable Long employeeId, @RequestBody Planning planning) {
-        Employee employee = employeeService.findById(employeeId);
-        if (employee == null) {
-            throw new RuntimeException("Employé introuvable avec l'ID " + employeeId);
-        }
-        planning.setEmployee(employee);
-        return planningService.save(planning);
+        return planningService.addPlanningForEmployee(employeeId, planning);
     }
     @PutMapping("/update-employee-planning/{employeeId}")
     public Planning updateEmployeePlanning(@PathVariable Long employeeId, @RequestBody Planning planning) {
@@ -92,6 +87,15 @@ public class PlanningController {
     //    System.out.println("Start date: " + start);
     //    System.out.println("End date: " + end);
     //    return planningService.findPlanningsBetween(start, end);
+    }
+
+    @GetMapping("/{employeeId}/daily-plannings")
+    public ResponseEntity<List<Planning>> getDailyPlannings(
+            @PathVariable Long employeeId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date day) {
+
+        List<Planning> plannings = planningService.getEmployeePlanningForDay(employeeId, day);
+        return ResponseEntity.ok(plannings);
     }
 
 

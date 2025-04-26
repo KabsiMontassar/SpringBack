@@ -117,7 +117,7 @@ public class UserController {
     public ResponseEntity<String> forgotPassword(@RequestParam String email){
             try{
                 userService.forgotPassword(email);
-                return ResponseEntity.ok("Email de réinitialisation envoyé.");
+                return ResponseEntity.ok("Reset password email sent successfully");
             } catch (RuntimeException e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
         }

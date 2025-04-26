@@ -17,4 +17,6 @@ public interface IPlanningService {
     Map<TypePlanning, Long> getDureeAbsenceParType(Long employeeId);
     List<Planning> getPlanningsByEmployeeId(Long employeeId);
     List<Planning> findPlanningsBetween(Long employeeID, Date weekStart, Date weekEnd);
+    List<Planning> getEmployeePlanningForDay(Long employeeId, Date day);
+    List<Planning> findPlanningsByType(TypePlanning type);
 }

@@ -1,8 +1,10 @@
 package o.springback.services.GestionUser;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.Id;
 import lombok.NoArgsConstructor;
 import o.springback.Interfaces.GestionUser.IUserService;
 import o.springback.dto.RegisterRequestDTO;
+import o.springback.dto.UserDTO;
 import o.springback.entities.GestionPlateforme.Plateforme;
 import o.springback.entities.GestionUser.Agriculteur;
 import o.springback.entities.GestionUser.User;
@@ -14,6 +16,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import o.springback.services.GestionUser.EmailService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +44,8 @@ public class UserService implements IUserService , UserDetailsService {
         return userRepository.save(user);
     }
 
+
+
     @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
@@ -56,10 +62,6 @@ public class UserService implements IUserService , UserDetailsService {
         }
     }
 
-    @Override
-    public User mapToDTO(User user) {
-        return null;
-    }
 
     @Override
     public User register(RegisterRequestDTO request) {
