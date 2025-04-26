@@ -1,14 +1,18 @@
 package o.springback.controller.GestionUser;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionUser.IUserService;
+import o.springback.repositories.GestionUserRepository.UserRepository;
 import o.springback.dto.AuthenticationResponseDTO;
 import o.springback.dto.RegisterRequestDTO;
+import o.springback.dto.UserDTO;
 import o.springback.entities.GestionUser.AuthRequest;
 import o.springback.entities.GestionUser.User;
 import o.springback.services.GestionUser.JwtService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,6 +34,7 @@ public class UserController {
         IUserService userService;
         private JwtService jwtService;
        private AuthenticationManager authenticationManager;
+       private UserRepository userRepository;
 
 
         @GetMapping("/retrieve-all-Users")
@@ -66,15 +71,38 @@ public class UserController {
             return userService.update(c);
         }
 
+        @PutMapping("/profile")
+        @PreAuthorize("hasAnyAuthority('ROLE_AGRICULTEUR', 'ROLE_CLIENT')")
+        public ResponseEntity<User> updateUserById(@RequestBody  @Valid UserDTO user, Authentication authentication) {
+            User currentUser = userRepository.findByEmail(authentication.getName())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            User updatedUser = userService.updateUserProfile(user, currentUser.getIdUser());
+
+            return ResponseEntity.ok(updatedUser);
+        }
+
         @GetMapping("/welcome")
         public String welcome() {
             return "Welcome this endpoint is not secure";
         }
 
+
+    //@GetMapping("/user/userProfile")
+    //@PreAuthorize("hasAuthority('ROLE_USER')")
+    //public String userProfile() {
+    //    return "Welcome to User Profile";
         @GetMapping("/user/userProfile")
-        @PreAuthorize("hasAuthority('ROLE_USER')")
-        public String userProfile() {
-            return "Welcome to User Profile";
+        @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_AGRICULTEUR', 'ROLE_CLIENT')")
+        public ResponseEntity<User> userProfile(HttpServletRequest request) {
+            String authHeader = request.getHeader("Authorization");
+            if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return ResponseEntity.badRequest().build();
+            }
+            String token = authHeader.substring(7);
+            String email = jwtService.extractUsername(token);
+
+            User user = userService.findByEmail(email);
+            return ResponseEntity.ok(user);
         }
 
         @GetMapping("/admin/adminProfile")

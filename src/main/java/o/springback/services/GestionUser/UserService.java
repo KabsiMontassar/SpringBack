@@ -76,11 +76,29 @@ public class UserService implements IUserService , UserDetailsService {
         user.setTelephone(request.getTelephone());
         user.setAdresse(request.getAdresse());
         user.setDateInscription(new Date());
-        user.setRole("ROLE_USER");
+        user.setRole("ROLE_" +request.getRole());
 
 
         return userRepository.save(user);
     }
+
+    @Override
+    public User updateUserProfile(UserDTO user, Long id) {
+        User userActuel = userRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("User not found with"));
+        userActuel.setNom(user.getNom());
+        userActuel.setPrenom(user.getPrenom());
+        userActuel.setEmail(user.getEmail());
+        userActuel.setTelephone(user.getTelephone());
+        userActuel.setAdresse(user.getAdresse());
+        return userRepository.save(userActuel);
+    }
+
+    public boolean isSameUser(Long userId, String email){
+        return userRepository.existsByIdUserAndEmail(userId, email);
+    }
+
+
     @Override
     public void delete(Long id){
         userRepository.deleteById(id);

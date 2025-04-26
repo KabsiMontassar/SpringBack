@@ -38,9 +38,6 @@ public class UserDTO {
 
     private Date dateInscription;
 
-    @Size(max = 50, message = "Role cannot exceed 50 characters")
-    private String role;
-
     @Size(max = 255, message = "Image URL cannot exceed 255 characters")
     private String imageUrl;
 
@@ -56,7 +53,6 @@ public class UserDTO {
         if (this.telephone != null) user.setTelephone(this.telephone);
         if (this.password != null) user.setPassword(this.password);
         if (this.adresse != null) user.setAdresse(this.adresse);
-        if (this.role != null) user.setRole(this.role);
         if (this.typePack != null) user.setTypePack(this.typePack);
     }
 }

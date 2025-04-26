@@ -16,10 +16,10 @@ public interface IUserService {
     User findByEmail(String email);
     //User mapToDTO(User user);
     User register (RegisterRequestDTO request);
+    User updateUserProfile(UserDTO user, Long id);
     void forgotPassword(String email);
     void resetPassword(String token, String newPassword);
     void changePassword(Long id, String currentPassword, String newPassword);
-
 
     void updatePlateformeId(String email, Plateforme c);
 }
