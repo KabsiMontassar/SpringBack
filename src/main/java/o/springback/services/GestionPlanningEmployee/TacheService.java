@@ -474,7 +474,7 @@ public class TacheService implements ITacheService{
 
 
     //@Scheduled(cron = "0 0 7 * * MON")
-    @Scheduled(cron = "*/15 * * * * *")
+    //@Scheduled(cron = "*/15 * * * * *")
     public void notifierTacheDDL() {
         LocalDate today = LocalDate.now();
         List<Tache> taches = tacheRepository.findByDateFinBetween(
@@ -489,7 +489,7 @@ public class TacheService implements ITacheService{
 
 
     // @Scheduled(cron = "0 0 8 * * MON") // Chaque lundi à 8h du matin
-    @Scheduled(cron = "*/20 * * * * *")
+    //@Scheduled(cron = "*/20 * * * * *")
     public void notifierTachesEnRetard() {
         log.info("Recherche des tâches en retard");
         LocalDate aujourdhui = LocalDate.now();
