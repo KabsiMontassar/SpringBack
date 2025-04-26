@@ -34,10 +34,10 @@ public class PaymentController {
         try {
             Order order = orderService.getOrderById(request.getOrderId());
 
-            int amount = (int) (order.getTotalOrderPrice() * 1000); // convert to cents
+            int amount = (int) (order.getTotalOrderPrice() * 100); // convert to cents
             Map<String, Object> params = new HashMap<>();
             params.put("amount", amount);
-            params.put("currency", "tnd");
+            params.put("currency", "usd");
 
             PaymentIntent intent = PaymentIntent.create(params);
 
