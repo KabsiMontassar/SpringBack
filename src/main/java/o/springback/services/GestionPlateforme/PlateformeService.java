@@ -112,8 +112,8 @@ public class PlateformeService implements IPlateformeService {
     }
 
 
-   @Scheduled(cron = "*/15 * * * * ?")
-    public void deleteExpiredPlateformes() {
+  @Scheduled(cron = "*/15 * * * * ?")
+   public void deleteExpiredPlateformes() {
         List<Plateforme> plateformes = plateformeRepository.findAll();
         log.info("Deleting expired plateformes...");
         for (Plateforme plateforme : plateformes) {
