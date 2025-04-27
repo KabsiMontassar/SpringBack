@@ -1,14 +1,17 @@
 package o.springback.controller.GestionArticle;
 import lombok.RequiredArgsConstructor;
 import o.springback.Interfaces.GestionArticle.IArticleService;
-import o.springback.Interfaces.GestionArticle.IReservationService;
 import o.springback.entities.GestionArticle.Article;
 import o.springback.entities.GestionArticle.Payment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/articles")
 @RequiredArgsConstructor
