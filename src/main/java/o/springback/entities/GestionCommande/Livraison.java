@@ -1,5 +1,6 @@
 package o.springback.entities.GestionCommande;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,17 +19,16 @@ public class Livraison {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idPanier;
 
-    String dateLivraison;
+
+    private String adresse;
+    private String description;
+    private double latitude;
+    private double longitude;
 
     @OneToOne
+    @JoinColumn(name = "commande_id")
+    @JsonIgnore
     Order order;
-
-    @OneToOne
-    Livreur livreur;
-
-    LocalDate dateLivraisonEffective;
-
-    LocalDate dateLivraisonPrevue;
 
     @Enumerated(EnumType.STRING)
     StatusLivraison statusLivraison;

@@ -3,6 +3,7 @@ package o.springback.services.GestionFormation;
 import lombok.extern.slf4j.Slf4j;
 import o.springback.Interfaces.GestionFormation.IFormationService;
 import o.springback.entities.GestionFormation.Formation;
+import o.springback.entities.GestionFormation.TypeFormation;
 import o.springback.repositories.GestionFormation.FormationRepository;
 import o.springback.repositories.GestionFormation.ParticipationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -46,6 +46,7 @@ public class FormationService implements IFormationService {
             return null;
         }
     }
+
 
     @Override
     public Formation addFormation(Formation formation, MultipartFile photo) {
@@ -86,9 +87,9 @@ public class FormationService implements IFormationService {
         return participationRepository.getTauxReussiteFormation(formationId);
     }
 
-   @Scheduled(cron = "*/15 * * * * *")
+    @Scheduled(cron = "*/15 * * * * *")
     public void afficherFormationsDeDemain() {
-     /*   LocalDate demain = LocalDate.now().plusDays(1);
+        LocalDate demain = LocalDate.now().plusDays(1);
 
         for (Formation f : formationRepository.findAll()) {
             Date dateDebut = f.getDateDebut();
@@ -97,18 +98,24 @@ public class FormationService implements IFormationService {
             if (dateDebutLocal.isEqual(demain)) {
                 log.info(" Formation prévue demain : "+f.getNom());
             }
-        }*/
+        }
+
+
 
     }
 
 
- /*   @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = 30000)
     public void rappelerFormationsSansDetails() {
         for (Formation f : formationRepository.findAll()) {
             if (f.getDetailFormation() == null) {
                 log.warn(" Formation sans détails : " + f.getNom() + " (ID: " + f.getIdFormation() + ")");
             }
         }
-    }*/
+    }
+
+    public List<Formation> getFormationsByType(TypeFormation type) {
+        return formationRepository.findByTypeFormation(type);
+    }
 
 }

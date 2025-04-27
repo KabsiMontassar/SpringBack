@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/formations")
 @AllArgsConstructor
 public class FormationController {
-/*
+
     private IFormationService formationService;
 
     @Autowired
@@ -114,6 +114,5 @@ public class FormationController {
                 .map(FormationWithDetailDTO::new)
                 .collect(Collectors.toList());
     }
-*/
-}
 
+}

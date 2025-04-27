@@ -1,6 +1,7 @@
 package o.springback.repositories.GestionFormation;
 
 import o.springback.entities.GestionFormation.Formation;
+import o.springback.entities.GestionFormation.TypeFormation;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,6 @@ public interface FormationRepository extends JpaRepository<Formation, Integer> {
     @Query("SELECT f.typeFormation, COUNT(f) FROM Formation f GROUP BY f.typeFormation")
     List<Object[]> countByType();
 
+
+    List<Formation> findByTypeFormation(TypeFormation typeFormation);
 }
