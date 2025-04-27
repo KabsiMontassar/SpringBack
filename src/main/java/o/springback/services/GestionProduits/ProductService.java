@@ -41,7 +41,7 @@ public class ProductService implements IProductService {
         productRepository.deleteById(id);
     }
 
-    @Scheduled(fixedDelay = 10000)
+    //@Scheduled(fixedDelay = 10000)
     //@Scheduled(fixedDelay = 7889400) // hamza issue
 
     @Override

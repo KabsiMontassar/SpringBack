@@ -1,15 +1,13 @@
 package o.springback.controller.GestionCommande;
 
-import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import lombok.RequiredArgsConstructor;
-import o.springback.dto.PaymentRequest;
+import o.springback.dto.GestionCommande.PaymentRequest;
 import o.springback.entities.GestionCommande.Order;
 import o.springback.entities.GestionCommande.Payment;
 import o.springback.entities.GestionCommande.StatusPaiement;
 import o.springback.services.GestionCommande.OrderServiceImpl;
 import o.springback.services.GestionCommande.PaymentServiceImpl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController

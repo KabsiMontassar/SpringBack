@@ -1,4 +1,4 @@
-package o.springback.dto;
+package o.springback.dto.GestionCommande;
 
 import lombok.Data;
 import lombok.Getter;
