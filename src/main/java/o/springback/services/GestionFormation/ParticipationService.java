@@ -9,6 +9,8 @@ import o.springback.repositories.GestionFormation.FormationRepository;
 import o.springback.repositories.GestionFormation.ParticipationRepository;
 import o.springback.repositories.GestionUserRepository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -18,14 +20,25 @@ import java.util.List;
 public class ParticipationService implements IParticipationService {
 
     @Autowired
-    private UserRepository UserRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private FormationRepository FormationRepository;
-
+    private FormationRepository formationRepository;
 
     @Autowired
     private ParticipationRepository participationRepository;
+
+    private User getCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email;
+        if (principal instanceof UserDetails) {
+            email = ((UserDetails) principal).getUsername();
+        } else {
+            email = principal.toString();
+        }
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+    }
 
     @Override
     public Participation addParticipation(Participation participation) {
@@ -34,7 +47,7 @@ public class ParticipationService implements IParticipationService {
 
     @Override
     public Participation updateParticipation(int id, Participation participation) {
-        participation.setIdParticipation(id); // Assurez-vous que l'ID est correct
+        participation.setIdParticipation(id);
         return participationRepository.save(participation);
     }
 
@@ -53,52 +66,56 @@ public class ParticipationService implements IParticipationService {
         return participationRepository.findAll();
     }
 
+    @Override
     public Participation participate(ParticipationRequestDto dto) {
-        User user = UserRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = getCurrentUser();
+        Formation formation = formationRepository.findById(dto.getFormationId())
+                .orElseThrow(() -> new RuntimeException("Formation non trouvée"));
 
-        Formation formation = FormationRepository.findById(dto.getFormationId())
-                .orElseThrow(() -> new RuntimeException("Formation not found"));
-
-        // Vérification du rôle
-        if (!user.getRole().equalsIgnoreCase("AGRICULTEUR")) {
-            throw new RuntimeException("Seuls les agriculteurs peuvent participer");
-        }
-
-        // Vérifie s’il a déjà participé
         if (participationRepository.existsByUserAndFormation(user, formation)) {
             throw new RuntimeException("Vous êtes déjà inscrit à cette formation");
         }
 
-        // Vérification de la capacité de la formation
-        int capacity = formation.getCapacity(); // Capacité maximale de la formation
-        long currentParticipants = participationRepository.countByFormation(formation); // Nombre actuel de participants
+        int capacity = formation.getCapacity();
+        long currentParticipants = participationRepository.countConfirmedParticipantsByFormationId(formation.getIdFormation());
 
-        if (currentParticipants >= capacity) {
-            // Si la formation est pleine, l'utilisateur sera ajouté à la liste d'attente
-            Participation participation = new Participation();
-            participation.setUser(user);
-            participation.setFormation(formation);
-            participation.setDateInscription(new Date());
-            participation.setCertificatDelivre(false);
-            participation.setEnAttente(true); // Ajout de l'état "en attente"
-            return participationRepository.save(participation);
-        }
-
-        // Si la formation n'est pas pleine, l'utilisateur est inscrit normalement
         Participation participation = new Participation();
         participation.setUser(user);
         participation.setFormation(formation);
         participation.setDateInscription(new Date());
         participation.setCertificatDelivre(false);
 
-        return participationRepository.save(participation);
+        if (currentParticipants >= capacity) {
+            participation.setEnAttente(true);
+        } else {
+            participation.setEnAttente(false);
+        }
+
+        participation = participationRepository.save(participation);
+
+        // 🔥 RE-CHARGER depuis DB après Save pour être sûr
+        List<Participation> waitingList = participationRepository.findByFormationAndEnAttenteOrderByDateInscriptionAsc(formation, true);
+
+        if (participation.isEnAttente()) {
+            int position = -1;
+            for (int i = 0; i < waitingList.size(); i++) {
+                if (waitingList.get(i).getUser().getIdUser().equals(user.getIdUser())) {
+                    position = i + 1;
+                    break;
+                }
+            }
+            participation.setWaitingPosition(position);
+        } else {
+            participation.setWaitingPosition(0); // Pas en attente
+        }
+
+        return participation;
     }
 
-
+    @Override
     public void annulerParticipation(int participationId) {
         Participation p = participationRepository.findById(participationId)
-                .orElseThrow(() -> new RuntimeException("Participation not found"));
+                .orElseThrow(() -> new RuntimeException("Participation introuvable"));
 
         long diff = new Date().getTime() - p.getDateInscription().getTime();
         long hours = diff / (1000 * 60 * 60);
@@ -107,26 +124,31 @@ public class ParticipationService implements IParticipationService {
             throw new RuntimeException("Impossible d'annuler après 24h");
         }
 
-        // Si l'utilisateur annule sa participation, il doit être supprimé de la liste et remplacé par un utilisateur en attente
+        Formation formation = p.getFormation(); // 📦 Sauvegarder la formation avant delete
+
         participationRepository.deleteById(participationId);
 
-        // Recherche des utilisateurs en attente
-        List<Participation> waitingList = participationRepository.findByFormationAndEnAttente(p.getFormation(), true);
+        // Après annulation, vérifier la capacité restante
+        long confirmedParticipants = participationRepository.countConfirmedParticipantsByFormationId(formation.getIdFormation());
 
-        if (!waitingList.isEmpty()) {
-            // Remplacer le premier utilisateur en attente
-            Participation waitingUser = waitingList.get(0);
-            waitingUser.setEnAttente(false); // L'utilisateur n'est plus en attente
-            participationRepository.save(waitingUser);
+        if (confirmedParticipants < formation.getCapacity()) {
+            List<Participation> waitingList = participationRepository.findByFormationAndEnAttenteOrderByDateInscriptionAsc(formation, true);
+            if (!waitingList.isEmpty()) {
+                Participation nextInLine = waitingList.get(0);
+                nextInLine.setEnAttente(false);
+                participationRepository.save(nextInLine);
+            }
         }
     }
+
+    @Override
     public Participation enregistrerNoteEtEvaluerCertificat(int participationId, float note) {
         Participation p = participationRepository.findById(participationId)
                 .orElseThrow(() -> new RuntimeException("Participation non trouvée"));
 
         p.setNoteFinale(note);
-
         Formation f = p.getFormation();
+
         if (f.isCertification() && note >= f.getNoteMinPourCertificat()) {
             p.setCertificatDelivre(true);
         } else {
@@ -134,6 +156,40 @@ public class ParticipationService implements IParticipationService {
         }
 
         return participationRepository.save(p);
+    }
+
+    @Override
+    public List<Participation> getMyParticipations() {
+        User user = getCurrentUser();
+        return participationRepository.findByUser(user);
+    }
+
+    @Override
+    public int getWaitingPosition(int formationId) {
+        User user = getCurrentUser();
+        Formation formation = formationRepository.findById(formationId)
+                .orElseThrow(() -> new RuntimeException("Formation non trouvée"));
+
+        List<Participation> waitingList = participationRepository.findByFormationAndEnAttenteOrderByDateInscriptionAsc(formation, true);
+
+        for (int i = 0; i < waitingList.size(); i++) {
+            if (waitingList.get(i).getUser().getIdUser().equals(user.getIdUser())) {
+                return i + 1;
+            }
+        }
+
+        return 0; // Pas inscrit
+    }
+
+    @Override
+    public long countConfirmedParticipants(int formationId) {
+        return participationRepository.countConfirmedParticipantsByFormationId(formationId);
+    }
+    @Override
+    public List<Participation> getAllWaitingForFormation(int formationId) {
+        Formation formation = formationRepository.findById(formationId)
+                .orElseThrow(() -> new RuntimeException("Formation non trouvée"));
+        return participationRepository.findByFormationAndEnAttenteOrderByDateInscriptionAsc(formation, true);
     }
 
 

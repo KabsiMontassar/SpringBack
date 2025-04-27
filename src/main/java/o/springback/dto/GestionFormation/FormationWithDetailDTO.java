@@ -22,7 +22,7 @@ public class FormationWithDetailDTO {
     private int capacity;
     private String photoPath;
     private TypeFormation typeFormation;
-    private DetailsFormationDTO detailFormation; // Remplacé l'entité par DTO
+    private DetailsFormationDTO detailFormation;
 
     public FormationWithDetailDTO(Formation formation) {
         this.idFormation = formation.getIdFormation();

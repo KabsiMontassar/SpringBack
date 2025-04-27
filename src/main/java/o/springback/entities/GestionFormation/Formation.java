@@ -40,7 +40,7 @@ public class Formation {
     private String photoPath;
     @Min(10)
     private float noteMinPourCertificat;
-    @Min(value = 3)
+    @Min(value = 1)
     @Max(value = 20)
     private int Capacity;
 
