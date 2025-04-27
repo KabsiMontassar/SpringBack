@@ -29,7 +29,7 @@ public class Reservation {
 
     @OneToOne
     @JsonManagedReference("reservation-payment")
-    private Payment payment;
+    private PaymentArticle payment;
 
     @ManyToOne
     @JsonBackReference("article-reservations")

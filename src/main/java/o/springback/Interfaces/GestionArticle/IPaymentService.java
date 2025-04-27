@@ -1,13 +1,13 @@
 package o.springback.Interfaces.GestionArticle;
 
-import o.springback.entities.GestionArticle.Payment;
+import o.springback.entities.GestionArticle.PaymentArticle;
 
 import java.util.List;
 
 public interface IPaymentService {
-    List<Payment> findAll();
-    Payment findById(Long idPayment);
-    Payment save(Payment payment);
-    Payment update(Payment payment);
+    List<PaymentArticle> findAll();
+    PaymentArticle findById(Long idPayment);
+    PaymentArticle save(PaymentArticle payment);
+    PaymentArticle update(PaymentArticle payment);
     void delete(Long idPayment);
 }

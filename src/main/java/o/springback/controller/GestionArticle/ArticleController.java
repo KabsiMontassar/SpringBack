@@ -2,7 +2,7 @@ package o.springback.controller.GestionArticle;
 import lombok.RequiredArgsConstructor;
 import o.springback.Interfaces.GestionArticle.IArticleService;
 import o.springback.entities.GestionArticle.Article;
-import o.springback.entities.GestionArticle.Payment;
+import o.springback.entities.GestionArticle.PaymentArticle;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +48,7 @@ public class ArticleController {
         return ResponseEntity.noContent().build();
     }
     @GetMapping("/type/{type}")
-    public ResponseEntity<List<Article>> getArticlesByType(@PathVariable Payment.PaymentType type) {
+    public ResponseEntity<List<Article>> getArticlesByType(@PathVariable PaymentArticle.PaymentType type) {
         return ResponseEntity.ok(articleService.findByTypeArticle(type));
     }
 
@@ -60,7 +60,7 @@ public class ArticleController {
     @GetMapping("/by-availability-and-type")
     public ResponseEntity<List<Article>> getArticlesByAvailabilityAndType(
             @RequestParam boolean available,
-            @RequestParam Payment.PaymentType type) {
+            @RequestParam PaymentArticle.PaymentType type) {
         return ResponseEntity.ok(articleService.findByIsAvailableAndTypeArticle(available, type));
     }
 

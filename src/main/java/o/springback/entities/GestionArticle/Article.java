@@ -42,7 +42,7 @@ public class Article {
 
     @NotNull(message = "Article type cannot be null")
     @Enumerated(EnumType.STRING)
-    private Payment.PaymentType typeArticle;
+    private PaymentArticle.PaymentType typeArticle;
 
 
     @NotNull(message = "Creation date is required")

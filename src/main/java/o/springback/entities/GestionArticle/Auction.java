@@ -51,7 +51,7 @@ public class Auction {
 
     @OneToOne
     @JsonManagedReference("auction-payment")
-    private Payment payment;
+    private PaymentArticle payment;
 
     @Transient
     public String getArticleTitle() {

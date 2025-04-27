@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionArticle.IArticleService;
 import o.springback.entities.GestionArticle.Article;
 import o.springback.entities.GestionArticle.Auction;
-import o.springback.entities.GestionArticle.Payment;
+import o.springback.entities.GestionArticle.PaymentArticle;
+import o.springback.entities.GestionArticle.PaymentArticle;
 import o.springback.entities.GestionArticle.Reservation;
 import o.springback.repositories.GestionArticle.ArticleRepository;
 import o.springback.repositories.GestionArticle.AuctionRepository;
@@ -130,7 +131,7 @@ public class ArticleService implements IArticleService {
         existing.setTypeArticle(updatedArticle.getTypeArticle());
         existing.setAvailable(updatedArticle.isAvailable());
 
-        if (updatedArticle.getTypeArticle() == Payment.PaymentType.AUCTION && updatedArticle.getPrix() <= 0) {
+        if (updatedArticle.getTypeArticle() == PaymentArticle.PaymentType.AUCTION && updatedArticle.getPrix() <= 0) {
             throw new IllegalArgumentException("The prix must be greater than 0 for AUCTION type.");
         }
 
@@ -207,7 +208,7 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public List<Article> findByTypeArticle(Payment.PaymentType typeArticle) {
+    public List<Article> findByTypeArticle(PaymentArticle.PaymentType typeArticle) {
         return articleRepository.findByTypeArticle(typeArticle);
     }
 
@@ -240,7 +241,7 @@ public class ArticleService implements IArticleService {
         return articleRepository.findByTitleContainingIgnoreCase(title);
     }
 
-    public List<Article> findByIsAvailableAndTypeArticle(boolean isAvailable, Payment.PaymentType typeArticle) {
+    public List<Article> findByIsAvailableAndTypeArticle(boolean isAvailable, PaymentArticle.PaymentType typeArticle) {
         return articleRepository.findByIsAvailableAndTypeArticle(isAvailable, typeArticle);
     }
 

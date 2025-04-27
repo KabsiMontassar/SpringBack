@@ -1,7 +1,7 @@
 package o.springback.repositories.GestionArticle;
 
 import o.springback.entities.GestionArticle.Article;
-import o.springback.entities.GestionArticle.Payment;
+import o.springback.entities.GestionArticle.PaymentArticle;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface ArticleRepository  extends JpaRepository<Article,Long> {
-    List<Article> findByTypeArticle(Payment.PaymentType typeArticle);
+    List<Article> findByTypeArticle(PaymentArticle.PaymentType typeArticle);
 
     @Query("SELECT a FROM Article a WHERE a.auction.id = :auctionId")
     Article findByAuctionId(Long auctionId);
@@ -23,5 +23,5 @@ public interface ArticleRepository  extends JpaRepository<Article,Long> {
     Article findByTitle(@Param("title") String title);
     List<Article> findByTitleContainingIgnoreCase(String title);
 
-    List<Article> findByIsAvailableAndTypeArticle(boolean isAvailable, Payment.PaymentType typeArticle);
+    List<Article> findByIsAvailableAndTypeArticle(boolean isAvailable, PaymentArticle.PaymentType typeArticle);
 }
