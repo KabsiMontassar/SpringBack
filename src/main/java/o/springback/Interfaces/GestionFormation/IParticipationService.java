@@ -17,4 +17,12 @@ public interface IParticipationService {
     void annulerParticipation(int id);
 
     Participation enregistrerNoteEtEvaluerCertificat(int idParticipation, float note);
+
+    List<Participation> getMyParticipations();
+    int getWaitingPosition(int formationId);
+
+    long countConfirmedParticipants(int formationId);
+
+    List<Participation> getAllWaitingForFormation(int formationId);
+
 }
