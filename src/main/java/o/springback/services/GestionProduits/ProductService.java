@@ -42,7 +42,7 @@ public class ProductService implements IProductService {
     }
 
     //@Scheduled(fixedDelay = 10000)
-    @Scheduled(fixedDelay = 7889400) 
+    @Scheduled(fixedDelay = 7889400)
 
     @Override
     public void deleteOutOfStockProducts() {
