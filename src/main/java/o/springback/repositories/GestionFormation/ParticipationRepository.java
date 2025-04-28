@@ -72,4 +72,8 @@ public interface ParticipationRepository extends JpaRepository<Participation, In
        """)
     long countConfirmedParticipantsByFormationId(int formationId);
 
+
+
+
+
 }
