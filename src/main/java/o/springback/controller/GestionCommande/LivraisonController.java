@@ -2,11 +2,8 @@ package o.springback.controller.GestionCommande;
 
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionCommande.ILivraisonService;
-import o.springback.dto.LivraisonDTO;
+import o.springback.dto.GestionCommande.LivraisonDTO;
 import o.springback.entities.GestionCommande.Livraison;
-import o.springback.entities.GestionCommande.Order;
-import o.springback.services.GestionCommande.LivraisonServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
