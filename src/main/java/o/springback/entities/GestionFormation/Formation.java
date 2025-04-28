@@ -56,4 +56,8 @@ public class Formation {
     @OneToMany(mappedBy = "formation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference("formation-participations")
     private Set<Participation> participations;
+
+    @OneToMany(mappedBy = "formation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<ParticipationStatus> participationStatuses;
+
 }

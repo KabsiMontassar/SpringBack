@@ -13,4 +13,6 @@ public class ParticipationResponseDTO {
     private int waitingPosition;
 
     private FormationShortDTO formation;
+    private boolean bloque;
+
 }

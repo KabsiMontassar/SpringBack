@@ -1,12 +1,15 @@
 package o.springback.services.GestionFormation;
 
+import jakarta.transaction.Transactional;
 import o.springback.Interfaces.GestionFormation.IParticipationService;
 import o.springback.dto.GestionFormation.ParticipationRequestDto;
 import o.springback.entities.GestionFormation.Formation;
 import o.springback.entities.GestionFormation.Participation;
+import o.springback.entities.GestionFormation.ParticipationStatus;
 import o.springback.entities.GestionUser.User;
 import o.springback.repositories.GestionFormation.FormationRepository;
 import o.springback.repositories.GestionFormation.ParticipationRepository;
+import o.springback.repositories.GestionFormation.ParticipationStatusRepository;
 import o.springback.repositories.GestionUserRepository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +30,8 @@ public class ParticipationService implements IParticipationService {
 
     @Autowired
     private ParticipationRepository participationRepository;
+    @Autowired
+    private ParticipationStatusRepository participationStatusRepository;
 
     private User getCurrentUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -40,6 +45,9 @@ public class ParticipationService implements IParticipationService {
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
     }
 
+    public User getCurrentConnectedUser() {
+        return getCurrentUser();
+    }
     @Override
     public Participation addParticipation(Participation participation) {
         return participationRepository.save(participation);
@@ -67,15 +75,35 @@ public class ParticipationService implements IParticipationService {
     }
 
     @Override
+    @Transactional
     public Participation participate(ParticipationRequestDto dto) {
         User user = getCurrentUser();
         Formation formation = formationRepository.findById(dto.getFormationId())
                 .orElseThrow(() -> new RuntimeException("Formation non trouvée"));
 
-        if (participationRepository.existsByUserAndFormation(user, formation)) {
-            throw new RuntimeException("Vous êtes déjà inscrit à cette formation");
+        ParticipationStatus status = participationStatusRepository.findByUserAndFormation(user, formation).orElse(null);
+
+        if (status != null && status.isBloque()) {
+            if (status.getDateBlocage() != null) {
+                int secondsPenalty = status.getNombreAnnulations() * 10;
+                long elapsedMillis = new Date().getTime() - status.getDateBlocage().getTime();
+                if (elapsedMillis >= secondsPenalty * 1000L) {
+                    // ✅ Déblocage terminé : update en mémoire ET SAVE
+                    status.setBloque(false);
+                    status.setNombreAnnulations(0);
+                    participationStatusRepository.save(status);
+
+                    // ✅ BESTIE : on met à jour l'objet status pour rechecker après
+                    status = participationStatusRepository.findByUserAndFormation(user, formation)
+                            .orElse(null);
+                }
+            }
         }
 
+// 🚨 ici on RECHECK AVEC L'OBJET RÉEL DE LA BASE !
+        if (status != null && status.isBloque()) {
+            throw new RuntimeException("Vous êtes bloqué pour cette formation. 😔");
+        }
         int capacity = formation.getCapacity();
         long currentParticipants = participationRepository.countConfirmedParticipantsByFormationId(formation.getIdFormation());
 
@@ -93,7 +121,6 @@ public class ParticipationService implements IParticipationService {
 
         participation = participationRepository.save(participation);
 
-        // 🔥 RE-CHARGER depuis DB après Save pour être sûr
         List<Participation> waitingList = participationRepository.findByFormationAndEnAttenteOrderByDateInscriptionAsc(formation, true);
 
         if (participation.isEnAttente()) {
@@ -106,31 +133,57 @@ public class ParticipationService implements IParticipationService {
             }
             participation.setWaitingPosition(position);
         } else {
-            participation.setWaitingPosition(0); // Pas en attente
+            participation.setWaitingPosition(0);
         }
 
         return participation;
     }
 
+
+
     @Override
+    @Transactional
     public void annulerParticipation(int participationId) {
-        Participation p = participationRepository.findById(participationId)
+        Participation participation = participationRepository.findById(participationId)
                 .orElseThrow(() -> new RuntimeException("Participation introuvable"));
 
-        long diff = new Date().getTime() - p.getDateInscription().getTime();
-        long hours = diff / (1000 * 60 * 60);
+        Formation formation = participation.getFormation();
+        User user = participation.getUser();
+        Date dateDebutFormation = formation.getDateDebut();
+        Date now = new Date();
 
-        if (hours > 24) {
-            throw new RuntimeException("Impossible d'annuler après 24h");
+        long diffMillis = dateDebutFormation.getTime() - now.getTime();
+        long diffHours = diffMillis / (1000 * 60 * 60);
+
+        if (diffHours <= 24) {
+            throw new RuntimeException("Impossible d'annuler : il reste moins de 24h avant le début de la formation.");
         }
 
-        Formation formation = p.getFormation(); // 📦 Sauvegarder la formation avant delete
+        // ➡️ Récupérer ou créer ParticipationStatus
+        ParticipationStatus status = participationStatusRepository.findByUserAndFormation(user, formation)
+                .orElseGet(() -> {
+                    ParticipationStatus newStatus = new ParticipationStatus();
+                    newStatus.setUser(user);
+                    newStatus.setFormation(formation);
+                    return newStatus;
+                });
 
-        participationRepository.deleteById(participationId);
+        // ➡️ Incrémenter les annulations
+        status.setNombreAnnulations(status.getNombreAnnulations() + 1);
 
-        // Après annulation, vérifier la capacité restante
+        // ➡️ Bloquer si nécessaire
+        if (status.getNombreAnnulations() >= 3) {
+            status.setBloque(true);
+            status.setDateBlocage(new Date());
+        }
+
+        participationStatusRepository.save(status);
+
+        // ➡️ ⚡ SUPPRIMER la participation (toujours)
+        participationRepository.delete(participation);
+
+        // ➡️ ⚡ Rééquilibrer la liste d'attente uniquement si pas bloqué
         long confirmedParticipants = participationRepository.countConfirmedParticipantsByFormationId(formation.getIdFormation());
-
         if (confirmedParticipants < formation.getCapacity()) {
             List<Participation> waitingList = participationRepository.findByFormationAndEnAttenteOrderByDateInscriptionAsc(formation, true);
             if (!waitingList.isEmpty()) {
@@ -140,6 +193,7 @@ public class ParticipationService implements IParticipationService {
             }
         }
     }
+
 
     @Override
     public Participation enregistrerNoteEtEvaluerCertificat(int participationId, float note) {
@@ -192,5 +246,56 @@ public class ParticipationService implements IParticipationService {
         return participationRepository.findByFormationAndEnAttenteOrderByDateInscriptionAsc(formation, true);
     }
 
+
+
+
+    @Override
+    public Formation getConflictingFormation(User user, Formation newFormation) {
+        List<Participation> participations = participationRepository.findByUser(user);
+
+        for (Participation p : participations) {
+            Formation f = p.getFormation();
+            if (f != null) {
+                boolean overlap = !(newFormation.getDateFin().before(f.getDateDebut()) || newFormation.getDateDebut().after(f.getDateFin()));
+                if (overlap) {
+                    return f; // Retourner la formation conflictuelle
+                }
+            }
+        }
+        return null;
+    }
+
+    public ParticipationStatus getParticipationStatus(User user, Formation formation) {
+        return participationStatusRepository.findByUserAndFormation(user, formation).orElse(null);
+    }
+
+    public boolean isUserBlockedForFormation(int formationId) {
+        User user = getCurrentConnectedUser();
+        Formation formation = formationRepository.findById(formationId)
+                .orElseThrow(() -> new RuntimeException("Formation non trouvée"));
+
+        ParticipationStatus status = getParticipationStatus(user, formation);
+        return status != null && status.isBloque();
+    }
+
+    public long getRemainingBlockTime(User user, Formation formation) {
+        ParticipationStatus status = participationStatusRepository.findByUserAndFormation(user, formation)
+                .orElse(null);
+        if (status == null || !status.isBloque() || status.getDateBlocage() == null) {
+            return 0; // Pas bloqué
+        }
+
+        int secondsPenalty = status.getNombreAnnulations() * 10; // 10 secondes x nombre d'annulations
+
+        long elapsedMillis = new Date().getTime() - status.getDateBlocage().getTime();
+        long remainingMillis = secondsPenalty * 1000 - elapsedMillis;
+
+        return Math.max(remainingMillis / 1000, 0); // Retourner les secondes restantes
+    }
+
+    @Override
+    public boolean isUserAlreadyParticipating(User user, Formation formation) {
+        return participationRepository.existsByUserAndFormation(user, formation);
+    }
 
 }
