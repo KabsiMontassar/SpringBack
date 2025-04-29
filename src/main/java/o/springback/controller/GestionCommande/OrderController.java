@@ -28,6 +28,8 @@ public class OrderController {
     OrderService orderService;
     OrderProductService orderProductService;
 
+
+
     public OrderController(ProductService productService, OrderService orderService, OrderProductService orderProductService) {
         this.productService = productService;
         this.orderService = orderService;
@@ -37,8 +39,14 @@ public class OrderController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public @NotNull Iterable<Order> list() {
+        return this.orderService.getUserOrders();
+    }
+    @GetMapping("/backoffice")
+    @ResponseStatus(HttpStatus.OK)
+    public @NotNull Iterable<Order> backoffice() {
         return this.orderService.getAllOrders();
     }
+
 
     @PostMapping
     public ResponseEntity<Order> create(@RequestBody OrderForm form) {

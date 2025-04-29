@@ -3,6 +3,7 @@ package o.springback.entities.GestionUser;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import o.springback.entities.GestionCommande.Order;
 import o.springback.entities.GestionFormation.Participation;
 import o.springback.entities.GestionPlateforme.Component;
 import o.springback.entities.GestionPlateforme.Plateforme;
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -68,4 +70,8 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private Set<Participation> participations;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Order> orders;
 }

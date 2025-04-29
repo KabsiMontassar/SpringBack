@@ -4,6 +4,7 @@ import com.stripe.model.PaymentIntent;
 import lombok.RequiredArgsConstructor;
 import o.springback.dto.GestionCommande.PaymentRequest;
 import o.springback.entities.GestionCommande.Order;
+import o.springback.entities.GestionCommande.OrderStatus;
 import o.springback.entities.GestionCommande.Payment;
 import o.springback.entities.GestionCommande.StatusPaiement;
 import o.springback.services.GestionCommande.OrderServiceImpl;
@@ -45,6 +46,7 @@ public class PaymentController {
             payment.setStripePaymentIntentId(intent.getId());
             payment.setStatus(StatusPaiement.PENDING); // Status initial
             payment.setCreatedAt(LocalDateTime.now());
+            order.setStatus(OrderStatus.CONFIRMED.name());
 
             paymentService.createPaiement(payment);
 

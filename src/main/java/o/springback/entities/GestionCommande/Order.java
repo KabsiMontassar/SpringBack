@@ -1,12 +1,14 @@
 package o.springback.entities.GestionCommande;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import o.springback.entities.GestionUser.Client;
+import o.springback.entities.GestionUser.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,6 +22,10 @@ import java.util.List;
 @Getter
 @Setter
 public class Order {
+    @ManyToOne
+    @JoinColumn(name = "idUser")
+    private User user;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +43,10 @@ public class Order {
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     Livraison livraison;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    Payment payment;
 
 
 
