@@ -15,4 +15,6 @@ public interface IAuctionService {
     List<Auction> getTop5AuctionsByBids();
 
     List<Auction> findByArticleId(Long articleId);
+
+    void finalizeAuction(Long auctionId);
 }

@@ -79,5 +79,11 @@ public class AuctionController {
         List<Auction> auctions = auctionService.findByArticleId(articleId);
         return ResponseEntity.ok(auctions);
     }
+
+    @PostMapping("/finalize/{id}")
+    public ResponseEntity<Void> finalizeAuction(@PathVariable Long id) {
+        auctionService.finalizeAuction(id);
+        return ResponseEntity.ok().build();
+    }
 }
 
