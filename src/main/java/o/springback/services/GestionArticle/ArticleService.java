@@ -70,9 +70,9 @@ public class ArticleService implements IArticleService {
 
     @Override
     public Article save(Article article) {
-        if(article.getUser() == null || article.getUser().getIdUser() == null) {
+   /*     if(article.getUser() == null || article.getUser().getIdUser() == null) {
             throw new IllegalArgumentException("User is required for a reservation.");
-        }
+        }*/
         if (articleRepository.existsByTitle(article.getTitle())) {
             throw new IllegalArgumentException("An article with the title '" + article.getTitle() + "' already exists.");
         }

@@ -27,7 +27,7 @@ public class Article {
     private String title;
 
     @NotBlank(message = "Description is required")
-    @Size(min = 10, max = 500, message = "Description must be between 10 and 500 characters")
+    @Size(min = 10, max = 5000, message = "Description must be between 10 and 500 characters")
     private String description;
 
     @PositiveOrZero(message = "Prix must be positive or zero")
