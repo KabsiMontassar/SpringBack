@@ -18,6 +18,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -25,43 +29,68 @@ public class SecurityConfig {
 
     @Autowired
     private JwtAuthFilter authFilter;
-    //@Autowired
-    //private UserService userService; // Assuming UserService implements UserDetailsService
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserService(); // Ensure UserInfoService implements UserDetailsService
-    }
+    @Autowired
+    private UserService userService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
+        return http
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.setAllowedOrigins(List.of("http://localhost:4200"));
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    config.setAllowedHeaders(List.of("*"));
+                    config.setExposedHeaders(List.of("Authorization", "Content-Type"));
+                    config.setAllowCredentials(true);
+                    return config;
+                }))
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken","/**", "/auth/signup","/uploads/**").permitAll()
-                        .requestMatchers("/auth/user/**").hasAuthority("ROLE_USER") // page profile
-                        .requestMatchers("/auth/admin/**").hasAuthority("ROLE_ADMIN") // backoffice
-                        .anyRequest().authenticated() // Protect all other endpoints
+                        .requestMatchers(
+                                "/auth/welcome", 
+                                "/auth/addNewUser",
+                                "/auth/generateToken",
+                                "/auth/signup",
+                                "/uploads/**",
+                                "/oauth2/**",
+                                "/login/oauth2/code/*",
+                                "/error"
+                        ).permitAll()
+                        .requestMatchers("/auth/user/**").hasAuthority("ROLE_USER")
+                        .requestMatchers("/auth/admin/**").hasAuthority("ROLE_ADMIN")
+                        .anyRequest().authenticated()
                 )
-                .sessionManagement(sess -> sess
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No sessions
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .authorizationEndpoint(authorization -> authorization
+                                .baseUri("/oauth2/authorization"))
+                        .redirectionEndpoint(redirection -> redirection
+                                .baseUri("/login/oauth2/code/*"))
+                        .successHandler(new OAuth2AuthenticationSuccessHandler())
                 )
-                .authenticationProvider(authenticationProvider()) // Custom authentication provider
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
-
-        return http.build();
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Password encoding
+        return new BCryptPasswordEncoder();
     }
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService());
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> userService.loadUserByUsername(username);
     }
 
     @Bean

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Transactional
@@ -17,7 +18,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     OrderRepo orderRepo;
     @Override
-    public Iterable<Order> getAllOrders() {
+    public List<Order> getAllOrders() {
         return this.orderRepo.findAll();
     }
 
@@ -40,6 +41,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getOrderById(Long id) {
         return orderRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Order> getOrdersByStatus(String status) {
+        return orderRepo.findByStatus(status);
     }
 
     /*
