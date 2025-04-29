@@ -3,11 +3,7 @@ package o.springback.services.GestionPlateforme;
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionPlateforme.IComponentService;
 import o.springback.entities.GestionPlateforme.Component;
-import o.springback.entities.GestionUser.User;
 import o.springback.repositories.GestionPlateformeRepository.ComponentRepository;
-import o.springback.repositories.GestionUserRepository.UserRepository;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,23 +14,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ComponentService implements IComponentService {
     private final ComponentRepository componentRepository;
-    private final UserRepository userRepository;
-
-
-
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
 
     @Override
     public Component save(Component component) {
-         User user = getCurrentUser();
-
-        component.setUser(user);
-
         return componentRepository.save(component);
     }
 
