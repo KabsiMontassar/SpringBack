@@ -1,5 +1,7 @@
 package o.springback.controller.GestionUser;
 
+import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
+import com.nimbusds.openid.connect.sdk.AuthenticationResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -10,6 +12,7 @@ import o.springback.dto.RegisterRequestDTO;
 import o.springback.dto.UserDTO;
 import o.springback.entities.GestionUser.AuthRequest;
 import o.springback.entities.GestionUser.User;
+import o.springback.services.GestionUser.CaptchaService;
 import o.springback.services.GestionUser.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -35,6 +38,7 @@ public class UserController {
         private JwtService jwtService;
        private AuthenticationManager authenticationManager;
        private UserRepository userRepository;
+       private CaptchaService captchaService;
 
 
         @GetMapping("/retrieve-all-Users")
@@ -113,6 +117,12 @@ public class UserController {
 
        @PostMapping("/generateToken")
         public ResponseEntity<AuthenticationResponseDTO> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+            boolean isCaptchaValid = captchaService.verifyCaptcha(authRequest.getRecaptchaToken());
+            System.out.println("reCaptcha token received: "+authRequest.getRecaptchaToken());
+
+            if (!isCaptchaValid) {
+                throw new RuntimeException("Invalid reCAPTCHA. Please try again.");
+            }
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
@@ -141,6 +151,9 @@ public class UserController {
             return ResponseEntity.badRequest().body(error);
         }
     }
+
+
+
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestParam String email){
             try{

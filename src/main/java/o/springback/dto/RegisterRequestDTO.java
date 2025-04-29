@@ -24,4 +24,5 @@ public class RegisterRequestDTO {
     private String password;
     private String adresse;
     private String role;
+    private String captchaToken;
 }
