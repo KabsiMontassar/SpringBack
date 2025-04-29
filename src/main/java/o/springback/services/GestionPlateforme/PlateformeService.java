@@ -9,6 +9,8 @@ import o.springback.entities.GestionUser.User;
 import o.springback.repositories.GestionPlateformeRepository.PlateformeRepository;
 import o.springback.repositories.GestionUserRepository.UserRepository;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,12 @@ public class PlateformeService implements IPlateformeService {
     private PlateformeRepository plateformeRepository;
     private UserRepository userRepository;
 
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Plateforme save(Plateforme plateforme) {
@@ -32,6 +40,8 @@ public class PlateformeService implements IPlateformeService {
             throw new IllegalArgumentException("Content cannot be null");
         }
         log.debug("PlateformeService.save() called with: plateforme = [{}]", plateforme);
+        User user = getCurrentUser();
+        plateforme.setAgriculteur(user);
         return plateformeRepository.saveAndFlush(plateforme);
     }
 
@@ -56,16 +66,21 @@ public class PlateformeService implements IPlateformeService {
     }
 
     @Override
-    public void changePackType(Long id, String plan) {
-        User user = userRepository.findById(id).orElse(null);
-        if (user != null) {
+    public void changePackType( String plan) {
+
+
+            User user = getCurrentUser();
+            if (user == null) {
+                throw new RuntimeException("User not found");
+            }
+
 
             TypePack planEnum = TypePack.valueOf(plan.toUpperCase());
 
             user.setTypePack(planEnum);
             userRepository.save(user);
 
-        }
+
     }
 
     @Override
@@ -98,7 +113,7 @@ public class PlateformeService implements IPlateformeService {
     }
 
 
-    //@Scheduled(cron = "*/15 * * * * ?")
+    @Scheduled(cron = "*/15 * * * * ?")
     public void checkPlateformeExpiration() {
         List<Plateforme> plateformes = plateformeRepository.findAll();
         log.info("Checking for plateforme expiration...");
@@ -112,7 +127,7 @@ public class PlateformeService implements IPlateformeService {
     }
 
 
-   //@Scheduled(cron = "*/15 * * * * ?")
+   @Scheduled(cron = "*/15 * * * * ?")
     public void deleteExpiredPlateformes() {
         List<Plateforme> plateformes = plateformeRepository.findAll();
         log.info("Deleting expired plateformes...");

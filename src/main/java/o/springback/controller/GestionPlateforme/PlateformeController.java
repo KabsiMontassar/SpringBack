@@ -66,11 +66,11 @@ public class PlateformeController {
 
 
 
-    @PutMapping("/user/{id}/{plan}")
+    @PutMapping("/user/{plan}")
     public void changePackType(
-            @PathVariable("id") Long id,
+
             @PathVariable("plan") String plan) {
-        plateformeService.changePackType(id, plan);
+        plateformeService.changePackType( plan);
     }
 
 
