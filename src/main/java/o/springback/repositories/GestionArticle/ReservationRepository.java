@@ -14,5 +14,6 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
 
     @Query("SELECT r FROM Reservation r JOIN FETCH r.article WHERE r.id = :id")
     Optional<Reservation> findByIdWithArticle(@Param("id") Long id);
+    List<Reservation> findByUserIdUser(Long userId);
 
 }

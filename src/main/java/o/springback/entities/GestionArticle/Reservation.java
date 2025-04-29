@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import o.springback.entities.GestionUser.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,6 +35,10 @@ public class Reservation {
     @ManyToOne
     @JsonBackReference("article-reservations")
     private Article article;
+
+    @ManyToOne
+    @JsonBackReference("user-reservations")
+    private User user;
 
     @Transient // Indique que ce champ n'est pas persisté en base de données
     public String getArticleTitle() {
