@@ -31,7 +31,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(userName)
                 .setIssuedAt(new Date()) // Token issued at current time
-                //.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30 )) // Token valid for 30 minutes
+             //  .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30 )) // Token valid for 30 minutes
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     } // a discutee
@@ -74,16 +74,16 @@ public class JwtService {
     }
 
     // Validate the token against user details and expiration
-    public boolean validateToken(String token) {
-        try {
-            if (token == null || token.isEmpty()) {
-                return false;
-            }
-            return !isTokenExpired(token);
-        } catch (Exception e) {
-            return false;
-        }
-    }
+    // public boolean validateToken(String token) {
+    //     try {
+    //         if (token == null || token.isEmpty()) {
+    //             return false;
+    //         }
+    //         return !isTokenExpired(token);
+    //     } catch (Exception e) {
+    //         return false;
+    //     }
+    // }
 
 
     // Check if the token is expired
