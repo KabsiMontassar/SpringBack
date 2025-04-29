@@ -31,8 +31,16 @@ public class Participation {
     private boolean certificatDelivre;
     private boolean enAttente = false;
 
+
+    @Transient
+    private int waitingPosition;
+
+    private int nombreAnnulations = 0;
+    private boolean bloque = false;
+
     @ManyToOne
     @JsonBackReference("formation-participations")
+    @JoinColumn(name = "formation_idFormation")
     private Formation formation;
 
     @ManyToOne

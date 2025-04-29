@@ -98,7 +98,7 @@ public class PlateformeService implements IPlateformeService {
     }
 
 
-    @Scheduled(cron = "*/15 * * * * ?")
+    //@Scheduled(cron = "*/15 * * * * ?")
     public void checkPlateformeExpiration() {
         List<Plateforme> plateformes = plateformeRepository.findAll();
         log.info("Checking for plateforme expiration...");
@@ -112,7 +112,7 @@ public class PlateformeService implements IPlateformeService {
     }
 
 
-   @Scheduled(cron = "*/15 * * * * ?")
+   //@Scheduled(cron = "*/15 * * * * ?")
     public void deleteExpiredPlateformes() {
         List<Plateforme> plateformes = plateformeRepository.findAll();
         log.info("Deleting expired plateformes...");

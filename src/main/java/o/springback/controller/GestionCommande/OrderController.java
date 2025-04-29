@@ -1,28 +1,23 @@
 package o.springback.controller.GestionCommande;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionCommande.OrderProductService;
 import o.springback.Interfaces.GestionCommande.OrderService;
-import o.springback.dto.OrderProductDto;
+import o.springback.dto.GestionCommande.OrderProductDto;
 import o.springback.entities.GestionCommande.Order;
 import o.springback.entities.GestionCommande.OrderProduct;
 import o.springback.entities.GestionCommande.OrderStatus;
 import o.springback.entities.GestionProduits.Products;
 import o.springback.exception.ResourceNotFoundException;
-import o.springback.repositories.Gestioncommande.OrderRepo;
 import o.springback.services.GestionCommande.PDFGeneratorService;
 import o.springback.services.GestionProduits.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/commande")
@@ -115,10 +110,14 @@ public class OrderController {
             this.productOrders = productOrders;
         }
     }
+
+
     @DeleteMapping("/{id}")
     public void deleteCommande(@PathVariable Long id) {
         orderService.deleteCommande(id);
     }
+
+
 
     @Autowired
     private PDFGeneratorService pdfGeneratorService;
@@ -144,42 +143,6 @@ public class OrderController {
     }
 
 
-    /*@Autowired
-    private OrderServiceImpl commandeService;
-
-    @PostMapping("/add")
-    public Order createCommande(@RequestBody Order order) {
-        return commandeService.createCommande(order);
-    }
-
-    @PostMapping("/create")
-    public ResponseEntity<Order> passerCommande(
-            @RequestBody CommandeRequest request) {
-
-        Order cmd = commandeService.creerCommande(
-                request.getClientId(),
-                request.getProduitsQuantites()
-        );
-        return ResponseEntity.ok(cmd);
-    }
 
 
-
-
-    @PutMapping("/update/{id}")
-    public Order updateCommande(@PathVariable Long id, @RequestBody Order order) {
-        return commandeService.updateCommande(id, order);
-    }
-
-
-
-    @GetMapping("/get-by-id/{id}")
-    public Order getCommandeById(@PathVariable Long id) {
-        return commandeService.getCommandeById(id);
-    }
-
-    @GetMapping("/get-all")
-    public List<Order> getAllCommandes() {
-        return commandeService.getAllCommandes();
-    }*/
 }
