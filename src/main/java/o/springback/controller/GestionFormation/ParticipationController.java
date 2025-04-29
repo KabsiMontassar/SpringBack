@@ -5,8 +5,13 @@ import o.springback.Interfaces.GestionFormation.IParticipationService;
 import o.springback.dto.GestionFormation.FormationShortDTO;
 import o.springback.dto.GestionFormation.ParticipationRequestDto;
 import o.springback.dto.GestionFormation.ParticipationResponseDTO;
+import o.springback.entities.GestionFormation.Formation;
 import o.springback.entities.GestionFormation.Participation;
+import o.springback.entities.GestionFormation.ParticipationStatus;
+import o.springback.entities.GestionUser.User;
+import o.springback.repositories.GestionFormation.FormationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +26,8 @@ public class ParticipationController {
 
 
     private IParticipationService participationService;
+    private FormationRepository formationRepository;
+
 
     @PostMapping
     public Participation addParticipation(@RequestBody Participation participation) {
@@ -53,8 +60,15 @@ public class ParticipationController {
     }
 
     @DeleteMapping("/annuler/{id}")
-    public void annulerParticipation(@PathVariable int id) {
-        participationService.annulerParticipation(id);
+    public ResponseEntity<?> annulerParticipation(@PathVariable int id) {
+        try {
+            participationService.annulerParticipation(id);
+            return ResponseEntity.ok().build(); // ✅ Tout s'est bien passé
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .status(400) // ✅ Bad Request pas erreur serveur
+                    .body(e.getMessage()); // ✅ Renvoyer proprement le message dans le body
+        }
     }
 
     @PostMapping("/noter/{idParticipation}")
@@ -64,6 +78,7 @@ public class ParticipationController {
     @GetMapping("/mes-participations")
     public List<ParticipationResponseDTO> getMyParticipations() {
         List<Participation> participations = participationService.getMyParticipations();
+        User currentUser = participationService.getCurrentConnectedUser();
 
         return participations.stream().map(p -> {
             ParticipationResponseDTO dto = new ParticipationResponseDTO();
@@ -74,7 +89,6 @@ public class ParticipationController {
             dto.setNoteFinale(p.getNoteFinale());
 
             if (p.isEnAttente()) {
-                // 🔥🔥🔥 Nouveau calcul dynamique correct ici 🔥🔥🔥
                 List<Participation> waitingList = participationService.getAllWaitingForFormation(p.getFormation().getIdFormation());
                 for (int i = 0; i < waitingList.size(); i++) {
                     if (waitingList.get(i).getUser().getIdUser().equals(p.getUser().getIdUser())) {
@@ -85,6 +99,10 @@ public class ParticipationController {
             } else {
                 dto.setWaitingPosition(0);
             }
+
+            // ➡️ Tester blocage
+            ParticipationStatus status = participationService.getParticipationStatus(currentUser, p.getFormation());
+            dto.setBloque(status != null && status.isBloque());
 
             if (p.getFormation() != null) {
                 FormationShortDTO formationDto = new FormationShortDTO();
@@ -106,6 +124,38 @@ public class ParticipationController {
     @GetMapping("/count-confirmed/{formationId}")
     public long countConfirmedParticipants(@PathVariable int formationId) {
         return participationService.countConfirmedParticipants(formationId);
+    }
+
+    @GetMapping("/check-conflict/{formationId}")
+    public Formation checkConflict(@PathVariable int formationId) {
+        User currentUser = participationService.getCurrentConnectedUser(); // 🌟 Utiliser service !
+        Formation newFormation = formationRepository.findById(formationId)
+                .orElseThrow(() -> new RuntimeException("Formation non trouvée"));
+
+        return participationService.getConflictingFormation(currentUser, newFormation);
+    }
+
+    @GetMapping("/check-blocked/{formationId}")
+    public boolean checkUserBlocked(@PathVariable int formationId) {
+        return participationService.isUserBlockedForFormation(formationId);
+    }
+
+    @GetMapping("/remaining-block-time/{formationId}")
+    public long getRemainingBlockTime(@PathVariable int formationId) {
+        User user = participationService.getCurrentConnectedUser();
+        Formation formation = formationRepository.findById(formationId)
+                .orElseThrow(() -> new RuntimeException("Formation non trouvée"));
+
+        return participationService.getRemainingBlockTime(user, formation);
+    }
+
+    @GetMapping("/is-participating/{formationId}")
+    public boolean isUserAlreadyParticipating(@PathVariable int formationId) {
+        User currentUser = participationService.getCurrentConnectedUser();
+        Formation formation = formationRepository.findById(formationId)
+                .orElseThrow(() -> new RuntimeException("Formation non trouvée"));
+
+        return participationService.isUserAlreadyParticipating(currentUser, formation);
     }
 
 }
