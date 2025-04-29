@@ -14,9 +14,11 @@ import o.springback.repositories.GestionFormation.FormationRepository;
 import o.springback.repositories.GestionFormation.ParticipationRepository;
 import o.springback.repositories.GestionFormation.ParticipationStatusRepository;
 import o.springback.repositories.GestionUserRepository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
@@ -118,7 +120,8 @@ public class ParticipationService implements IParticipationService {
 
         long diff = formation.getDateDebut().getTime() - new Date().getTime();
         long hours = diff / (1000 * 60 * 60);
-        if (hours <= 24) return;
+        if (hours <= 24)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Impossible d'annuler à moins de 24h de la formation.");
 
         ParticipationStatus status = participationStatusRepository.findByUserAndFormation(user, formation)
                 .orElseGet(() -> {
