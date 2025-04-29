@@ -156,6 +156,23 @@ public class PlateformeService implements IPlateformeService {
         return result;
     }
 
+    public Plateforme getRandomPlateforme() {
+        List<Plateforme> plateformes = plateformeRepository.findAll();
+        if (plateformes.isEmpty()) {
+            return null; // or throw an exception
+        }
+        int randomIndex = (int) (Math.random() * plateformes.size());
+        return plateformes.get(randomIndex);
+    }
+
+    // get platfrom by name
+
+    public Plateforme getPlateformeByName(String name) {
+        return plateformeRepository.findByNomPlateforme(name);
+
+    }
+
+
 
 
 

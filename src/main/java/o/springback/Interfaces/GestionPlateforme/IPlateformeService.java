@@ -18,4 +18,8 @@ public interface IPlateformeService {
     void changePackType( String plan);
 
     Map<String, Integer> getMostlyBoughtPacks();
+
+    Plateforme getRandomPlateforme();
+
+    Plateforme getPlateformeByName(String name);
 }

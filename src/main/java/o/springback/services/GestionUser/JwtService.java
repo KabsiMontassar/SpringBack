@@ -31,7 +31,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(userName)
                 .setIssuedAt(new Date()) // Token issued at current time
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30 )) // Token valid for 30 minutes
+             //  .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30 )) // Token valid for 30 minutes
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     } // a discutee
@@ -76,7 +76,10 @@ public class JwtService {
     // Validate the token against user details and expiration
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (username.equals(userDetails.getUsername())
+                //&&
+          //      !isTokenExpired(token)
+        );
     }
 
     // Check if the token is expired

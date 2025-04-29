@@ -86,6 +86,18 @@ public class PlateformeController {
         return plateformeService.getMostlyBoughtPacks();
     }
 
+    //fetch random plateforme
+    @GetMapping("/random")
+    public Plateforme getRandomPlateforme() {
+        return plateformeService.getRandomPlateforme();
+    }
+
+    //get plateforme by name
+    @GetMapping("/name/{name}")
+    public Plateforme getPlateformeByName(@PathVariable("name") String name) {
+        return plateformeService.getPlateformeByName(name);
+    }
+
 
 
 }
