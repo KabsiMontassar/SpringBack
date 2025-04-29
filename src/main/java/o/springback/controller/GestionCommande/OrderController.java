@@ -85,7 +85,7 @@ public class OrderController {
             if (product == null) {
                 errors.add("Product with ID " + op.getProduct().getIdProduit() + " not found");
             } else if (product.getQuantiteDisponible() <= 0) {
-                errors.add("Product " + product.getIdProduit() + " is out of stock");
+                errors.add(product.getNom() + " is out of stock");
             } else if (product.getQuantiteDisponible() < op.getQuantity()) {
                 errors.add("Insufficient stock for product " + product.getIdProduit() +
                         ". Available: " + product.getQuantiteDisponible() +

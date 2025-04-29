@@ -14,4 +14,6 @@ public interface ILivraisonService {
 
     Livraison affecterLivraisonToOrder(Livraison l, Long idOrder);
 
+    Livraison getLivraisonByCommandeId(Long commandeId);
+
 }

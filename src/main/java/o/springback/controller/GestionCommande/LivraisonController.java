@@ -49,5 +49,11 @@ public class LivraisonController {
         return livraisonService.getAllLivraisons();
     }
 
+    @GetMapping("/commande/{commandeId}")
+    public Livraison getLivraisonByCommandeId(@PathVariable Long commandeId) {
+
+        return livraisonService.getLivraisonByCommandeId(commandeId);
+
+    }
 
 }

@@ -23,10 +23,17 @@ public class LivraisonServiceImpl implements ILivraisonService {
 
 
     @Override
-    public Livraison updateLivraison(Long id, Livraison livraison) {
-        livraison.setIdPanier(id);
-        return livraisonRepository.save(livraison);
+    public Livraison updateLivraison(Long id, Livraison updatedLivraison) {
+        Livraison existing = livraisonRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Livraison non trouvée"));
+
+        existing.setAdresse(updatedLivraison.getAdresse());
+        existing.setDescription(updatedLivraison.getDescription());
+        existing.setLatitude(updatedLivraison.getLatitude());
+        existing.setLongitude(updatedLivraison.getLongitude());
+        return livraisonRepository.save(existing);
     }
+
 
     @Override
     public void deleteLivraison(Long id) {
@@ -59,6 +66,13 @@ public class LivraisonServiceImpl implements ILivraisonService {
         return livraison;
     }
 
+    @Override
+    public Livraison getLivraisonByCommandeId(Long commandeId)
+    {
+        Order order = orderRepo.findById(commandeId)
+                .orElseThrow(() -> new RuntimeException("Commande non trouvée"));
+        return order.getLivraison();
+    }
 
 
 }

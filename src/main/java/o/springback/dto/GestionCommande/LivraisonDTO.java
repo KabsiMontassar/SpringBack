@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Data
-public class LivraisonDTO {
+public class    LivraisonDTO {
     private String adresse;
     private String description;
     private double latitude;
