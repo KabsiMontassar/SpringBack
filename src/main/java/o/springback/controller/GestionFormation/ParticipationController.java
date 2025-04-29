@@ -8,9 +8,12 @@ import o.springback.dto.GestionFormation.ParticipationResponseDTO;
 import o.springback.entities.GestionFormation.Formation;
 import o.springback.entities.GestionFormation.Participation;
 import o.springback.entities.GestionUser.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -51,8 +54,15 @@ public class ParticipationController {
     }
 
     @DeleteMapping("/annuler/{id}")
-    public void annulerParticipation(@PathVariable int id) {
-        participationService.annulerParticipation(id);
+    public ResponseEntity<?> annulerParticipation(@PathVariable int id) {
+        try {
+            participationService.annulerParticipation(id);
+            return ResponseEntity.ok().build();
+        } catch (ResponseStatusException e) {
+            return ResponseEntity
+                    .status(e.getStatusCode())
+                    .body(Map.of("message", e.getReason())); // ✅ clé "message"
+        }
     }
 
     @PostMapping("/noter/{idParticipation}")
