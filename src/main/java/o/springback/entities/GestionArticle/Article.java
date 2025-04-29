@@ -1,9 +1,11 @@
 package o.springback.entities.GestionArticle;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import o.springback.entities.GestionUser.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,7 +50,11 @@ public class Article {
     @NotNull(message = "Creation date is required")
     private LocalDateTime createdAt;
 
-
+    @Transient
+    private CategoryAU category;
+    public enum CategoryAU {
+        commun, advanced, vip
+    }
     @OneToOne
     @JsonManagedReference("article-auction")
     private Auction auction;
@@ -56,5 +62,10 @@ public class Article {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonManagedReference("article-reservations")
     private List<Reservation> reservations;
+
+    @ManyToOne
+    @JsonBackReference("user-articles")
+    private User user;
+
 
 }

@@ -22,5 +22,8 @@ public interface AuctionRepository extends JpaRepository<Auction,Long> {
     @Query("SELECT a FROM Auction a JOIN FETCH a.article WHERE a.id = :id")
     Optional<Auction> findByIdWithArticle(@Param("id") Long id);
 
+    // zeydin
+
+
 
 }

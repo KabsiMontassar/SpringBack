@@ -7,12 +7,14 @@ import o.springback.dto.AuthenticationResponseDTO;
 import o.springback.dto.RegisterRequestDTO;
 import o.springback.entities.GestionUser.AuthRequest;
 import o.springback.entities.GestionUser.User;
+import o.springback.repositories.GestionUserRepository.UserRepository;
 import o.springback.services.GestionUser.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +32,7 @@ public class UserController {
         IUserService userService;
         private JwtService jwtService;
        private AuthenticationManager authenticationManager;
+       private UserRepository userRepository;
 
 
         @GetMapping("/retrieve-all-Users")
@@ -47,7 +50,6 @@ public class UserController {
     public User retrieveUserbyemail(@PathVariable("User-email") String email) {
         return userService.findByEmail(email);
     }
-
 
 
 

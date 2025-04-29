@@ -6,17 +6,21 @@ import o.springback.Interfaces.GestionArticle.IArticleService;
 import o.springback.entities.GestionArticle.Article;
 import o.springback.entities.GestionArticle.Auction;
 import o.springback.entities.GestionArticle.PaymentArticle;
-import o.springback.entities.GestionArticle.PaymentArticle;
 import o.springback.entities.GestionArticle.Reservation;
+import o.springback.entities.GestionUser.User;
 import o.springback.repositories.GestionArticle.ArticleRepository;
 import o.springback.repositories.GestionArticle.AuctionRepository;
 import o.springback.repositories.GestionArticle.ReservationRepository;
+import o.springback.repositories.GestionUserRepository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @AllArgsConstructor
@@ -24,6 +28,16 @@ public class ArticleService implements IArticleService {
     private ArticleRepository articleRepository;
     private AuctionRepository auctionRepository;
     private ReservationRepository reservationRepository;
+    private UserRepository userRepository;
+
+
+    @Override
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
 
     @Override
     public List<Article> findAll() {
@@ -56,6 +70,9 @@ public class ArticleService implements IArticleService {
 
     @Override
     public Article save(Article article) {
+        if(article.getUser() == null || article.getUser().getIdUser() == null) {
+            throw new IllegalArgumentException("User is required for a reservation.");
+        }
         if (articleRepository.existsByTitle(article.getTitle())) {
             throw new IllegalArgumentException("An article with the title '" + article.getTitle() + "' already exists.");
         }
@@ -67,7 +84,7 @@ public class ArticleService implements IArticleService {
         newArticle.setPricePerHour(article.getPricePerHour());
         newArticle.setPrix(article.getPrix());
         newArticle.setTypeArticle(article.getTypeArticle());
-        newArticle.setAvailable(true); // par défaut
+        newArticle.setAvailable(true);
         newArticle.setCreatedAt(LocalDateTime.now());
 
         switch (article.getTypeArticle()) {
@@ -245,7 +262,62 @@ public class ArticleService implements IArticleService {
         return articleRepository.findByIsAvailableAndTypeArticle(isAvailable, typeArticle);
     }
 
+    /*
+@Override
+    public List<Map<String, Object>> getUsersWithScores() {
+        List<Object[]> results = articleRepository.findUsersWithArticleScores();
+        List<Map<String, Object>> usersWithScores = new ArrayList<>();
 
+        for (Object[] result : results) {
+            User user = (User) result[0];
+            Long score = ((Number) result[1]).longValue();
+
+            Map<String, Object> userMap = new HashMap<>();
+            userMap.put("user", user);
+            userMap.put("score", score);
+
+            usersWithScores.add(userMap);
+        }
+
+        return usersWithScores;
+    }
+
+@Override
+    public List<Map<String, Object>> getArticlesOrderedByUserScore() {
+        List<Object[]> results = articleRepository.findArticlesOrderedByUserScore();
+        List<Map<String, Object>> articlesWithScores = new ArrayList<>();
+
+        for (Object[] result : results) {
+            Article article = (Article) result[0];
+            Long userScore = ((Number) result[1]).longValue();
+
+            Map<String, Object> articleMap = new HashMap<>();
+            articleMap.put("article", article);
+            articleMap.put("userScore", userScore);
+
+            articlesWithScores.add(articleMap);
+        }
+
+        return articlesWithScores;
+    }
+
+@Override
+    public Map<User, List<Article>> getArticlesGroupedByUserScore() {
+        List<Map<String, Object>> usersWithScores = getUsersWithScores();
+        Map<User, List<Article>> result = new LinkedHashMap<>();
+
+        for (Map<String, Object> userWithScore : usersWithScores) {
+            User user = (User) userWithScore.get("user");
+            // Récupère tous les articles de l'utilisateur
+            List<Article> userArticles = user.getArticles().stream()
+                    .sorted(Comparator.comparing(Article::getCreatedAt).reversed())
+                    .collect(Collectors.toList());
+
+            result.put(user, userArticles);
+        }
+
+        return result;
+    }*/
 
 
 
