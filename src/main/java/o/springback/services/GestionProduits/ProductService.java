@@ -4,8 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import o.springback.Interfaces.GestionProduits.IProductService;
 import o.springback.entities.GestionProduits.Products;
+import o.springback.entities.GestionUser.User;
 import o.springback.repositories.GestionProduitsRepository.ProductRepository;
+import o.springback.repositories.GestionUserRepository.UserRepository;
+import o.springback.services.GestionUser.UserService;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -15,6 +20,14 @@ import java.util.List;
 public class ProductService implements IProductService {
 
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
+
+
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
 
     @Override
     public List<Products> findAll() {
@@ -28,6 +41,11 @@ public class ProductService implements IProductService {
 
     @Override
     public Products save(Products product) {
+
+        User user = getCurrentUser();
+
+        product.setUser(user);
+
         return productRepository.save(product);
     }
 
