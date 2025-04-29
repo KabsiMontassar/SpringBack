@@ -1,5 +1,6 @@
 package o.springback.Config;
 
+import lombok.RequiredArgsConstructor;
 import o.springback.filter.JwtAuthFilter;
 import o.springback.services.GestionUser.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     @Autowired
     private JwtAuthFilter authFilter;
-    //@Autowired
-    //private UserService userService; // Assuming UserService implements UserDetailsService
+    //private final AuthenticationProvider authenticationProvider;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    @Autowired
+    private UserService userService; // Assuming UserService implements UserDetailsService
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -43,9 +47,11 @@ public class SecurityConfig {
                         .requestMatchers("/auth/admin/**").hasAuthority("ROLE_ADMIN") // backoffice
                         .anyRequest().authenticated() // Protect all other endpoints
                 )
+                .oauth2Login(oauth -> oauth.successHandler(oAuth2SuccessHandler))
                 .sessionManagement(sess -> sess
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No sessions
                 )
+                //zedt () fel authenticationProvider
                 .authenticationProvider(authenticationProvider()) // Custom authentication provider
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
 
