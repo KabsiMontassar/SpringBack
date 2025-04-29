@@ -30,12 +30,14 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthFilter authFilter;
 
-    @Autowired
-    private UserService userService;
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new UserService(); // Ensure UserInfoService implements UserDetailsService
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
+        http
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(List.of("http://localhost:4200"));
@@ -45,52 +47,32 @@ public class SecurityConfig {
                     config.setAllowCredentials(true);
                     return config;
                 }))
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/auth/welcome", 
-                                "/auth/addNewUser",
-                                "/auth/generateToken",
-                                "/auth/signup",
-                                "/uploads/**",
-                                "/oauth2/**",
-                                "/login/oauth2/code/*",
-                                "/error"
-                        ).permitAll()
-                        .requestMatchers("/auth/user/**").hasAuthority("ROLE_USER")
-                        .requestMatchers("/auth/admin/**").hasAuthority("ROLE_ADMIN")
-                        .anyRequest().authenticated()
+                        .requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken","/**", "/auth/signup","/uploads/**").permitAll()
+                        .requestMatchers("/auth/user/**").hasAuthority("ROLE_USER") // page profile
+                        .requestMatchers("/auth/admin/**").hasAuthority("ROLE_ADMIN") // backoffice
+                        .anyRequest().authenticated() // Protect all other endpoints
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login")
-                        .authorizationEndpoint(authorization -> authorization
-                                .baseUri("/oauth2/authorization"))
-                        .redirectionEndpoint(redirection -> redirection
-                                .baseUri("/login/oauth2/code/*"))
-                        .successHandler(new OAuth2AuthenticationSuccessHandler())
+                .sessionManagement(sess -> sess
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No sessions
                 )
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .authenticationProvider(authenticationProvider()) // Custom authentication provider
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
+
+        return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(); // Password encoding
     }
-
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService());
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> userService.loadUserByUsername(username);
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
     }
 
     @Bean
