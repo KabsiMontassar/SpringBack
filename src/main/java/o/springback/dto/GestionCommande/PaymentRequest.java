@@ -1,4 +1,4 @@
-package o.springback.dto;
+package o.springback.dto.GestionCommande;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,4 +10,6 @@ public class PaymentRequest {
     private int amount; // en centimes
     private String currency;
     private String description;
+    private Long orderId;
+
 }

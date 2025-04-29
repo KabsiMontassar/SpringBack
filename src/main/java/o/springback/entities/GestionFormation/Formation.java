@@ -40,7 +40,7 @@ public class Formation {
     private String photoPath;
     @Min(10)
     private float noteMinPourCertificat;
-    @Min(value = 3)
+    @Min(value = 1)
     @Max(value = 20)
     private int Capacity;
 
@@ -56,4 +56,8 @@ public class Formation {
     @OneToMany(mappedBy = "formation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference("formation-participations")
     private Set<Participation> participations;
+
+    @OneToMany(mappedBy = "formation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<ParticipationStatus> participationStatuses;
+
 }

@@ -1,12 +1,13 @@
-package o.springback.dto;
+package o.springback.dto.GestionCommande;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import o.springback.entities.GestionProduits.Products;
 
 import java.util.Map;
 
-
+@Data
 public class OrderProductDto {
     private Products products;
     private Integer quantity;

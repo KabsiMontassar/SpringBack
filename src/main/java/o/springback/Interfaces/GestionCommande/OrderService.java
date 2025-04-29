@@ -19,10 +19,13 @@ public interface OrderService {
     //double calculTotal(List<Commande> items);
     //boolean validerCommande(List<Commande> items);
     */
-   Iterable<Order> getAllOrders();
+   List<Order> getAllOrders();
     Order create(Order order);
     public void update(Order order);
     void deleteCommande(Long id);
 
+    Order getOrderById(Long id);
+
+    List<Order> getOrdersByStatus(String status);
 
 }

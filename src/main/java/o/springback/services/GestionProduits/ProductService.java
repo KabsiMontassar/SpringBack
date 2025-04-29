@@ -41,10 +41,12 @@ public class ProductService implements IProductService {
         productRepository.deleteById(id);
     }
 
-    @Scheduled(fixedDelay = 10000) // Exécution toutes les 10 secondes
+    //@Scheduled(fixedDelay = 10000)
+    //@Scheduled(fixedDelay = 7889400)
+
     @Override
     public void deleteOutOfStockProducts() {
-        try {
+       try {
             List<Products> products = productRepository.findAll();
             for (Products product : products) {
                 if (product.getQuantiteDisponible() <= 0) {

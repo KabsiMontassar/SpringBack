@@ -2,8 +2,11 @@ package o.springback.services.GestionCommande;
 
 import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionCommande.ILivraisonService;
+import o.springback.Interfaces.GestionCommande.OrderService;
 import o.springback.entities.GestionCommande.Livraison;
+import o.springback.entities.GestionCommande.Order;
 import o.springback.repositories.Gestioncommande.LivraisonRepository;
+import o.springback.repositories.Gestioncommande.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +17,10 @@ import java.util.List;
 public class LivraisonServiceImpl implements ILivraisonService {
     @Autowired
     private LivraisonRepository livraisonRepository;
+    private OrderRepo orderRepo;
 
-    @Override
-    public Livraison createLivraison(Livraison livraison) {
-        return livraisonRepository.save(livraison);
-    }
+
+
 
     @Override
     public Livraison updateLivraison(Long id, Livraison livraison) {
@@ -40,4 +42,23 @@ public class LivraisonServiceImpl implements ILivraisonService {
     public List<Livraison> getAllLivraisons() {
         return livraisonRepository.findAll();
     }
+
+    @Override
+    public Livraison affecterLivraisonToOrder(Livraison l, Long idOrder) {
+        Order order = orderRepo.findById(idOrder)
+                .orElseThrow(() -> new RuntimeException("Commande non trouvée"));
+
+        if (order.getLivraison() != null) {
+            throw new RuntimeException("Cette commande a déjà une livraison.");
+        }
+
+        l.setOrder(order);
+        Livraison livraison = livraisonRepository.save(l);
+        order.setLivraison(livraison);
+        orderRepo.save(order);
+        return livraison;
+    }
+
+
+
 }

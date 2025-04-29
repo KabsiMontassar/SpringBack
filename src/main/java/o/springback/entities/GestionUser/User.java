@@ -53,7 +53,7 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     private TypePack typePack = TypePack.GUEST;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "plateforme_id")
     private Plateforme plateforme;

@@ -19,9 +19,17 @@ public class PlateformeController {
 
     @PostMapping
     public Plateforme addPlateforme(@RequestBody Plateforme c) {
-        plateformeService.save(c);
-        userService.updatePlateformeId(c.getAgriculteur().getEmail(), c);
-        return c;
+        if (c.getAgriculteur() == null || c.getAgriculteur().getEmail() == null) {
+            throw new IllegalArgumentException("Agriculteur email is required");
+        }
+
+        Plateforme savedPlateforme = plateformeService.save(c);
+        try {
+            userService.updatePlateformeId(c.getAgriculteur().getEmail(), savedPlateforme);
+        } catch (Exception e) {
+            System.err.println("Error updating plateforme ID: " + e.getMessage());
+        }
+        return savedPlateforme;
     }
 
     @PutMapping
@@ -71,6 +79,11 @@ public class PlateformeController {
     public Map<String,Integer> generateReport() {
        return plateformeService.generateReport();
 
+    }
+
+    @GetMapping("/mostlyBoughtPacks")
+    public Map<String, Integer> getMostlyBoughtPacks() {
+        return plateformeService.getMostlyBoughtPacks();
     }
 
 

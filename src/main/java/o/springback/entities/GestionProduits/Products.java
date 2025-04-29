@@ -29,6 +29,7 @@ public class Products {
     private LocalDate dateAjout = LocalDate.now();
     private String imageURL;
     private String status;
+    private String conseilsCulture;
 
     // Utiliser JsonIgnoreProperties pour éviter les problèmes de boucles infinies
     @JsonIgnoreProperties("produits")
