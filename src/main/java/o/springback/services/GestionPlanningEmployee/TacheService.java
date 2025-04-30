@@ -1,4 +1,5 @@
 package o.springback.services.GestionPlanningEmployee;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import o.springback.Interfaces.GestionPlanningEmployee.ITacheService;
@@ -28,6 +29,7 @@ public class TacheService implements ITacheService{
     private PlanningRepository planningRepository;
     private EmployeeRepository employeeRepository;
     @Override
+    @Transactional
     public Tache add(Tache tache) {
         if (tache.getPosition() == null){
             tache.setPosition(getNextPositionForStatut(tache.getStatutTache()));

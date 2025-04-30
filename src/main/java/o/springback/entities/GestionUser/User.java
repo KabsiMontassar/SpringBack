@@ -22,8 +22,6 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor
 @ToString
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="type", discriminatorType = DiscriminatorType.STRING)
 public class User implements Serializable {
     @Id
     @Column(name = "idUser")

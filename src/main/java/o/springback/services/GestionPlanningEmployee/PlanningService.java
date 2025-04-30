@@ -1,4 +1,5 @@
 package o.springback.services.GestionPlanningEmployee;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import o.springback.entities.GestionPlanningEmployee.*;
 import o.springback.repositories.GestionPlanningEmployeeRepository.PlanningRepository;
@@ -46,6 +47,7 @@ public class PlanningService implements IPlanningService{
     }
 
     @Override
+    @Transactional
     public Planning addPlanningForEmployee(Long employeeId, Planning planning) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new RuntimeException("Employé non trouvé avec ID: " + employeeId));

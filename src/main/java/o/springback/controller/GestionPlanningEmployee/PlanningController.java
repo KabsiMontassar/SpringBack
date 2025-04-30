@@ -70,7 +70,7 @@ public class PlanningController {
     public List<Planning> getPlanningsByEmployee(@PathVariable Long employeeId) {
         return planningService.getPlanningsByEmployeeId(employeeId);
     }
-    @GetMapping("employee/{employeeId}/week")
+    @GetMapping("/employee/{employeeId}/week")
     public List<Planning> getPlanningsInRange(@PathVariable Long employeeId,
                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date weekStart,
                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date weekEnd
