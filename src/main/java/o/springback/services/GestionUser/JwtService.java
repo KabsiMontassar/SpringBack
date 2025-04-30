@@ -73,17 +73,17 @@ public class JwtService {
         }
     }
 
-    // Validate the token against user details and expiration
-    // public boolean validateToken(String token) {
-    //     try {
-    //         if (token == null || token.isEmpty()) {
-    //             return false;
-    //         }
-    //         return !isTokenExpired(token);
-    //     } catch (Exception e) {
-    //         return false;
-    //     }
-    // }
+
+    public boolean validateToken(String token) {
+       try {
+           if (token == null || token.isEmpty()) {
+                 return false;
+            }
+            return !isTokenExpired(token);
+         } catch (Exception e) {
+             return false;
+        }
+   }
 
 
     // Check if the token is expired
