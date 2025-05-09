@@ -70,7 +70,7 @@ public class User implements Serializable {
     @JsonManagedReference
     private Set<Participation> participations;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<ProductInteraction> interactions;
 
