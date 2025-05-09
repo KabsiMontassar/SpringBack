@@ -3,13 +3,11 @@ package o.springback.entities.GestionUser;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import o.springback.entities.GestionArticle.Article;
-import o.springback.entities.GestionArticle.Bid;
-import o.springback.entities.GestionArticle.Reservation;
 import o.springback.entities.GestionFormation.Participation;
 import o.springback.entities.GestionPlateforme.Component;
 import o.springback.entities.GestionPlateforme.Plateforme;
 import o.springback.entities.GestionPlateforme.TypePack;
+import o.springback.entities.GestionProduits.ProductInteraction;
 import o.springback.entities.GestionProduits.Products;
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -51,14 +49,6 @@ public class User implements Serializable {
     @Size(max = 255, message = "L'URL de l'image ne doit pas dépasser 255 caractères")
     private String verificationToken;
 
-    @Transient
-    private Article.CategoryAU category;
-    public enum CategoryAU {
-        commun, advanced, vip
-    }
-    @Transient
-    private Integer score;
-
     @Enumerated(EnumType.STRING)
     private TypePack typePack = TypePack.GUEST;
 
@@ -80,15 +70,8 @@ public class User implements Serializable {
     @JsonManagedReference
     private Set<Participation> participations;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference("user-articles")
-    private Set<Article> articles;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private Set<ProductInteraction> interactions;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference("user-bids")
-    private Set<Bid> bids;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference("user-reservations")
-    private Set<Reservation> reservations;
 }
