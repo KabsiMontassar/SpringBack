@@ -7,6 +7,7 @@ import o.springback.entities.GestionFormation.Participation;
 import o.springback.entities.GestionPlateforme.Component;
 import o.springback.entities.GestionPlateforme.Plateforme;
 import o.springback.entities.GestionPlateforme.TypePack;
+import o.springback.entities.GestionProduits.ProductInteraction;
 import o.springback.entities.GestionProduits.Products;
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -68,4 +69,9 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private Set<Participation> participations;
+
+
+    @OneToMany(mappedBy = "user")
+    private Set<ProductInteraction> interactions;
+
 }

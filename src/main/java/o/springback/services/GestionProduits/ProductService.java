@@ -29,10 +29,6 @@ public class ProductService implements IProductService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    @Override
-    public List<Products> findAll() {
-        return productRepository.findAll();
-    }
 
     @Override
     public Products findById(Long idProduit) {
@@ -76,6 +72,13 @@ public class ProductService implements IProductService {
             log.error("Erreur lors de la suppression des produits hors stock", e);
         }
     }
+
+    @Override
+    public List<Products> findAll() {
+        User user = getCurrentUser();
+        return productRepository.findPreferredProductsForUser(user);
+    }
+
 }
 
 
