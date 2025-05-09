@@ -24,4 +24,22 @@ public interface ArticleRepository  extends JpaRepository<Article,Long> {
     List<Article> findByTitleContainingIgnoreCase(String title);
 
     List<Article> findByIsAvailableAndTypeArticle(boolean isAvailable, PaymentArticle.PaymentType typeArticle);
+/*
+
+    @Query("SELECT u, " +
+            "(SELECT COUNT(a1) FROM Article a1 WHERE a1.user = u AND a1.category = o.springback.entities.GestionArticle.Article.CategoryAU.commun) * 5 + " +
+            "(SELECT COUNT(a2) FROM Article a2 WHERE a2.user = u AND a2.category = o.springback.entities.GestionArticle.Article.CategoryAU.advanced) * 10 + " +
+            "(SELECT COUNT(a3) FROM Article a3 WHERE a3.user = u AND a3.category = o.springback.entities.GestionArticle.Article.CategoryAU.vip) * 20 AS score " +
+            "FROM User u JOIN u.articles a " +
+            "GROUP BY u " +
+            "ORDER BY score DESC")
+    List<Object[]> findUsersWithArticleScores();
+
+    @Query("SELECT a, " +
+            "(SELECT COUNT(a1) FROM Article a1 WHERE a1.user = a.user AND a1.category = o.springback.entities.GestionArticle.Article.CategoryAU.commun) * 5 + " +
+            "(SELECT COUNT(a2) FROM Article a2 WHERE a2.user = a.user AND a2.category = o.springback.entities.GestionArticle.Article.CategoryAU.advanced) * 10 + " +
+            "(SELECT COUNT(a3) FROM Article a3 WHERE a3.user = a.user AND a3.category = o.springback.entities.GestionArticle.Article.CategoryAU.vip) * 20 AS userScore " +
+            "FROM Article a " +
+            "ORDER BY userScore DESC")
+    List<Object[]> findArticlesOrderedByUserScore();*/
 }

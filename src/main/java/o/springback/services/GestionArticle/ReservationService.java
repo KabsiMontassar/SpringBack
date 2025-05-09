@@ -5,9 +5,13 @@ import lombok.AllArgsConstructor;
 import o.springback.Interfaces.GestionArticle.IReservationService;
 import o.springback.entities.GestionArticle.Article;
 import o.springback.entities.GestionArticle.Reservation;
+import o.springback.entities.GestionUser.User;
 import o.springback.repositories.GestionArticle.ArticleRepository;
 import o.springback.repositories.GestionArticle.PaymentRepository;
 import o.springback.repositories.GestionArticle.ReservationRepository;
+import o.springback.repositories.GestionUserRepository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -23,6 +27,15 @@ public class ReservationService implements IReservationService {
     private final PaymentRepository paymentRepository;
     private final ArticleService articleService;
 
+    private UserRepository userRepository;
+
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
     @Override
     public List<Reservation> findAll() {
         return reservationRepository.findAll();
@@ -36,6 +49,11 @@ public class ReservationService implements IReservationService {
 
     @Override
     public Reservation save(Reservation reservation) {
+        User user = getCurrentUser();
+        if(reservation.getUser() == null || reservation.getUser().getIdUser() == null) {
+            throw new IllegalArgumentException("User is required for a reservation.");
+        }
+        reservation.setUser(user);
         if (reservation.getArticle() == null || reservation.getArticle().getId() == null) {
             throw new IllegalArgumentException("Article is required for a reservation.");
         }
@@ -115,4 +133,10 @@ public class ReservationService implements IReservationService {
         return reservationRepository.findByIdWithArticle(id)
                 .orElseThrow(() -> new RuntimeException("Reservation not found with id: " + id));
     }
+    @Override
+    public List<Reservation> getReservationsByUser(Long userId) {
+        return reservationRepository.findByUserIdUser(userId);
+    }
+
+
 }

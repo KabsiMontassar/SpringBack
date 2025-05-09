@@ -3,6 +3,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import o.springback.entities.GestionUser.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,4 +29,9 @@ public class Bid {
     @ManyToOne
     @JsonBackReference("auction-bids")
     private Auction auction;
+
+    @ManyToOne
+    @JsonBackReference("user-bids")
+    private User user;
+
 }

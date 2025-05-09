@@ -66,11 +66,11 @@ public class PlateformeController {
 
 
 
-    @PutMapping("/user/{id}/{plan}")
+    @PutMapping("/user/{plan}")
     public void changePackType(
-            @PathVariable("id") Long id,
+
             @PathVariable("plan") String plan) {
-        plateformeService.changePackType(id, plan);
+        plateformeService.changePackType( plan);
     }
 
 
@@ -84,6 +84,18 @@ public class PlateformeController {
     @GetMapping("/mostlyBoughtPacks")
     public Map<String, Integer> getMostlyBoughtPacks() {
         return plateformeService.getMostlyBoughtPacks();
+    }
+
+    //fetch random plateforme
+    @GetMapping("/random")
+    public Plateforme getRandomPlateforme() {
+        return plateformeService.getRandomPlateforme();
+    }
+
+    //get plateforme by name
+    @GetMapping("/name/{name}")
+    public Plateforme getPlateformeByName(@PathVariable("name") String name) {
+        return plateformeService.getPlateformeByName(name);
     }
 
 

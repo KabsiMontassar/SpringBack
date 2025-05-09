@@ -15,7 +15,11 @@ public interface IPlateformeService {
     List<Plateforme> findAll();
 
 
-    void changePackType(Long id, String plan);
+    void changePackType( String plan);
 
     Map<String, Integer> getMostlyBoughtPacks();
+
+    Plateforme getRandomPlateforme();
+
+    Plateforme getPlateformeByName(String name);
 }
