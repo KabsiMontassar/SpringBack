@@ -19,7 +19,7 @@ RUN mkdir -p /app/uploads
 # Environment variables with default values
 ENV SPRING_DATASOURCE_URL=jdbc:mysql://mysql-service:3306/SpringPI
 ENV SPRING_DATASOURCE_USERNAME=root
-ENV SPRING_DATASOURCE_PASSWORD=
+#ENV SPRING_DATASOURCE_PASSWORD=
 ENV SERVER_PORT=8081
 
 # Expose the application port
