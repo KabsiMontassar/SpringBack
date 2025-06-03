@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  mysql-service:
+    image: mysql:8.0
+    container_name: mysql-service
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'  
+      MYSQL_DATABASE: SpringPI
+    ports:
+      - "3307:3306"  
+    networks:
+      - springnet
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  springback-app:
+    image: kebsimontassar/springback:latest  
+    container_name: springback-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-service:3306/SpringPI
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""  
+    ports:
+      - "8081:8081"
+    networks:
+      - springnet
+
+volumes:
+  mysql-data:
+
+networks:
+  springnet:
+    driver: bridge
